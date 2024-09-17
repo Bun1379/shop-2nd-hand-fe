@@ -1,18 +1,46 @@
+import React from 'react';
+import { NavLink, useNavigate } from "react-router-dom";
+import './Header.css';
 function Header() {
     return (
-        <div className="header">
+        <nav className="header">
             <ul className="header-nav">
-                <li>
-                    <a href="/">Home</a>
-                </li>
-                <li>
-                    <a href="/about">About</a>
-                </li>
-                <li>
-                    <a href="/contact">Contact</a>
-                </li>
+                <ul className="header-nav-left">
+                    <li>
+                        <NavLink to="/">
+                            Logo shop
+                        </NavLink>
+                    </li>
+                    <li>
+                        <NavLink to="/">
+                            Nam
+                        </NavLink>
+                    </li>
+                    <li>
+                        <NavLink to="/">
+                            Nữ
+                        </NavLink>
+                    </li>
+                    <li>
+                        <NavLink to="/">
+                            Unisex
+                        </NavLink>
+                    </li>
+                </ul>
+                <ul className="header-nav-right">
+                    <li>
+                        <NavLink to="/login">
+                            Đăng nhập
+                        </NavLink>
+                    </li>
+                    <li>
+                        <NavLink to="/register">
+                            Đăng ký
+                        </NavLink>
+                    </li>
+                </ul>
             </ul>
-        </div>
+        </nav>
     );
 }
 

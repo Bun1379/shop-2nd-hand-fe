@@ -1,10 +1,11 @@
 import Header from "../components/Header";
 import Footer from "../components/Footer";
+import "./UserLayout.css";
 const UserLayout = ({ children }) => {
     return (
         <>
             <Header />
-            <div className="container">{children}</div>
+            <div className="user-layout-container">{children}</div>
             <Footer />
         </>
     );
