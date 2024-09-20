@@ -18,7 +18,6 @@
 
 .header-nav-left {
     display: flex;
-    align-items: center;
 }
 
 .header-nav-left>li {
@@ -37,7 +36,6 @@
 
 .header-nav-right {
     display: flex;
-    align-items: center;
     margin-left: auto;
 }
 
