@@ -11,10 +11,14 @@
 .header-nav {
     list-style-type: none;
     margin: 0 130px;
+    display: flex;
+    align-items: center;
+    height: 100%;
 }
 
 .header-nav-left {
-    float: left;
+    display: flex;
+    align-items: center;
 }
 
 .header-nav-left>li {
@@ -26,14 +30,15 @@
     color: white;
     text-transform: uppercase;
     text-decoration: none;
-    line-height: 70px;
     padding-right: 50px;
     display: block;
     font-size: 24px;
 }
 
 .header-nav-right {
-    float: right;
+    display: flex;
+    align-items: center;
+    margin-left: auto;
 }
 
 .header-nav-right>li {
@@ -42,9 +47,32 @@
 
 .header-nav-right>li>a {
     text-decoration: none;
-    line-height: 70px;
-    display: block;
-    font-size: 24px;
     padding-left: 50px;
     color: #fff;
+    font-size: 24px;
+}
+
+.header-nav-right .header-search-container {
+    width: 200px;
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+.header-nav-right .header-search-container>input {
+    height: 30px;
+    border: none;
+    outline: none;
+    width: 100%;
+    padding-left: 30px;
+    font-size: 16px;
+    border-radius: 30px;
+    background-color: #fff;
+}
+
+.header-nav-right .header-search-container .icon-search {
+    position: absolute;
+    left: 10px;
+    color: #888;
+    pointer-events: none;
 }

@@ -1,6 +1,6 @@
 import React from 'react';
 import './Home.css';
-import UserLayout from '../../../layouts/UserLayout';
+import UserLayout from '../../../layouts/UserLayout/UserLayout';
 function Home() {
     return (
         <>

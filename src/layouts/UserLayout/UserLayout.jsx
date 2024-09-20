@@ -1,5 +1,5 @@
-import Header from "../components/Header";
-import Footer from "../components/Footer";
+import Header from "../../components/Header";
+import Footer from "../../components/Footer";
 import "./UserLayout.css";
 const UserLayout = ({ children }) => {
     return (
@@ -10,7 +10,5 @@ const UserLayout = ({ children }) => {
         </>
     );
 };
-
-
 
 export default UserLayout;
