@@ -1,0 +1,15 @@
+.login-end {
+    display: flex;
+    justify-content: space-between;
+}
+
+.forgot-pw,
+.register {
+    text-decoration: none;
+    color: blue;
+}
+
+.forgot-pw:hover,
+.register:hover {
+    color: #397D54;
+}

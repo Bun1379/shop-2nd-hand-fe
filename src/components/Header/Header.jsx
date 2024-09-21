@@ -70,7 +70,7 @@ function Header() {
                                 </NavLink>
                             </li>
                             <li>
-                                <NavLink to="/register">
+                                <NavLink to="/signup">
                                     Đăng ký
                                 </NavLink>
                             </li>

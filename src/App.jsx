@@ -1,22 +1,37 @@
 import './App.css';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import Login from './view/LoginRegister/Login';
-import Register from './view/LoginRegister/Register';
-import ForgotPW from './view/LoginRegister/ForgotPW';
-import Verify from './view/LoginRegister/Verify';
-import Home from './view/User/Home/Home';
+import Login from './pages/LoginSignup/Login';
+import Signup from './pages/LoginSignup/Signup';
+import ForgotPW from './pages/LoginSignup/ForgotPW';
+import Verify from './pages/LoginSignup/Verify';
+import Home from './pages/User/Home/Home';
 
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/forgot-pw" element={<ForgotPW />} />
-        <Route path="/verify" element={<Verify />} />
-      </Routes>
-    </BrowserRouter>
+    <>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/forgot-pw" element={<ForgotPW />} />
+          <Route path="/verify" element={<Verify />} />
+        </Routes>
+      </BrowserRouter>
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={true}
+        newestOnTop={true}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
+    </>
   );
 }
 

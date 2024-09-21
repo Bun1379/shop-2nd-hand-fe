@@ -1,7 +1,11 @@
 import React, { useState } from 'react';
+import { toast } from 'react-toastify';
+import { Link, useNavigate } from "react-router-dom";
 import LoginLayout from '../../layouts/LoginLayout/LoginLayout';
-import AuthAPI from '../../api/AuthAPI';
+import AuthAPI from '../../api/authAPI';
+import './Login.css';
 const Login = () => {
+    const navigate = useNavigate();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
@@ -14,14 +18,22 @@ const Login = () => {
             });
 
             if (response.status === 200) {
-                console.log('Đăng nhập thành công', response.data);
-                localStorage.setItem('token', response.data.DT.token);
-                localStorage.setItem('user', JSON.stringify(response.data.DT.user));
-                localStorage.setItem('roleID', response.data.DT.user.roleID);
-                window.location.href = '/';
+                if (response.data.DT.user.is_active) {
+                    toast.error("Tài khoản của bạn đã bị khóa");
+                } else {
+                    localStorage.setItem('token', response.data.DT.token);
+                    localStorage.setItem('user', JSON.stringify(response.data.DT.user));
+                    localStorage.setItem('roleID', response.data.DT.user.roleID);
+                    toast.success('Đăng nhập thành công!');
+                    if (response.data.DT.user.is_verified) {
+                        navigate(response.data.DT.user.is_admin ? '/admin' : '/');
+                    } else {
+                        navigate('/verify', { state: { email } });
+                    }
+                }
             }
-        } catch (err) {
-            console.error('Đăng nhập thất bại:', err);
+        } catch (error) {
+            toast.error('Đăng nhập thất bại: ' + error.response.data.EM);
         }
     };
     return (
@@ -47,6 +59,10 @@ const Login = () => {
                         onChange={(e) => setPassword(e.target.value)}
                         required
                     />
+                </div>
+                <div className="login-end">
+                    <Link className="forgot-pw" to="/forgot-pw">Quên mật khẩu ?</Link>
+                    <Link className="register" to="/signup">Đăng ký</Link>
                 </div>
                 <button type="submit">Đăng Nhập</button>
             </form>

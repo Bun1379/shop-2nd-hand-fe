@@ -18,12 +18,6 @@ body {
   pointer-events: none;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
 .App-header {
   background-color: #282c34;
   min-height: 100vh;
@@ -39,12 +33,15 @@ body {
   color: #61dafb;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
 
-  to {
-    transform: rotate(360deg);
-  }
+.Toastify__toast--success {
+  font-weight: bold !important;
+  box-shadow: 0 4px 10px rgb(0, 0, 0) !important;
+  border: 2px solid #4CAF50 !important;
+}
+
+.Toastify__toast--error {
+  font-weight: bold !important;
+  box-shadow: 0 4px 10px rgb(0, 0, 0) !important;
+  border: 2px solid #f44336 !important;
 }
