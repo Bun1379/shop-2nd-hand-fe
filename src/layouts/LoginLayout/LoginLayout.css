@@ -22,6 +22,27 @@
 .login-layout-content h2 {
     margin-bottom: 15px;
     text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.login-layout-content h2>a {
+    text-decoration: none;
+    color: #397D54;
+    font-size: 24px;
+    position: absolute;
+    left: 0;
+}
+
+.login-layout-content h2>a:hover {
+    color: #cbead1;
+}
+
+.login-layout-content h2>p {
+    margin: 0;
+    text-align: center;
 }
 
 .login-layout-content form {

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 import { Link, useNavigate } from "react-router-dom";
+import { FaArrowLeft } from "react-icons/fa";
 import LoginLayout from '../../layouts/LoginLayout/LoginLayout';
 import AuthAPI from '../../api/authAPI';
 import './Login.css';
@@ -18,14 +19,14 @@ const Login = () => {
             });
 
             if (response.status === 200) {
-                if (response.data.DT.user.is_active) {
+                if (response.data.DT.user.is_active === false) {
                     toast.error("Tài khoản của bạn đã bị khóa");
                 } else {
                     localStorage.setItem('token', response.data.DT.token);
                     localStorage.setItem('user', JSON.stringify(response.data.DT.user));
                     localStorage.setItem('roleID', response.data.DT.user.roleID);
                     toast.success('Đăng nhập thành công!');
-                    if (response.data.DT.user.is_verified) {
+                    if (response.data.DT.user.is_verified === true) {
                         navigate(response.data.DT.user.is_admin ? '/admin' : '/');
                     } else {
                         navigate('/verify', { state: { email } });
@@ -38,7 +39,10 @@ const Login = () => {
     };
     return (
         <LoginLayout>
-            <h2>Đăng Nhập</h2>
+            <h2>
+                <Link to="/"><FaArrowLeft /></Link>
+                <p>Đăng nhập</p>
+            </h2>
             <form onSubmit={handleSubmit}>
                 <div>
                     <label htmlFor="email">Email:</label>

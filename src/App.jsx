@@ -5,6 +5,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Login from './pages/LoginSignup/Login';
 import Signup from './pages/LoginSignup/Signup';
 import ForgotPW from './pages/LoginSignup/ForgotPW';
+import ResetPW from './pages/LoginSignup/ResetPW';
 import Verify from './pages/LoginSignup/Verify';
 import Home from './pages/User/Home/Home';
 
@@ -17,6 +18,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/forgot-pw" element={<ForgotPW />} />
+          <Route path="/reset-pw" element={<ResetPW />} />
           <Route path="/verify" element={<Verify />} />
         </Routes>
       </BrowserRouter>

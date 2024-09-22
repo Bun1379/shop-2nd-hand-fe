@@ -1,6 +1,7 @@
 import React from 'react';
 import LoginLayout from '../../layouts/LoginLayout/LoginLayout';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
+import { FaArrowLeft } from "react-icons/fa";
 import { useState } from 'react';
 import AuthAPI from '../../api/authAPI';
 import { toast } from 'react-toastify';
@@ -9,7 +10,7 @@ const Signup = () => {
     const navigate = useNavigate();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [confirmPassword, setConfirmPassword] = useState(''); // Thêm state cho mật khẩu nhập lại
+    const [confirmPassword, setConfirmPassword] = useState('');
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -37,7 +38,10 @@ const Signup = () => {
 
     return (
         <LoginLayout>
-            <h2>Đăng ký</h2>
+            <h2>
+                <Link to="/login"><FaArrowLeft /></Link>
+                <p>Đăng ký</p>
+            </h2>
             <form onSubmit={handleSubmit}>
                 <div>
                     <label htmlFor="email">Email:</label>
@@ -65,7 +69,7 @@ const Signup = () => {
                         type="password"
                         id="confirmPassword"
                         value={confirmPassword}
-                        onChange={(e) => setConfirmPassword(e.target.value)} // Cập nhật state cho mật khẩu nhập lại
+                        onChange={(e) => setConfirmPassword(e.target.value)}
                         required
                     />
                 </div>
