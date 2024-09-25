@@ -8,7 +8,7 @@ import ForgotPW from './pages/LoginSignup/ForgotPW';
 import ResetPW from './pages/LoginSignup/ResetPW';
 import Verify from './pages/LoginSignup/Verify';
 import Home from './pages/User/Home/Home';
-
+import ProductItem from './components/ProductItem/ProductItem';
 function App() {
   return (
     <>
@@ -20,6 +20,8 @@ function App() {
           <Route path="/forgot-pw" element={<ForgotPW />} />
           <Route path="/reset-pw" element={<ResetPW />} />
           <Route path="/verify" element={<Verify />} />
+
+          <Route path="/product" element={<ProductItem />} />
         </Routes>
       </BrowserRouter>
       <ToastContainer
