@@ -10,6 +10,7 @@ import Verify from "./pages/LoginSignup/Verify";
 import Home from "./pages/User/Home/Home";
 import ProductItem from "./components/ProductItem/ProductItem";
 import "bootstrap/dist/css/bootstrap.min.css";
+import Cart from "./pages/User/Cart/Cart";
 function App() {
   return (
     <>
@@ -23,6 +24,7 @@ function App() {
           <Route path="/verify" element={<Verify />} />
 
           <Route path="/product" element={<ProductItem />} />
+          <Route path="/cart" element={<Cart />} />
         </Routes>
       </BrowserRouter>
       <ToastContainer
