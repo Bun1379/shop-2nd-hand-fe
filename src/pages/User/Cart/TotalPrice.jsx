@@ -1,4 +1,4 @@
-const TotalPrice = ({ total }) => {
+const TotalPrice = ({ total, handleCheckOut }) => {
   //   const [total, setTotal] = use(0);
 
   //   useEffect(() => {
@@ -22,7 +22,9 @@ const TotalPrice = ({ total }) => {
       <p className="fw-bold fs-2">Tổng đơn hàng</p>
       <p className="">Tổng sản phẩm: </p>
       <p className="fw-bold">Tổng thanh toán: {total} VND</p>
-      <button className="btn btn-success">Thanh toán</button>
+      <button className="btn btn-success" onClick={handleCheckOut}>
+        Thanh toán
+      </button>
     </div>
   );
 };

@@ -57,14 +57,14 @@ const Cart = () => {
     );
     setCart(newCart);
   };
-  // const handleCheckOut = () => {
-  //   const selectedItems = cart.filter((item) => item.selected);
-  //   if (selectedItems.length === 0) {
-  //     alert("Vui lòng chọn sản phẩm để mua");
-  //     return;
-  //   }
-  //   navigate.navigate("Checkout", { items: selectedItems });
-  // };
+  const handleCheckOut = () => {
+    const selectedItems = cart.filter((item) => item.selected);
+    if (selectedItems.length === 0) {
+      alert("Vui lòng chọn sản phẩm để mua");
+      return;
+    }
+    navigate("/check-out", { state: selectedItems });
+  };
   useEffect(() => {
     fetchDataCart();
   }, []);
@@ -75,7 +75,7 @@ const Cart = () => {
     setTotal(total);
   }, [cart]);
   return (
-    <UserLayout>
+    <div>
       <p className="fw-bold fs-3 p-3">Giỏ hàng</p>
       <div className="">
         {cart.map((item) => (
@@ -87,9 +87,9 @@ const Cart = () => {
             handleDeleteProduct={handleDeleteProduct}
           />
         ))}
-        <TotalPrice total={total} />
+        <TotalPrice total={total} handleCheckOut={handleCheckOut} />
       </div>
-    </UserLayout>
+    </div>
   );
 };
 export default Cart;
