@@ -11,12 +11,18 @@ import Home from "./pages/User/Home/Home";
 import ProductItem from "./components/ProductItem/ProductItem";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Cart from "./pages/User/Cart/Cart";
+import Checkout from "./pages/User/Checkout/Checkout";
+import UserLayout from "./layouts/UserLayout/UserLayout";
 function App() {
   return (
     <>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={<UserLayout />}>
+            <Route index element={<Home />} />
+            <Route path="cart" element={<Cart />} />
+            <Route path="check-out" element={<Checkout />} />
+          </Route>
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/forgot-pw" element={<ForgotPW />} />
@@ -24,7 +30,6 @@ function App() {
           <Route path="/verify" element={<Verify />} />
 
           <Route path="/product" element={<ProductItem />} />
-          <Route path="/cart" element={<Cart />} />
         </Routes>
       </BrowserRouter>
       <ToastContainer
