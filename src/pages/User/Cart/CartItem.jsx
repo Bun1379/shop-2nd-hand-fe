@@ -81,7 +81,7 @@ const CartItem = ({
         className="ms-4"
       />
       <div className="d-flex flex-column ms-4">
-        <p>Product Name {item.product.productName}</p>
+        <p className="fw-bold">{item.product.productName}</p>
         <p>Phân loại: </p>
       </div>
       <div className="d-flex flex-row ms-auto gap-3 align-items-center">
