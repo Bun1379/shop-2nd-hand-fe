@@ -53,6 +53,7 @@ const CartItem = ({
     const validQuantity = Math.max(1, newQuantity);
     if (maxQuantity && validQuantity > maxQuantity) {
       alert(`Số lượng tối đa là ${maxQuantity}`);
+      updateQuantity(maxQuantity);
       return;
     }
     updateQuantity(validQuantity);

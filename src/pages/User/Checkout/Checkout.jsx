@@ -1,4 +1,4 @@
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import CheckoutItem from "./CheckoutItem";
 import { useEffect, useState } from "react";
 import OrderAPI from "../../../api/OrderAPI";
@@ -7,6 +7,7 @@ import Select from "react-select";
 const Checkout = () => {
   const location = useLocation();
   const items = location.state;
+  const navigation = useNavigate();
 
   const options = [
     { value: "COD", label: "Tiền mặt" },
@@ -19,7 +20,10 @@ const Checkout = () => {
     address: "",
   });
   const [total, setTotal] = useState(0);
-  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState("COD");
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState({
+    value: "COD",
+    label: "Tiền mặt",
+  });
 
   const fetchDataUser = async () => {
     try {
@@ -43,12 +47,12 @@ const Checkout = () => {
       address: userInfo.address,
       phone: userInfo.phone,
       name: userInfo.username,
-      paymentMethod: selectedPaymentMethod,
+      paymentMethod: selectedPaymentMethod.value,
     };
     try {
       await OrderAPI.CreateOrder(data);
       alert("Mua hàng thành công");
-      //   navigation.navigate("Order", { initStatus: "PENDING" });
+      navigation("/order");
     } catch (error) {
       console.log(error.response?.data || "API error");
       alert(error.response?.data?.EM);

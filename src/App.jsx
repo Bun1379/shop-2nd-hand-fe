@@ -13,6 +13,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import Cart from "./pages/User/Cart/Cart";
 import Checkout from "./pages/User/Checkout/Checkout";
 import UserLayout from "./layouts/UserLayout/UserLayout";
+import Order from "./pages/User/Order/Order";
 import ProductDetail from "./pages/ProductDetail/ProductDetail";
 
 function App() {
@@ -25,6 +26,7 @@ function App() {
             <Route path="cart" element={<Cart />} />
             <Route path="check-out" element={<Checkout />} />
             <Route path="product-detail" element={<ProductDetail />} />
+            <Route path="order" element={<Order />} />
           </Route>
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
