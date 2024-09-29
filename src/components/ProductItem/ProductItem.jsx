@@ -1,15 +1,19 @@
 import React from 'react';
 import './ProductItem.css';
+import { useNavigate } from 'react-router-dom';
 
-const ProductItem = () => {
-    const images = "https://mabustudio.com/wp-content/uploads/2020/01/chup-trai-quan-ao-1-scaled.jpg"
-    const productName = "Áo thun nam"
-    const price = 100000
+const ProductItem = (item) => {
+    const navigate = useNavigate();
+    const product = item.product;
+    const handleClick = () => {
+        navigate('/product-detail', { state: { product } });
+    };
+
     return (
-        <div className="product-item">
-            <img src={images} alt={productName} />
-            <h3>{productName}</h3>
-            <p>{price.toLocaleString()} đ</p>
+        <div className="product-item" onClick={handleClick} style={{ cursor: 'pointer' }}>
+            <img src={item.product.images[0]} alt={item.product.productName} />
+            <h3>{item.product.productName}</h3>
+            <p>{item.product.price.toLocaleString()} đ</p>
         </div>
     );
 };

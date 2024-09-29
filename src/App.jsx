@@ -13,6 +13,8 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import Cart from "./pages/User/Cart/Cart";
 import Checkout from "./pages/User/Checkout/Checkout";
 import UserLayout from "./layouts/UserLayout/UserLayout";
+import ProductDetail from "./pages/ProductDetail/ProductDetail";
+
 function App() {
   return (
     <>
@@ -22,6 +24,7 @@ function App() {
             <Route index element={<Home />} />
             <Route path="cart" element={<Cart />} />
             <Route path="check-out" element={<Checkout />} />
+            <Route path="product-detail" element={<ProductDetail />} />
           </Route>
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
@@ -30,6 +33,8 @@ function App() {
           <Route path="/verify" element={<Verify />} />
 
           <Route path="/product" element={<ProductItem />} />
+
+
         </Routes>
       </BrowserRouter>
       <ToastContainer
