@@ -15,7 +15,7 @@ import Checkout from "./pages/User/Checkout/Checkout";
 import UserLayout from "./layouts/UserLayout/UserLayout";
 import Order from "./pages/User/Order/Order";
 import ProductDetail from "./pages/ProductDetail/ProductDetail";
-
+import UserProfile from "./pages/User/UserProfile/UserProfile";
 function App() {
   return (
     <>
@@ -27,6 +27,7 @@ function App() {
             <Route path="check-out" element={<Checkout />} />
             <Route path="product-detail" element={<ProductDetail />} />
             <Route path="order" element={<Order />} />
+            <Route path="user-profile" element={<UserProfile />} />
           </Route>
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />

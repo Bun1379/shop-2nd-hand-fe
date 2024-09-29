@@ -1,15 +1,36 @@
 import React, { useState, useEffect } from 'react';
-import { NavLink } from "react-router-dom";
-import { FaBell, FaShoppingCart, FaUser, FaSearch } from 'react-icons/fa'; // Import các icon cần thiết
+import { NavLink, useNavigate } from "react-router-dom";
+import { FaBell, FaShoppingCart, FaUser, FaSearch } from 'react-icons/fa';
+import { toast } from 'react-toastify';
 import './Header.css';
 
 function Header() {
+    const navigate = useNavigate();
     const [isLoggedIn, setIsLoggedIn] = useState(false);
 
     useEffect(() => {
         const token = localStorage.getItem('token');
-        setIsLoggedIn(!!token);  // Chuyển token thành boolean
+        setIsLoggedIn(!!token);
     }, []);
+
+    const [dropdownOpen, setDropdownOpen] = useState(false);
+
+    const handleMouseEnter = () => {
+        setDropdownOpen(true);
+    };
+
+    const handleMouseLeave = () => {
+        setDropdownOpen(false);
+    };
+
+    const handleLogout = () => {
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+        setIsLoggedIn(false);
+        toast.success('Đăng xuất thành công!');
+
+        navigate('/login');
+    };
 
     return (
         <nav className="header">
@@ -56,10 +77,35 @@ function Header() {
                                     <FaShoppingCart />
                                 </NavLink>
                             </li>
-                            <li>
-                                <NavLink to="/user">
+                            <li
+                                className="nav-item dropdown"
+                                onMouseEnter={handleMouseEnter}
+                                onMouseLeave={handleMouseLeave}
+                            >
+                                <NavLink to="#" className="nav-link">
                                     <FaUser />
                                 </NavLink>
+
+                                {/* Dropdown Menu */}
+                                {dropdownOpen && (
+                                    <ul className="dropdown-menu show">
+                                        <li>
+                                            <NavLink className="dropdown-item" to="/user-profile">
+                                                Tài khoản của tôi
+                                            </NavLink>
+                                        </li>
+                                        <li>
+                                            <NavLink className="dropdown-item" to="/order">
+                                                Đơn hàng
+                                            </NavLink>
+                                        </li>
+                                        <li>
+                                            <button className="dropdown-item" onClick={handleLogout}>
+                                                Đăng xuất
+                                            </button>
+                                        </li>
+                                    </ul>
+                                )}
                             </li>
                         </>
                     ) : (

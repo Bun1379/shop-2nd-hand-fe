@@ -1,0 +1,14 @@
+.user-profile .list-group-item.active {
+    background-color: white;
+    color: #388E3C;
+    border: #388E3C solid 2px;
+    font-weight: bold
+}
+
+.user-profile .list-group-item {
+    cursor: pointer;
+}
+
+.user-profile .list-group-item:hover {
+    background-color: #f0f0f0;
+}
