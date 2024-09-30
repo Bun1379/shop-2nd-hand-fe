@@ -19,7 +19,7 @@ const CheckoutItem = ({ item }) => {
       <div className="d-flex flex-row gap-5 align-items-center pe-5">
         <p className="mb-0">{item.product.price}</p>
         <p className="mb-0">{item.quantity}</p>
-        <p className="mb-0">{item.price}</p>
+        <p className="mb-0">{item.product.price * item.quantity}</p>
       </div>
     </div>
   );

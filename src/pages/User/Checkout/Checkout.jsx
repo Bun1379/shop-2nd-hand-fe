@@ -52,7 +52,7 @@ const Checkout = () => {
     try {
       await OrderAPI.CreateOrder(data);
       alert("Mua hàng thành công");
-      navigation("/order");
+      navigation("/user-profile", { state: { initialSection: "orders" } });
     } catch (error) {
       console.log(error.response?.data || "API error");
       alert(error.response?.data?.EM);

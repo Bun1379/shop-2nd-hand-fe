@@ -16,6 +16,7 @@ import UserLayout from "./layouts/UserLayout/UserLayout";
 import Order from "./pages/User/Order/Order";
 import ProductDetail from "./pages/ProductDetail/ProductDetail";
 import UserProfile from "./pages/User/UserProfile/UserProfile";
+import OrderDetail from "./pages/User/Order/OrderDetail";
 function App() {
   return (
     <>
@@ -27,17 +28,18 @@ function App() {
             <Route path="check-out" element={<Checkout />} />
             <Route path="product-detail" element={<ProductDetail />} />
             <Route path="order" element={<Order />} />
-            <Route path="user-profile" element={<UserProfile />} />
+            <Route path="order/:orderId" element={<OrderDetail />} />
+            <Route
+              path="user-profile"
+              element={<UserProfile initialSection="profile" />}
+            />
           </Route>
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/forgot-pw" element={<ForgotPW />} />
           <Route path="/reset-pw" element={<ResetPW />} />
           <Route path="/verify" element={<Verify />} />
-
           <Route path="/product" element={<ProductItem />} />
-
-
         </Routes>
       </BrowserRouter>
       <ToastContainer

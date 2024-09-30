@@ -1,10 +1,11 @@
 import OrderProductItem from "./OrderProductItem";
 
-const OrderItem = ({ order }) => {
+const OrderItem = ({ order, handleOnClickOrder }) => {
   return (
     <div
       className="bg-white w-75 border border-2 border-success d-flex flex-column justify-content-center mb-2"
       style={{ height: "auto", margin: "0 auto" }}
+      onClick={() => handleOnClickOrder(order._id)}
     >
       <div
         className="d-flex flex-row justify-content-between align-items-center border-bottom border-2"
