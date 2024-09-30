@@ -14,6 +14,8 @@ const UserAccount = ({ initialSection }) => {
     switch (activeSection) {
       case "profile":
         return <UpdateUser />;
+      case "orders":
+        return <Order />;
       case "notifications":
         return (
           <div>
@@ -44,6 +46,13 @@ const UserAccount = ({ initialSection }) => {
               onClick={() => setActiveSection("profile")}
             >
               Thông tin cá nhân
+            </li>
+            <li
+              className={`list-group-item ${activeSection === "orders" ? "active" : ""
+                }`}
+              onClick={() => setActiveSection("orders")}
+            >
+              Đơn mua
             </li>
             <li
               className={`list-group-item ${activeSection === "notifications" ? "active" : ""

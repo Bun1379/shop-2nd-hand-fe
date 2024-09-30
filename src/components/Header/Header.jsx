@@ -86,8 +86,12 @@ function Header() {
                       </NavLink>
                     </li>
                     <li>
-                      <NavLink className="dropdown-item" to="/order">
-                        Đơn hàng
+                      <NavLink
+                        className="dropdown-item"
+                        to="/user-profile"
+                        state={{ initialSection: "orders" }}
+                      >
+                        Đơn mua
                       </NavLink>
                     </li>
                     <li>
