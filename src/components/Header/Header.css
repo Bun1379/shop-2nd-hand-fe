@@ -74,3 +74,16 @@
     color: #888;
     pointer-events: none;
 }
+
+.header-nav-right .dropdown-item:hover {
+    background-color: #f0f0f0 !important;
+}
+
+.header-nav-right .dropdown-item.active {
+    background-color: transparent !important;
+    color: black !important;
+}
+
+.header-nav-right .dropdown-item.active:hover {
+    background-color: #f0f0f0 !important;
+}

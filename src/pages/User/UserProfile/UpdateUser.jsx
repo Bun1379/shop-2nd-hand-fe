@@ -51,15 +51,7 @@ const UpdateUser = () => {
             <form onSubmit={updateUser}>
                 <div className="mb-3">
                     <label htmlFor="email" className="form-label">Email:</label>
-                    <input
-                        type="email"
-                        className="form-control"
-                        id="email"
-                        name="email"
-                        placeholder="Nhập email"
-                        value={formData.email}
-                        readOnly
-                    />
+                    <span className="form-control bg-secondary bg-opacity-25">{formData.email}</span>
                 </div>
                 <div className="mb-3">
                     <label htmlFor="username" className="form-label">Họ tên:</label>

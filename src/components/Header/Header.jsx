@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink, useNavigate, useLocation } from "react-router-dom";
 import { FaBell, FaShoppingCart, FaUser, FaSearch } from "react-icons/fa";
 import { toast } from "react-toastify";
 import "./Header.css";
 
 function Header() {
+  const location = useLocation();
   const navigate = useNavigate();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
@@ -28,7 +29,6 @@ function Header() {
     localStorage.removeItem("user");
     setIsLoggedIn(false);
     toast.success("Đăng xuất thành công!");
-
     navigate("/login");
   };
 
@@ -86,11 +86,7 @@ function Header() {
                       </NavLink>
                     </li>
                     <li>
-                      <NavLink
-                        className="dropdown-item"
-                        to="/user-profile"
-                        state={{ initialSection: "orders" }}
-                      >
+                      <NavLink className="dropdown-item" to="/user-profile" state={{ initialSection: "orders" }}>
                         Đơn mua
                       </NavLink>
                     </li>

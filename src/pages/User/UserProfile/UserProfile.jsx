@@ -1,11 +1,13 @@
 import React, { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import "./UserProfile.css";
 import UpdateUser from "./UpdateUser";
 import Order from "../Order/Order";
+
 const UserAccount = ({ initialSection }) => {
   const location = useLocation();
-  console.log(location.state);
+  const user = JSON.parse(localStorage.getItem("user"));
+  console.log(user);
   const [activeSection, setActiveSection] = useState(
     location.state?.initialSection || initialSection || "profile"
   );
@@ -34,36 +36,33 @@ const UserAccount = ({ initialSection }) => {
         return null;
     }
   };
-
   return (
     <div className="container" style={{ marginTop: "100px" }}>
       <div className="row">
-        <div className="user-profile col-md-3">
-          <ul className="list-group">
+        <div className="user-profile col-md-3 text-center">
+          <img src={user.image} alt="Avatar" className="img-fluid rounded-circle" style={{ width: "100px", height: "100px" }} />
+
+          <ul className="list-group mt-3">
             <li
-              className={`list-group-item ${activeSection === "profile" ? "active" : ""
-                }`}
+              className={`list-group-item ${activeSection === "profile" ? "active" : ""}`}
               onClick={() => setActiveSection("profile")}
             >
               Thông tin cá nhân
             </li>
             <li
-              className={`list-group-item ${activeSection === "orders" ? "active" : ""
-                }`}
+              className={`list-group-item ${activeSection === "orders" ? "active" : ""}`}
               onClick={() => setActiveSection("orders")}
             >
               Đơn mua
             </li>
             <li
-              className={`list-group-item ${activeSection === "notifications" ? "active" : ""
-                }`}
+              className={`list-group-item ${activeSection === "notifications" ? "active" : ""}`}
               onClick={() => setActiveSection("notifications")}
             >
               Thông báo
             </li>
             <li
-              className={`list-group-item ${activeSection === "logout" ? "active" : ""
-                }`}
+              className={`list-group-item ${activeSection === "logout" ? "active" : ""}`}
               onClick={() => setActiveSection("logout")}
             >
               Đăng xuất
