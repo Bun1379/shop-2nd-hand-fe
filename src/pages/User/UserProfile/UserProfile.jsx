@@ -14,8 +14,6 @@ const UserAccount = ({ initialSection }) => {
     switch (activeSection) {
       case "profile":
         return <UpdateUser />;
-      case "orders":
-        return <Order />;
       case "notifications":
         return (
           <div>
@@ -41,33 +39,22 @@ const UserAccount = ({ initialSection }) => {
         <div className="user-profile col-md-3">
           <ul className="list-group">
             <li
-              className={`list-group-item ${
-                activeSection === "profile" ? "active" : ""
-              }`}
+              className={`list-group-item ${activeSection === "profile" ? "active" : ""
+                }`}
               onClick={() => setActiveSection("profile")}
             >
               Thông tin cá nhân
             </li>
             <li
-              className={`list-group-item ${
-                activeSection === "orders" ? "active" : ""
-              }`}
-              onClick={() => setActiveSection("orders")}
-            >
-              Đơn mua
-            </li>
-            <li
-              className={`list-group-item ${
-                activeSection === "notifications" ? "active" : ""
-              }`}
+              className={`list-group-item ${activeSection === "notifications" ? "active" : ""
+                }`}
               onClick={() => setActiveSection("notifications")}
             >
               Thông báo
             </li>
             <li
-              className={`list-group-item ${
-                activeSection === "logout" ? "active" : ""
-              }`}
+              className={`list-group-item ${activeSection === "logout" ? "active" : ""
+                }`}
               onClick={() => setActiveSection("logout")}
             >
               Đăng xuất
