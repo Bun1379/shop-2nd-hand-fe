@@ -1,0 +1,44 @@
+.categories {
+    border-radius: 10px;
+}
+
+.categories .input-group {
+    width: 100% !important;
+    margin-left: 0px !important;
+}
+
+.categories .list-group {
+    /* border: solid black; */
+    border-radius: 20px;
+    box-shadow: 0 0 10px #00000026;
+    display: block;
+
+}
+
+.categories .list-group-item {
+    display: flex;
+    align-items: center;
+    font-size: 1.1rem;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    border: 1px solid #ccc;
+}
+
+.categories .list-group-item:hover {
+    background-color: #f0f0f0;
+}
+
+.categories .list-group-item.active {
+    background-color: #397D54;
+    color: white;
+    border-color: white;
+}
+
+
+.categories .category-icon {
+    width: 30px;
+    height: auto;
+    margin-right: 10px;
+}
