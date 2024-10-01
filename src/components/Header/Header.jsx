@@ -9,6 +9,13 @@ function Header() {
   const navigate = useNavigate();
   const user = JSON.parse(localStorage.getItem("user"));
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [query, setQuery] = useState("");
+
+  const handleKeyPress = (e) => {
+    if (e.key === "Enter") {
+      navigate(`/search?query=${query}`);
+    }
+  };
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -53,7 +60,13 @@ function Header() {
         <ul className="header-nav-right">
           <li>
             <div className="header-search-container">
-              <input type="text" placeholder="Tìm kiếm..." />
+              <input
+                type="text"
+                placeholder="Tìm kiếm..."
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                onKeyDown={handleKeyPress}
+              />
               <FaSearch className="icon-search" />
             </div>
           </li>
@@ -87,7 +100,11 @@ function Header() {
                       </NavLink>
                     </li>
                     <li>
-                      <NavLink className="dropdown-item" to="/user-profile" state={{ initialSection: "orders" }}>
+                      <NavLink
+                        className="dropdown-item"
+                        to="/user-profile"
+                        state={{ initialSection: "orders" }}
+                      >
                         Đơn mua
                       </NavLink>
                     </li>

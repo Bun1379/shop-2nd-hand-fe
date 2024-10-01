@@ -17,6 +17,7 @@ import Order from "./pages/User/Order/Order";
 import ProductDetail from "./pages/ProductDetail/ProductDetail";
 import UserProfile from "./pages/User/UserProfile/UserProfile";
 import OrderDetail from "./pages/User/Order/OrderDetail";
+import Search from "./pages/User/Search/Search";
 function App() {
   return (
     <>
@@ -29,6 +30,7 @@ function App() {
             <Route path="product-detail" element={<ProductDetail />} />
             <Route path="order" element={<Order />} />
             <Route path="order/:orderId" element={<OrderDetail />} />
+            <Route path="search" element={<Search />} />
             <Route
               path="user-profile"
               element={<UserProfile initialSection="profile" />}
