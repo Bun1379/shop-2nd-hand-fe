@@ -7,6 +7,7 @@ import "./Header.css";
 function Header() {
   const location = useLocation();
   const navigate = useNavigate();
+  const user = JSON.parse(localStorage.getItem("user"));
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
@@ -74,7 +75,7 @@ function Header() {
                 onMouseLeave={handleMouseLeave}
               >
                 <NavLink to="#" className="nav-link">
-                  <FaUser />
+                  <img src={user.image} alt="Avatar" className="img-fluid rounded-circle" style={{ width: "40px", height: "40px" }} />
                 </NavLink>
 
                 {/* Dropdown Menu */}

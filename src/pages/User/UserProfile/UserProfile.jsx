@@ -22,7 +22,7 @@ const UserAccount = ({ initialSection }) => {
         return (
           <div>
             <h4>Thông báo</h4>
-            <p>Hiển thị thông báo của bạn.</p>
+            <p>Chưa có thông báo nào</p>
           </div>
         );
       case "logout":
@@ -40,7 +40,7 @@ const UserAccount = ({ initialSection }) => {
     <div className="container" style={{ marginTop: "100px" }}>
       <div className="row">
         <div className="user-profile col-md-3 text-center">
-          <img src={user.image} alt="Avatar" className="img-fluid rounded-circle" style={{ width: "100px", height: "100px" }} />
+          <img src={user.image} alt="Avatar" className="img-fluid rounded-circle" style={{ width: "200px", height: "200px" }} />
 
           <ul className="list-group mt-3">
             <li
