@@ -1,0 +1,25 @@
+.admin-container {
+  display: flex;
+  .admin-sidebar {
+    height: 100vh;
+  }
+  .admin-content {
+    width: 100%;
+    .admin-header {
+      height: 60px;
+      border: 1px solid #ccc;
+      display: flex;
+      justify-content: space-between;
+      padding: 0 20px;
+      align-items: center;
+      .left-side {
+        cursor: pointer;
+        font-size: 25px;
+        color: rgb(4, 42, 42);
+      }
+    }
+    .admin-main {
+      height: calc(100vh - 40px);
+    }
+  }
+}
