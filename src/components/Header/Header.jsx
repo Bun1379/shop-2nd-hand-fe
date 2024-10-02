@@ -56,6 +56,11 @@ function Header() {
           <li>
             <NavLink to="/">Unisex</NavLink>
           </li>
+          {localStorage.getItem("is_admin") === "true" && (
+            <li>
+              <NavLink to="/admin">Admin</NavLink>
+            </li>
+          )}
         </ul>
         <ul className="header-nav-right">
           <li>
@@ -88,7 +93,12 @@ function Header() {
                 onMouseLeave={handleMouseLeave}
               >
                 <NavLink to="#" className="nav-link">
-                  <img src={user.image} alt="Avatar" className="img-fluid rounded-circle" style={{ width: "40px", height: "40px" }} />
+                  <img
+                    src={user.image}
+                    alt="Avatar"
+                    className="img-fluid rounded-circle"
+                    style={{ width: "40px", height: "40px" }}
+                  />
                 </NavLink>
 
                 {/* Dropdown Menu */}

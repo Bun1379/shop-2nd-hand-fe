@@ -18,6 +18,7 @@ import ProductDetail from "./pages/ProductDetail/ProductDetail";
 import UserProfile from "./pages/User/UserProfile/UserProfile";
 import OrderDetail from "./pages/User/Order/OrderDetail";
 import Search from "./pages/User/Search/Search";
+import AdminLayout from "./layouts/AdminLayout/AdminLayout";
 function App() {
   return (
     <>
@@ -42,6 +43,10 @@ function App() {
           <Route path="/reset-pw" element={<ResetPW />} />
           <Route path="/verify" element={<Verify />} />
           <Route path="/product" element={<ProductItem />} />
+          <Route path="/admin" element={<AdminLayout />}>
+            <Route index element={<h1>Hello Admin</h1>} />
+          </Route>
+          <Route path="*" element={<h1>404 Not Found</h1>} />
         </Routes>
       </BrowserRouter>
       <ToastContainer
