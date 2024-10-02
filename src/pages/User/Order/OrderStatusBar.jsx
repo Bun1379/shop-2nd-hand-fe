@@ -13,7 +13,7 @@ const OrderStatusBar = ({ status, setStatus, totalOrder }) => {
     <div className="d-flex justify-content-center flex-column">
       <h3 className="text-center">Order Status</h3>
       <div
-        className="bg-white w-75 align-items-center justify-content-between d-flex flex-row"
+        className="bg-white w-100 align-items-center justify-content-between d-flex flex-row"
         style={{ height: "75px", margin: "0 auto" }}
       >
         {statusList.map((item, index) => (

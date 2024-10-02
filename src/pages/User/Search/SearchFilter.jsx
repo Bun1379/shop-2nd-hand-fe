@@ -1,7 +1,7 @@
-import './SearchFilter.css';
+import "./SearchFilter.css";
 import { FaList, FaSearch } from "react-icons/fa";
-import { useEffect, useState } from 'react';
-import CategoryAPI from '../../../api/categoryAPI';
+import { useEffect, useState } from "react";
+import CategoryAPI from "../../../api/categoryAPI";
 
 const SearchFilter = ({ onSelectCategory, onSearch }) => {
   const [categories, setCategories] = useState([]);
@@ -22,17 +22,19 @@ const SearchFilter = ({ onSelectCategory, onSearch }) => {
 
   const handleCategorySelect = (categoryId) => {
     if (selectedCategories.includes(categoryId)) {
-      setSelectedCategories(selectedCategories.filter((id) => id !== categoryId));
+      setSelectedCategories(
+        selectedCategories.filter((id) => id !== categoryId)
+      );
     } else {
       setSelectedCategories([...selectedCategories, categoryId]);
     }
-    onSelectCategory(categoryId, '');
+    onSelectCategory(categoryId, "");
   };
 
   return (
     <div className="col-md-3">
       <div className="categories">
-        <div className="input-group mb-2">
+        <div className="input-group my-3">
           <input
             type="text"
             className="form-control search-text"
@@ -58,9 +60,11 @@ const SearchFilter = ({ onSelectCategory, onSearch }) => {
             categories.map((category) => (
               <div
                 key={category._id}
-                className={`list-group-item list-group-item-action d-flex align-items-center ${selectedCategories.includes(category._id) ? 'active' : ''}`}
+                className={`list-group-item list-group-item-action d-flex align-items-center ${
+                  selectedCategories.includes(category._id) ? "active" : ""
+                }`}
                 onClick={() => handleCategorySelect(category._id)}
-                style={{ cursor: 'pointer' }}
+                style={{ cursor: "pointer" }}
               >
                 <span className="flex-grow-1">{category.name}</span>
               </div>

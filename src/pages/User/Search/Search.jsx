@@ -8,7 +8,7 @@ import ReactSelect from "react-select";
 const Search = () => {
   const [searchParams] = useSearchParams();
   const [products, setProducts] = useState([]);
-  const [sort, setSort] = useState({ value: 0, label: "Mặc định", });
+  const [sort, setSort] = useState({ value: 0, label: "Mặc định" });
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [selectedCategories, setSelectedCategories] = useState([]);
@@ -24,7 +24,7 @@ const Search = () => {
       const response = await ProductAPI.GetProducts({
         search: searchQuery,
         sortOrder: sort.value,
-        category: selectedCategories.join(','),
+        category: selectedCategories.join(","),
         page: 1,
       });
       //   console.log(search);
@@ -56,9 +56,11 @@ const Search = () => {
 
   const handleCategorySelect = (id) => {
     if (selectedCategories.includes(id)) {
-      setSelectedCategories(prev => prev.filter(categoryId => categoryId !== id));
+      setSelectedCategories((prev) =>
+        prev.filter((categoryId) => categoryId !== id)
+      );
     } else {
-      setSelectedCategories(prev => [...prev, id]);
+      setSelectedCategories((prev) => [...prev, id]);
     }
   };
 
@@ -68,8 +70,11 @@ const Search = () => {
   }, [searchParams, sort, selectedCategories]);
 
   return (
-    <div className="d-flex flex-row">
-      <SearchFilter onSelectCategory={handleCategorySelect} onSearch={fetchData} />
+    <div className="d-flex flex-row gap-3">
+      <SearchFilter
+        onSelectCategory={handleCategorySelect}
+        onSearch={fetchData}
+      />
       <div className="text-center w-75">
         Kết quả tìm kiếm cho: {searchParams.get("query")}
         <ReactSelect options={options} value={sort} onChange={setSort} />

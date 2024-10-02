@@ -19,7 +19,6 @@ const SideBar = ({ image, collapsed, toggled, handleToggleSidebar }) => {
             },
           }}
         >
-          {/* <SidebarHeader icon={<FaRegLaughWink />}></SidebarHeader> */}
           <MenuItem
             icon={<FaHome />}
             component={<Link to="/" />}
@@ -33,7 +32,10 @@ const SideBar = ({ image, collapsed, toggled, handleToggleSidebar }) => {
             Thống kê
           </MenuItem>
           <SubMenu label="Quản lý" icon={<CiBoxList />}>
-            <MenuItem icon={<GiClothes />} component={<Link to="/dashboard" />}>
+            <MenuItem
+              icon={<GiClothes />}
+              component={<Link to="/admin/product" />}
+            >
               {" "}
               Sản phẩm
             </MenuItem>

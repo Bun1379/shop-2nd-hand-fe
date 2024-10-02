@@ -10,7 +10,6 @@ const AdminLayout = () => {
     setCollapsed(!collapsed);
   };
 
-  // Kiểm tra quyền admin, nếu không phải admin, chuyển hướng về trang login
   if (localStorage.getItem("is_admin") !== "true") {
     return <Navigate to="/login" />;
   }
