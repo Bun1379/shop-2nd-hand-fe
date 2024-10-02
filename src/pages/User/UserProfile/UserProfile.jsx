@@ -8,7 +8,6 @@ import Notification from "../Notification/Notification";
 const UserAccount = ({ initialSection }) => {
   const location = useLocation();
   const user = JSON.parse(localStorage.getItem("user"));
-  console.log(user);
   const [activeSection, setActiveSection] = useState(
     location.state?.initialSection || initialSection || "profile"
   );
