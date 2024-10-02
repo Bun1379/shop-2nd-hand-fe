@@ -57,3 +57,11 @@ body {
 .btn-primary:active {
   background-color: #A8E0B7;
 }
+
+.border-primary {
+  border-color: #397D54 !important;
+}
+
+.text-primary {
+  color: #397D54 !important;
+}

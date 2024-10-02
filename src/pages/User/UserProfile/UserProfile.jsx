@@ -38,8 +38,8 @@ const UserAccount = ({ initialSection }) => {
           <img
             src={user.image}
             alt="Avatar"
-            className="img-fluid rounded-circle"
-            style={{ width: "100px", height: "100px" }}
+            className="img-fluid rounded-circle border border-2 border-primary"
+            style={{ width: "200px", height: "200px" }}
           />
 
           <ul className="list-group mt-3">
