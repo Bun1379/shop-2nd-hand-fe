@@ -12,6 +12,7 @@ const ProductDetail = () => {
   const location = useLocation();
   const { product } = location.state;
   const [quantity, setQuantity] = useState(1);
+  const [selectedImage, setSelectedImage] = useState(product.images[0]);
 
   const handleAddToCart = async () => {
     try {
@@ -25,6 +26,10 @@ const ProductDetail = () => {
     } catch (error) {
       toast.error(error.response.data.EM);
     }
+  };
+
+  const setMainImage = (image) => {
+    setSelectedImage(image);
   };
 
   const handleBuyNow = () => {
@@ -52,9 +57,10 @@ const ProductDetail = () => {
         <div className="col-md-6">
           <div className="product-image">
             <img
-              src={product.images[0]}
+              src={selectedImage}
               alt={product.productName}
               className="img-fluid"
+              style={{ width: "400px", height: "auto" }}
             />
           </div>
           {/* Hình ảnh phụ */}
@@ -67,6 +73,7 @@ const ProductDetail = () => {
                   alt={`Thumbnail ${index}`}
                   className="img-thumbnail me-2"
                   style={{ width: "80px", height: "80px" }}
+                  onClick={() => setMainImage(image)}
                 />
               ))}
           </div>
@@ -78,10 +85,13 @@ const ProductDetail = () => {
           <h3 className="text-danger mt-5">
             {product.price.toLocaleString()} đ
           </h3>
-
+          <p className="mt-3">
+            <span className="fw-bold">Số lượng hiện có:</span>{" "}
+            {product.quantity}
+          </p>
           {/* Lựa chọn số lượng và thêm vào giỏ hàng */}
-          <div className="product-actions mt-3 ">
-            <div className="d-flex flex-row ms-auto gap-3 align-items-center mt-5">
+          <div className="product-actions">
+            <div className="d-flex flex-row ms-auto gap-3 align-items-center">
               <label htmlFor="quantity" className="me-2">
                 Số lượng:
               </label>

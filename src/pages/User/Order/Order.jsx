@@ -43,7 +43,11 @@ const Order = () => {
 
   return (
     <div>
-      <OrderStatusBar status={status} setStatus={setStatus} />
+      <OrderStatusBar
+        status={status}
+        setStatus={setStatus}
+        totalOrder={totalOrder}
+      />
       {listOrder.length === 0 && (
         <div className="text-center mt-4 text-primary">
           Không có đơn hàng nào

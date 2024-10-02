@@ -3,7 +3,7 @@ import OrderProductItem from "./OrderProductItem";
 const OrderItem = ({ order, handleOnClickOrder }) => {
   return (
     <div
-      className="bg-white w-75 border border-2 border-success d-flex flex-column justify-content-center mb-2"
+      className="bg-white w-100 border border-2 border-success d-flex flex-column justify-content-center mb-2"
       style={{ height: "auto", margin: "0 auto" }}
       onClick={() => handleOnClickOrder(order._id)}
     >

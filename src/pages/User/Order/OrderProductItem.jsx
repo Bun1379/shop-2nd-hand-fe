@@ -6,7 +6,7 @@ const OrderProductItem = ({ product, quantity }) => {
     >
       <div className="d-flex align-items-center">
         <img
-          src="https://via.placeholder.com/150"
+          src={product.images[0] || "https://via.placeholder.com/150"}
           alt="product"
           style={{ width: "50px", height: "50px" }}
           className="ms-4"

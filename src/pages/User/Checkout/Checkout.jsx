@@ -3,6 +3,7 @@ import CheckoutItem from "./CheckoutItem";
 import { useEffect, useState } from "react";
 import OrderAPI from "../../../api/OrderAPI";
 import Select from "react-select";
+import { toast } from "react-toastify";
 
 const Checkout = () => {
   const location = useLocation();
@@ -52,10 +53,10 @@ const Checkout = () => {
     try {
       await OrderAPI.CreateOrder(data);
       alert("Mua hàng thành công");
+      toast.success("Mua hàng thành công");
       navigation("/user-profile", { state: { initialSection: "orders" } });
     } catch (error) {
-      console.log(error.response?.data || "API error");
-      alert(error.response?.data?.EM);
+      toast.error(error.response?.data?.EM);
     }
   };
 

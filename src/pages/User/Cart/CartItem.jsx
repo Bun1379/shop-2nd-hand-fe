@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import CartAPI from "../../../api/CartAPI";
+import { toast } from "react-toastify";
 
 const CartItem = ({
   item,
@@ -32,6 +33,7 @@ const CartItem = ({
       handleUpdateCart(productId, newQuantity);
     } catch (error) {
       console.log(error.response?.data || "API error");
+      toast.error(error.response?.data?.EM);
     }
   };
 
@@ -41,7 +43,6 @@ const CartItem = ({
     if (/^\d*$/.test(value)) {
       const validQuantity = Math.max(1, value);
       if (maxQuantity && validQuantity > maxQuantity) {
-        alert(`Số lượng tối đa là ${maxQuantity}`);
         updateQuantity(maxQuantity);
         return;
       }
@@ -52,7 +53,7 @@ const CartItem = ({
   const handleQuantityButton = (newQuantity) => {
     const validQuantity = Math.max(1, newQuantity);
     if (maxQuantity && validQuantity > maxQuantity) {
-      alert(`Số lượng tối đa là ${maxQuantity}`);
+      toast.error(`Số lượng tối đa là ${maxQuantity}`);
       updateQuantity(maxQuantity);
       return;
     }
@@ -76,7 +77,7 @@ const CartItem = ({
         onChange={handleCheckbox}
       />
       <img
-        src="https://via.placeholder.com/150"
+        src={item.product.images[0]}
         alt="product"
         style={{ width: "75px", height: "75px" }}
         className="ms-4"

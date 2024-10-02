@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-const OrderStatusBar = ({ status, setStatus }) => {
+const OrderStatusBar = ({ status, setStatus, totalOrder }) => {
   const statusList = [
     "ALL",
     "PENDING",
@@ -19,13 +19,20 @@ const OrderStatusBar = ({ status, setStatus }) => {
         {statusList.map((item, index) => (
           <div
             key={index}
-            className={`d-flex justify-content-center align-items-center border-bottom border-2 p-2  ${
+            className={`d-flex justify-content-center align-items-center border-bottom border-2 p-2 flex-row ${
               status === item ? "border-success" : ""
             }`}
             style={{ width: "20%" }}
             onClick={() => setStatus(item)}
           >
-            {item}
+            {item}{" "}
+            <p className="mb-0">
+              (
+              {item === "ALL"
+                ? totalOrder.length
+                : totalOrder.filter((order) => order.status === item).length}
+              )
+            </p>
           </div>
         ))}
       </div>

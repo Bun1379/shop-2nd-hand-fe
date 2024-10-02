@@ -6,7 +6,7 @@ const CheckoutItem = ({ item }) => {
     >
       <div className="d-flex align-items-center">
         <img
-          src="https://via.placeholder.com/150"
+          src={item.product.images[0]}
           alt="product"
           style={{ width: "50px", height: "50px" }}
           className="ms-4"
