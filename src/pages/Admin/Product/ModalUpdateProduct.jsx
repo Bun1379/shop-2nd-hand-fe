@@ -1,16 +1,14 @@
-import Button from "react-bootstrap/Button";
-import Modal from "react-bootstrap/Modal";
-// import { postCreateUser } from "../../../services/apiService";
 import { useEffect, useState } from "react";
-import { toast } from "react-toastify";
-import ReactSelect from "react-select";
 import CategoryAPI from "../../../api/categoryAPI";
 import UploadAPI from "../../../api/UploadAPI";
 import ProductAPI from "../../../api/ProductAPI";
-const ModalAddProduct = ({ showAdd, setShowAdd }) => {
-  // const [show, setShow] = useState(false);
-  const setShow = setShowAdd;
-  const show = showAdd;
+import { toast } from "react-toastify";
+import { Button, Modal } from "react-bootstrap";
+import ReactSelect from "react-select";
+
+const ModalUpdateProduct = ({ showUpdate, setShowUpdate, product }) => {
+  const setShow = setShowUpdate;
+  const show = showUpdate;
   const optionsSize = [
     {
       value: "S",
@@ -43,8 +41,9 @@ const ModalAddProduct = ({ showAdd, setShowAdd }) => {
   const [selectedCategory, setSelectedCategory] = useState([]);
   const [price, setPrice] = useState(0);
   const [quantity, setQuantity] = useState(0);
-  const [image, setImage] = useState([]);
+  //   const [image, setImage] = useState([]);
   const [listPreviewImage, setListPreviewImage] = useState([]);
+  const [actionsImage, setActionsImage] = useState([]);
 
   const handleClose = () => {
     setShow(false);
@@ -58,9 +57,8 @@ const ModalAddProduct = ({ showAdd, setShowAdd }) => {
     setPrice(0);
     setQuantity(0);
     setListPreviewImage([]);
-    setImage([]);
+    setActionsImage([]);
   };
-
   const fetchCategory = async () => {
     try {
       const response = await CategoryAPI.getAllCategories();
@@ -73,15 +71,14 @@ const ModalAddProduct = ({ showAdd, setShowAdd }) => {
   const handleChangeCate = (event) => {
     const cateId = event.target.value;
     const cate = category.find((item) => item._id === cateId);
-    if (!cate) return;
-    const isExist = selectedCategory.find((item) => item === cate);
+    const isExist = selectedCategory.find((item) => item._id === cate._id);
     if (!isExist) {
       setSelectedCategory([...selectedCategory, cate]);
     }
   };
 
-  const handleRemoveCate = (cateId) => {
-    const newCate = selectedCategory.filter((item) => item._id !== cateId);
+  const handleRemoveCate = (id) => {
+    const newCate = selectedCategory.filter((item) => item._id !== id);
     setSelectedCategory(newCate);
   };
 
@@ -91,59 +88,84 @@ const ModalAddProduct = ({ showAdd, setShowAdd }) => {
         ...listPreviewImage,
         URL.createObjectURL(event.target.files[0]),
       ]);
-      setImage([...image, event.target.files[0]]);
+      setActionsImage([
+        ...actionsImage,
+        {
+          action: "add",
+          image: event.target.files[0],
+        },
+      ]);
     }
   };
 
   const handleDeleteImage = (index) => {
-    const newImage = image.filter((item, idx) => idx !== index);
-    const newPreview = listPreviewImage.filter((item, idx) => idx !== index);
-    setImage(newImage);
-    setListPreviewImage(newPreview);
+    const urlDeleted = listPreviewImage[index];
+    const newImage = listPreviewImage.filter((item, idx) => idx !== index);
+    setListPreviewImage(newImage);
+    setActionsImage([
+      ...actionsImage,
+      {
+        action: "delete",
+        image: urlDeleted,
+      },
+    ]);
   };
 
-  const handleCreateProduct = async () => {
-    if (
-      !name ||
-      !description ||
-      !size ||
-      !price ||
-      !image ||
-      !selectedCategory ||
-      !quantity
-    ) {
-      toast.error("Vui lòng nhập đầy đủ thông tin");
-      return;
-    }
+  const handleUpdateProduct = async () => {
     const data = {
       productName: name,
       description,
       size: size.value,
+      category: selectedCategory.map((item) => item._id),
       price,
       quantity,
-      category: selectedCategory.map((item) => item._id),
+      // actionsImage,
     };
-    const images = [];
-    for (let i = 0; i < image.length; i++) {
-      const response = await UploadAPI.Upload(image[i]);
-      if (response.status === 200) {
-        images.push(response.data.DT);
+    let actions = [];
+    for (const item of actionsImage) {
+      if (item.action === "add") {
+        let response = await UploadAPI.Upload(item.image);
+        console.log(response);
+        actions.push({
+          action: "add",
+          url: response.data.DT,
+        });
+      } else {
+        actions.push({
+          action: "delete",
+          url: item.image,
+        });
       }
     }
-    data.images = images;
+    data.actions = actions;
     console.log(data);
-    const response = await ProductAPI.CreateProduct(data);
+    let response = await ProductAPI.UpdateProduct(product._id, data);
     if (response.status === 200) {
-      toast.success("Tạo sản phẩm thành công");
-      handleClose();
+      toast.success("Update product successfully");
+      setShow(false);
     } else {
-      toast.error("Tạo sản phẩm thất bại");
+      toast.error("Update product failed");
     }
   };
 
   useEffect(() => {
     fetchCategory();
-  }, []);
+  });
+
+  useEffect(() => {
+    if (product) {
+      setName(product.productName);
+      setDescription(product.description);
+      setSize({
+        value: product.size,
+        label: product.size,
+      });
+      setPrice(product.price);
+      setQuantity(product.quantity);
+      setSelectedCategory(product.category);
+      setListPreviewImage(product.images);
+    }
+  }, [product]);
 
   return (
     <>
@@ -181,11 +203,7 @@ const ModalAddProduct = ({ showAdd, setShowAdd }) => {
             </div>
             <div className="col-md-3">
               <label className="form-label">Danh mục: </label>
-              <select
-                className="form-select"
-                // value={role}
-                onChange={handleChangeCate}
-              >
+              <select className="form-select" onChange={handleChangeCate}>
                 <option value="0">Chọn danh mục</option>
                 {category.map((item) => (
                   <option key={item._id} value={item._id}>
@@ -206,19 +224,21 @@ const ModalAddProduct = ({ showAdd, setShowAdd }) => {
             <div className="col-md-12">
               <label className="form-label">Danh mục được chọn: </label>
               <ul>
-                {selectedCategory.map((item) => {
-                  return (
-                    <div className="d-flex align-items-center" key={item._id}>
-                      <li>{item.name}</li>
-                      <button
-                        className="btn btn-primary ms-2"
-                        onClick={() => handleRemoveCate(item._id)}
-                      >
-                        X
-                      </button>
-                    </div>
-                  );
-                })}
+                {selectedCategory &&
+                  selectedCategory.length > 0 &&
+                  selectedCategory.map((item) => {
+                    return (
+                      <div className="d-flex align-items-center" key={item._id}>
+                        <li>{item.name}</li>
+                        <button
+                          className="btn btn-primary ms-2"
+                          onClick={() => handleRemoveCate(item._id)}
+                        >
+                          X
+                        </button>
+                      </div>
+                    );
+                  })}
               </ul>
             </div>
             <div className="col-md-12">
@@ -267,7 +287,7 @@ const ModalAddProduct = ({ showAdd, setShowAdd }) => {
           <Button variant="secondary" onClick={handleClose}>
             Close
           </Button>
-          <Button variant="primary" onClick={handleCreateProduct}>
+          <Button variant="primary" onClick={handleUpdateProduct}>
             Save Changes
           </Button>
         </Modal.Footer>
@@ -275,4 +295,5 @@ const ModalAddProduct = ({ showAdd, setShowAdd }) => {
     </>
   );
 };
-export default ModalAddProduct;
+
+export default ModalUpdateProduct;

@@ -16,6 +16,11 @@ class ProductAPI {
     return axiosPrivate.post(url, data);
   }
 
+  static async UpdateProduct(id, data) {
+    const url = `/product/${id}`;
+    return axiosPrivate.put(url, data);
+  }
+
   //     static async UpdateProduct(id, data) {
   //         const url = `/products/${id}`;
   //         return axiosPrivate.put(url, data);

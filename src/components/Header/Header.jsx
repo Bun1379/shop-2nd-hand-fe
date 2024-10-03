@@ -35,6 +35,7 @@ function Header() {
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
+    localStorage.removeItem("is_admin");
     setIsLoggedIn(false);
     toast.success("Đăng xuất thành công!");
     navigate("/login");
@@ -43,7 +44,9 @@ function Header() {
   return (
     <div className="header">
       <nav className="navbar navbar-expand-lg navbar-light">
-        <div className="container-fluid"> {/* Sử dụng container-fluid và padding */}
+        <div className="container-fluid">
+          {" "}
+          {/* Sử dụng container-fluid và padding */}
           <NavLink className="navbar-brand" to="/">
             Logo shop
           </NavLink>
@@ -75,6 +78,13 @@ function Header() {
                   Unisex
                 </NavLink>
               </li>
+              {localStorage.getItem("is_admin") === "true" && (
+                <li className="nav-item">
+                  <NavLink className="nav-link" to="/admin">
+                    ADMIN
+                  </NavLink>
+                </li>
+              )}
             </ul>
 
             <div className="header-search-container">
@@ -123,8 +133,9 @@ function Header() {
                       />
                     </NavLink>
                     <ul
-                      className={`dropdown-menu dropdown-menu-end ${dropdownOpen ? "show" : ""
-                        }`}
+                      className={`dropdown-menu dropdown-menu-end ${
+                        dropdownOpen ? "show" : ""
+                      }`}
                     >
                       <li>
                         <NavLink className="dropdown-item" to="/user-profile">
