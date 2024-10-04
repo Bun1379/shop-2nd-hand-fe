@@ -15,6 +15,11 @@ class OrderAPI {
     const url = `/order/${orderId}`;
     return axiosPrivate.get(url);
   }
+
+  static async GetProductPurchased() {
+    const url = "/order/product-purchased";
+    return axiosPrivate.get(url);
+  }
 }
 
 export default OrderAPI;

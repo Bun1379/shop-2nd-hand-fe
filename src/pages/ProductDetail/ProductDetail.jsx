@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "./ProductDetail.css";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
@@ -6,6 +6,9 @@ import { FaPlus, FaMinus } from "react-icons/fa";
 import { toast } from "react-toastify";
 
 import CartAPI from "../../api/CartAPI";
+import ReviewAPI from "../../api/ReviewAPI";
+import Review from "../User/Review/Review";
+import RecentlyViewedProducts from "../../components/RecentlyView/RecentlyView";
 
 const ProductDetail = () => {
   const navigate = useNavigate();
@@ -13,6 +16,7 @@ const ProductDetail = () => {
   const { product } = location.state;
   const [quantity, setQuantity] = useState(1);
   const [selectedImage, setSelectedImage] = useState(product.images[0]);
+  const [reviews, setReviews] = useState([]);
 
   const handleAddToCart = async () => {
     try {
@@ -49,6 +53,37 @@ const ProductDetail = () => {
   const handleDecrease = () => {
     setQuantity((prevQuantity) => Math.max(1, prevQuantity - 1));
   };
+
+  const fetchReviews = async () => {
+    const response = await ReviewAPI.GetReviewByProduct(product._id);
+    if (response.status === 200) {
+      setReviews(response.data.DT);
+    } else {
+      toast.error(response.data.EM);
+    }
+  };
+
+  const addToRecentlyViewed = (product) => {
+    const recentlyViewed =
+      JSON.parse(localStorage.getItem("recentlyViewed")) || [];
+
+    if (!recentlyViewed.some((item) => item._id === product._id)) {
+      recentlyViewed.unshift(product);
+      if (recentlyViewed.length > 5) {
+        recentlyViewed.pop();
+      }
+      localStorage.setItem("recentlyViewed", JSON.stringify(recentlyViewed));
+    }
+  };
+
+  useEffect(() => {
+    fetchReviews();
+    setMainImage(product.images[0]);
+  }, [product]);
+
+  useEffect(() => {
+    addToRecentlyViewed(product);
+  }, []);
 
   return (
     <div className="product-detail-container border border-success p-3 border-2">
@@ -139,6 +174,10 @@ const ProductDetail = () => {
           <p>{product.description || "Không có thông tin mô tả chi tiết."}</p>
         </div>
       </div>
+      {reviews.length === 0 && <h4>Chưa có đánh giá nào</h4>}
+      {reviews.length > 0 && <h4>Đánh giá sản phẩm ({reviews.length})</h4>}
+      {reviews.length > 0 && <Review reviews={reviews} />}
+      <RecentlyViewedProducts />
     </div>
   );
 };
