@@ -43,6 +43,7 @@ const CartItem = ({
     if (/^\d*$/.test(value)) {
       const validQuantity = Math.max(1, value);
       if (maxQuantity && validQuantity > maxQuantity) {
+        toast.error(`Số lượng tối đa là ${maxQuantity}`);
         updateQuantity(maxQuantity);
         return;
       }

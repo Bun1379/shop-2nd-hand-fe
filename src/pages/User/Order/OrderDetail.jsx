@@ -83,7 +83,11 @@ const OrderDetail = ({}) => {
                   Phương thức thanh toán:
                   {order.paymentMethod === "COD" ? "Tiền mặt" : "Chuyển khoản"}
                 </p>
-                <p className="fw-bold mb-0 ms-3">Mã khuyến mãi: ...</p>
+                {order.discountCode && (
+                  <p className="fw-bold mb-0 ms-3">
+                    Mã khuyến mãi: {order.discountCode}
+                  </p>
+                )}
                 <p className="fw-bold mb-0 ms-3">
                   Tổng tiền: {order.totalAmount}
                 </p>

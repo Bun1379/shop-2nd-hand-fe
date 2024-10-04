@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import OrderAPI from "../../../api/OrderAPI";
 import Select from "react-select";
 import { toast } from "react-toastify";
+import DiscountAPI from "../../../api/DiscountAPI";
 
 const Checkout = () => {
   const location = useLocation();
@@ -21,10 +22,13 @@ const Checkout = () => {
     address: "",
   });
   const [total, setTotal] = useState(0);
+  const [afterDiscount, setAfterDiscount] = useState(0);
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState({
     value: "COD",
     label: "Tiền mặt",
   });
+  const [coupon, setCoupon] = useState("");
+  const [discountCode, setDiscountCode] = useState("");
 
   const fetchDataUser = async () => {
     try {
@@ -44,11 +48,12 @@ const Checkout = () => {
         productId: item.product._id,
         quantity: item.quantity,
       })),
-      totalAmount: total,
+      totalAmount: afterDiscount,
       address: userInfo.address,
       phone: userInfo.phone,
       name: userInfo.username,
       paymentMethod: selectedPaymentMethod.value,
+      discountCode: discountCode,
     };
     try {
       await OrderAPI.CreateOrder(data);
@@ -57,6 +62,20 @@ const Checkout = () => {
       navigation("/user-profile", { state: { initialSection: "orders" } });
     } catch (error) {
       toast.error(error.response?.data?.EM);
+      console.log(error);
+    }
+  };
+
+  const handleCouponClick = async () => {
+    try {
+      const response = await DiscountAPI.getDiscountPercentages(coupon);
+      if (response.status === 200) {
+        setAfterDiscount((total * (100 - response.data.DT)) / 100);
+        setDiscountCode(coupon);
+        toast.success("Áp dụng mã giảm giá thành công");
+      }
+    } catch (error) {
+      toast.error(error.response.data.EM);
     }
   };
 
@@ -67,6 +86,7 @@ const Checkout = () => {
       total += item.price;
     });
     setTotal(total);
+    setAfterDiscount(total);
   }, []);
   console.log(items);
   return (
@@ -140,8 +160,17 @@ const Checkout = () => {
                   onChange={setSelectedPaymentMethod}
                 />
               </p>
-              <p className="fw-bold mb-0 ms-3">Mã khuyến mãi: ...</p>
-              <p className="fw-bold mb-0 ms-3">Tổng tiền: {total}</p>
+              <p className="fw-bold mb-0 ms-3">Mã khuyến mãi: </p>
+              <input
+                className="form-control"
+                type="text"
+                value={coupon}
+                onChange={(e) => setCoupon(e.target.value)}
+              />
+              <button className="btn btn-primary" onClick={handleCouponClick}>
+                Áp dụng
+              </button>
+              <p className="fw-bold mb-0 ms-3">Tổng tiền: {afterDiscount}</p>
             </div>
           </div>
           <button
