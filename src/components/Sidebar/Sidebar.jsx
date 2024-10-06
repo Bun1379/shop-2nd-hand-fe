@@ -40,7 +40,10 @@ const SideBar = ({ image, collapsed, toggled, handleToggleSidebar }) => {
               {" "}
               Sản phẩm
             </MenuItem>
-            <MenuItem icon={<FaUserCog />} component={<Link to="/admin" />}>
+            <MenuItem
+              icon={<FaUserCog />}
+              component={<Link to="/admin/user" />}
+            >
               {" "}
               Người dùng
             </MenuItem>

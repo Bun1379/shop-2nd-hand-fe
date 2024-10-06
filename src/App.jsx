@@ -21,6 +21,7 @@ import Search from "./pages/User/Search/Search";
 import AdminLayout from "./layouts/AdminLayout/AdminLayout";
 import Product from "./pages/Admin/Product/Product";
 import Discount from "./pages/Admin/Discount/Discount";
+import User from "./pages/Admin/User/User";
 function App() {
   return (
     <>
@@ -49,6 +50,7 @@ function App() {
             <Route index element={<h1>Hello Admin</h1>} />
             <Route path="product" element={<Product />} />
             <Route path="discount" element={<Discount />} />
+            <Route path="user" element={<User />} />
           </Route>
           <Route path="*" element={<h1>404 Not Found</h1>} />
         </Routes>
