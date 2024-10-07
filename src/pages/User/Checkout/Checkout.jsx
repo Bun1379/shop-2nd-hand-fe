@@ -107,9 +107,12 @@ const Checkout = () => {
             <p className="mb-0 fw-bold">Thành tiền</p>
           </div>
         </div>
-        {items.map((item) => (
-          <CheckoutItem key={item.product._id} item={item} />
-        ))}
+        <div className="w-75" style={{ margin: "0 auto" }}>
+          {items.map((item) => (
+            <CheckoutItem key={item.product._id} item={item} />
+          ))}
+        </div>
+
         <div
           className="d-flex flex-column shadow border w-75 border-success mb-2 border-2 p-4 gap-3"
           style={{ height: "auto", margin: "0 auto" }}

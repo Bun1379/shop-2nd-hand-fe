@@ -47,7 +47,7 @@ const SideBar = ({ image, collapsed, toggled, handleToggleSidebar }) => {
               {" "}
               Người dùng
             </MenuItem>
-            <MenuItem icon={<FaBox />} component={<Link to="/admin" />}>
+            <MenuItem icon={<FaBox />} component={<Link to="/admin/order" />}>
               {" "}
               Đơn hàng
             </MenuItem>
