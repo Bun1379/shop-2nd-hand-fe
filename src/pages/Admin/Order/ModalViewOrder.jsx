@@ -10,7 +10,7 @@ const ModalViewOrder = ({ show, setShowView, order }) => {
   const [products, setProducts] = useState([]);
   const [totalAmount, setTotalAmount] = useState(0);
   const [paymentMethod, setPaymentMethod] = useState("");
-  const [discountCode, setDiscountCode] = useState("");
+  const [discountCode, setDiscountCode] = useState({});
 
   const handleClose = () => {
     setShowView(false);
@@ -71,7 +71,7 @@ const ModalViewOrder = ({ show, setShowView, order }) => {
               <input
                 type="text"
                 className="form-control"
-                value={discountCode}
+                value={discountCode?.discountCode}
                 disabled
               />
             </div>

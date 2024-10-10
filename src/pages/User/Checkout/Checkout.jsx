@@ -70,8 +70,10 @@ const Checkout = () => {
     try {
       const response = await DiscountAPI.getDiscountPercentages(coupon);
       if (response.status === 200) {
-        setAfterDiscount((total * (100 - response.data.DT)) / 100);
-        setDiscountCode(coupon);
+        setAfterDiscount(
+          (total * (100 - response.data.DT.discountPercentage)) / 100
+        );
+        setDiscountCode(response.data.DT._id);
         toast.success("Áp dụng mã giảm giá thành công");
       }
     } catch (error) {

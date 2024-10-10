@@ -57,9 +57,12 @@ const OrderDetail = ({}) => {
               <p className="mb-0 fw-bold">Thành tiền</p>
             </div>
           </div>
-          {order.products.map((item) => (
-            <CheckoutItem key={item.product._id} item={item} />
-          ))}
+          <div className="w-75" style={{ margin: "0 auto" }}>
+            {order.products.map((item) => (
+              <CheckoutItem key={item.product._id} item={item} />
+            ))}
+          </div>
+
           <div
             className="d-flex flex-column shadow border w-75 border-success mb-2 border-2 p-4 gap-3"
             style={{ height: "auto", margin: "0 auto" }}
@@ -85,7 +88,8 @@ const OrderDetail = ({}) => {
                 </p>
                 {order.discountCode && (
                   <p className="fw-bold mb-0 ms-3">
-                    Mã khuyến mãi: {order.discountCode}
+                    Mã khuyến mãi: {order.discountCode.discountCode} -{" "}
+                    {order.discountCode.discountPercentage}%
                   </p>
                 )}
                 <p className="fw-bold mb-0 ms-3">
