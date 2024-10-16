@@ -5,6 +5,7 @@ import OrderAPI from "../../../api/OrderAPI";
 import Select from "react-select";
 import { toast } from "react-toastify";
 import DiscountAPI from "../../../api/DiscountAPI";
+import PaymentAPI from "../../../api/PaymentAPI";
 
 const Checkout = () => {
   const location = useLocation();
@@ -56,10 +57,19 @@ const Checkout = () => {
       discountCode: discountCode,
     };
     try {
-      await OrderAPI.CreateOrder(data);
-      alert("Mua hàng thành công");
-      toast.success("Mua hàng thành công");
-      navigation("/user-profile", { state: { initialSection: "orders" } });
+      if (selectedPaymentMethod.value === "ONLINE") {
+        const PaymentData = { amount: afterDiscount };
+        const response = await PaymentAPI.postPayments(PaymentData);
+        if (response.status === 200) {
+          const paymentUrl = response.data.DT;
+          window.location.href = paymentUrl;
+        }
+      } else if (selectedPaymentMethod.value === "COD") {
+        await OrderAPI.CreateOrder(data);
+        alert("Mua hàng thành công");
+        toast.success("Mua hàng thành công");
+        navigation("/user-profile", { state: { initialSection: "orders" } });
+      }
     } catch (error) {
       toast.error(error.response?.data?.EM);
       console.log(error);
@@ -90,6 +100,7 @@ const Checkout = () => {
     setTotal(total);
     setAfterDiscount(total);
   }, []);
+
   console.log(items);
   return (
     <>

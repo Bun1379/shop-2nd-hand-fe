@@ -23,6 +23,8 @@ import Product from "./pages/Admin/Product/Product";
 import Discount from "./pages/Admin/Discount/Discount";
 import User from "./pages/Admin/User/User";
 import ManageOrder from "./pages/Admin/Order/MangeOrder";
+import PaymentResult from "./pages/User/Checkout/PaymentResult";
+
 function App() {
   return (
     <>
@@ -41,12 +43,14 @@ function App() {
               element={<UserProfile initialSection="profile" />}
             />
           </Route>
+
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/forgot-pw" element={<ForgotPW />} />
           <Route path="/reset-pw" element={<ResetPW />} />
           <Route path="/verify" element={<Verify />} />
           <Route path="/product" element={<ProductItem />} />
+
           <Route path="/admin" element={<AdminLayout />}>
             <Route index element={<h1>Hello Admin</h1>} />
             <Route path="product" element={<Product />} />
@@ -54,7 +58,9 @@ function App() {
             <Route path="user" element={<User />} />
             <Route path="order" element={<ManageOrder />} />
           </Route>
+
           <Route path="*" element={<h1>404 Not Found</h1>} />
+          <Route path="/payment/result" element={<PaymentResult />} />
         </Routes>
       </BrowserRouter>
       <ToastContainer
