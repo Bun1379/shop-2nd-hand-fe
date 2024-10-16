@@ -5,6 +5,7 @@ import UpdateUser from "./UpdateUser";
 import Order from "../Order/Order";
 import Notification from "../Notification/Notification";
 import PurchasedProducts from "../Review/PurchasedProducts";
+import Favoutite from "../Favourite/Favourite";
 
 const UserAccount = ({ initialSection }) => {
   const location = useLocation();
@@ -23,6 +24,8 @@ const UserAccount = ({ initialSection }) => {
         return <Notification />;
       case "productsPurchase":
         return <PurchasedProducts />;
+      case "favourites":
+        return <Favoutite />;
       case "logout":
         return (
           <div>
@@ -77,6 +80,14 @@ const UserAccount = ({ initialSection }) => {
               onClick={() => setActiveSection("notifications")}
             >
               Thông báo
+            </li>
+            <li
+              className={`list-group-item ${
+                activeSection === "favourites" ? "active" : ""
+              }`}
+              onClick={() => setActiveSection("favourites")}
+            >
+              Sản phẩm yêu thích
             </li>
             <li
               className={`list-group-item ${

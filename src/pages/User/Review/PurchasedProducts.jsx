@@ -12,7 +12,6 @@ const PurchasedProducts = () => {
 
   const handleSubmitReview = async (review) => {
     review.product = selectedProduct._id;
-    console.log(review);
     const response = await ReviewAPI.CreateReview(review);
     if (response.status === 200) {
       toast.success("Review successfully");
@@ -41,7 +40,7 @@ const PurchasedProducts = () => {
   }, []);
   return (
     <div>
-      <h1>Purchased Products</h1>
+      <h3 className="text-center">Sản phẩm đã mua</h3>
       {products.length === 0 && <p>No purchased products</p>}
       {products &&
         products.length > 0 &&

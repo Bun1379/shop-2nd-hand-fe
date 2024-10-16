@@ -4,11 +4,13 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { FaPlus, FaMinus } from "react-icons/fa";
 import { toast } from "react-toastify";
+import { FaHeart } from "react-icons/fa";
 
 import CartAPI from "../../api/CartAPI";
 import ReviewAPI from "../../api/ReviewAPI";
 import Review from "../User/Review/Review";
 import RecentlyViewedProducts from "../../components/RecentlyView/RecentlyView";
+import UserAPI from "../../api/UserAPI";
 
 const ProductDetail = () => {
   const navigate = useNavigate();
@@ -17,6 +19,7 @@ const ProductDetail = () => {
   const [quantity, setQuantity] = useState(1);
   const [selectedImage, setSelectedImage] = useState(product.images[0]);
   const [reviews, setReviews] = useState([]);
+  const [favouriteText, setFavouriteText] = useState("Yêu thích");
 
   const handleAddToCart = async () => {
     try {
@@ -76,9 +79,39 @@ const ProductDetail = () => {
     }
   };
 
+  const handleFavourite = async (productId) => {
+    try {
+      await UserAPI.PutUpdateFavorite(productId);
+      if (favouriteText === "Yêu thích") {
+        toast.success("Đã thêm vào yêu thích");
+        setFavouriteText("Bỏ yêu thích");
+      } else {
+        toast.success("Đã bỏ yêu thích");
+        setFavouriteText("Yêu thích");
+      }
+    } catch (error) {
+      toast.error(error.response.data.EM);
+    }
+  };
+
+  const fetchFavourite = async () => {
+    try {
+      const existingUserData = await UserAPI.GetUserInfo();
+      const favoriteProducts = existingUserData.data.DT.favourites;
+      if (favoriteProducts.some((item) => item._id === product._id)) {
+        setFavouriteText("Đã yêu thích");
+      } else {
+        setFavouriteText("Yêu thích");
+      }
+    } catch (error) {
+      console.error("Error: ", error);
+    }
+  };
+
   useEffect(() => {
     fetchReviews();
     setMainImage(product.images[0]);
+    fetchFavourite();
   }, [product]);
 
   useEffect(() => {
@@ -152,7 +185,16 @@ const ProductDetail = () => {
                 <FaPlus />
               </button>
             </div>
-            <div className="mt-5">
+            <div className="mt-1">
+              <button
+                className="btn btn-success d-flex align-items-center gap-2"
+                onClick={() => handleFavourite(product._id)}
+              >
+                {favouriteText}
+                <FaHeart color="white" />
+              </button>
+            </div>
+            <div className="mt-2">
               <button
                 className="btn btn-success bg-opacity-"
                 onClick={handleAddToCart}
