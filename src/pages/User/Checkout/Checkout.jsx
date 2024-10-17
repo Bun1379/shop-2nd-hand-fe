@@ -6,6 +6,7 @@ import Select from "react-select";
 import { toast } from "react-toastify";
 import DiscountAPI from "../../../api/DiscountAPI";
 import PaymentAPI from "../../../api/PaymentAPI";
+import UserAPI from "../../../api/UserAPI";
 
 const Checkout = () => {
   const location = useLocation();
@@ -28,8 +29,12 @@ const Checkout = () => {
     value: "COD",
     label: "Tiền mặt",
   });
-  const [coupon, setCoupon] = useState("");
+  const [coupon, setCoupon] = useState({
+    value: "",
+    label: "",
+  });
   const [discountCode, setDiscountCode] = useState("");
+  const [listDiscount, setListDiscount] = useState([]);
 
   const fetchDataUser = async () => {
     try {
@@ -78,7 +83,7 @@ const Checkout = () => {
 
   const handleCouponClick = async () => {
     try {
-      const response = await DiscountAPI.getDiscountPercentages(coupon);
+      const response = await DiscountAPI.getDiscountPercentages(coupon.value);
       if (response.status === 200) {
         setAfterDiscount(
           (total * (100 - response.data.DT.discountPercentage)) / 100
@@ -91,8 +96,27 @@ const Checkout = () => {
     }
   };
 
+  const fetchListDiscount = async () => {
+    try {
+      const response = await UserAPI.GetUserInfo();
+      if (response.status === 200) {
+        setListDiscount(
+          response.data.DT.discounts.map((item) => {
+            return {
+              value: item._id,
+              label: item.discountCode + " - " + item.discountPercentage + "%",
+            };
+          })
+        );
+      }
+    } catch (error) {
+      toast.error(error.response.data.EM);
+    }
+  };
+
   useEffect(() => {
     fetchDataUser();
+    fetchListDiscount();
     let total = 0;
     items.forEach((item) => {
       total += item.price;
@@ -101,7 +125,6 @@ const Checkout = () => {
     setAfterDiscount(total);
   }, []);
 
-  console.log(items);
   return (
     <>
       <h1 className="text-center p-2">Thanh toán</h1>
@@ -168,21 +191,15 @@ const Checkout = () => {
             </div>
 
             <div className="d-flex flex-column justify-content-between gap-4">
-              <p className="fw-bold mb-0 ms-3">
-                Phương thức thanh toán:
-                <Select
-                  options={options}
-                  defaultValue={selectedPaymentMethod}
-                  onChange={setSelectedPaymentMethod}
-                />
-              </p>
-              <p className="fw-bold mb-0 ms-3">Mã khuyến mãi: </p>
-              <input
-                className="form-control"
-                type="text"
-                value={coupon}
-                onChange={(e) => setCoupon(e.target.value)}
+              <span className="fw-bold mb-0 ms-3">Phương thức thanh toán:</span>
+              <Select
+                options={options}
+                defaultValue={selectedPaymentMethod}
+                onChange={setSelectedPaymentMethod}
               />
+
+              <span className="fw-bold mb-0 ms-3">Mã khuyến mãi: </span>
+              <Select options={listDiscount} onChange={setCoupon} />
               <button className="btn btn-primary" onClick={handleCouponClick}>
                 Áp dụng
               </button>

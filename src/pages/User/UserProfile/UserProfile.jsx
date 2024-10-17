@@ -6,6 +6,7 @@ import Order from "../Order/Order";
 import Notification from "../Notification/Notification";
 import PurchasedProducts from "../Review/PurchasedProducts";
 import Favoutite from "../Favourite/Favourite";
+import Discount from "../Discount/Discount";
 
 const UserAccount = ({ initialSection }) => {
   const location = useLocation();
@@ -26,6 +27,8 @@ const UserAccount = ({ initialSection }) => {
         return <PurchasedProducts />;
       case "favourites":
         return <Favoutite />;
+      case "discounts":
+        return <Discount />;
       case "logout":
         return (
           <div>
@@ -88,6 +91,14 @@ const UserAccount = ({ initialSection }) => {
               onClick={() => setActiveSection("favourites")}
             >
               Sản phẩm yêu thích
+            </li>
+            <li
+              className={`list-group-item ${
+                activeSection === "discounts" ? "active" : ""
+              }`}
+              onClick={() => setActiveSection("discounts")}
+            >
+              Túi mã giảm giá
             </li>
             <li
               className={`list-group-item ${

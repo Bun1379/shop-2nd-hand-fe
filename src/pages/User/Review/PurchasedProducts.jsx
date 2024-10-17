@@ -14,7 +14,20 @@ const PurchasedProducts = () => {
     review.product = selectedProduct._id;
     const response = await ReviewAPI.CreateReview(review);
     if (response.status === 200) {
-      toast.success("Review successfully");
+      if (response.data.DT.discount) {
+        const discount = response.data.DT.discount;
+        toast.success(
+          "Review successfully, you gain a discount: " +
+            discount.discountCode +
+            "-" +
+            discount.discountPercentage +
+            "%"
+        );
+      } else {
+        toast.success(
+          "Review successfully, we don't have any valid discount for you, sorry!"
+        );
+      }
       setShowReviewModal(false);
     } else {
       toast.error("Error: " + response.data.EM);
