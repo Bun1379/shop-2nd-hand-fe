@@ -24,7 +24,7 @@ const Search = () => {
       const response = await ProductAPI.GetProducts({
         search: searchQuery,
         sortOrder: sort.value,
-        category: selectedCategories.join(","),
+        category: selectedCategories,
         page: 1,
       });
       //   console.log(search);
