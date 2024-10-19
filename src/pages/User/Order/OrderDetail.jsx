@@ -1,10 +1,12 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import CheckoutItem from "../Checkout/CheckoutItem";
 import OrderAPI from "../../../api/OrderAPI";
 import { useEffect, useState } from "react";
 import { MdArrowBackIos } from "react-icons/md";
+import { toast } from "react-toastify";
 
 const OrderDetail = ({}) => {
+  const navigate = useNavigate();
   const params = useParams();
   const orderId = params.orderId;
   const [order, setOrder] = useState({});
@@ -14,6 +16,16 @@ const OrderDetail = ({}) => {
       console.log(response.data.DT);
       const order = response.data.DT;
       setOrder(order);
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+  const handleCancelOrder = async () => {
+    try {
+      await OrderAPI.CancelOrder(orderId);
+      toast.success("Hủy đơn hàng thành công");
+      navigate("/user-profile", { state: { initialSection: "orders" } });
     } catch (error) {
       console.error("Error:", error);
     }
@@ -98,6 +110,14 @@ const OrderDetail = ({}) => {
               </div>
             </div>
           </div>
+        </div>
+      )}
+      {/* Nút hủy đơn */}
+      {order.status === "PENDING" && (
+        <div className="d-flex justify-content-center">
+          <button className="btn btn-danger" onClick={handleCancelOrder}>
+            Hủy đơn hàng
+          </button>
         </div>
       )}
     </>

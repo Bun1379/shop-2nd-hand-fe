@@ -49,6 +49,10 @@ const Checkout = () => {
   };
 
   const handleCheckout = async () => {
+    if (!userInfo.username || !userInfo.phone || !userInfo.address) {
+      toast.error("Vui lòng nhập đầy đủ thông tin người nhận");
+      return;
+    }
     const data = {
       products: items.map((item) => ({
         productId: item.product._id,
@@ -71,8 +75,7 @@ const Checkout = () => {
         }
       } else if (selectedPaymentMethod.value === "COD") {
         await OrderAPI.CreateOrder(data);
-        alert("Mua hàng thành công");
-        toast.success("Mua hàng thành công");
+        toast.success("Đặt hàng thành công");
         navigation("/user-profile", { state: { initialSection: "orders" } });
       }
     } catch (error) {

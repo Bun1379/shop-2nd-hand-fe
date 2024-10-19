@@ -30,6 +30,11 @@ class OrderAPI {
     const url = `/order/${orderId}/status`;
     return axiosPrivate.put(url, data);
   }
+
+  static async CancelOrder(orderId) {
+    const url = `/order/cancel-order/${orderId}`;
+    return axiosPrivate.put(url);
+  }
 }
 
 export default OrderAPI;

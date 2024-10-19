@@ -11,6 +11,14 @@ const PurchasedProducts = () => {
   const [selectedProduct, setSelectedProduct] = useState({});
 
   const handleSubmitReview = async (review) => {
+    if (!review.rating) {
+      toast.error("Rating is required");
+      return;
+    }
+    if (!review.comment) {
+      toast.error("Comment is required");
+      return;
+    }
     review.product = selectedProduct._id;
     const response = await ReviewAPI.CreateReview(review);
     if (response.status === 200) {

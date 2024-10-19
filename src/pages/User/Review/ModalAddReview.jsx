@@ -42,8 +42,8 @@ const ModalAddReview = ({ show, setShow, handleSubmitReview }) => {
         />
       </Modal.Body>
       <Modal.Footer>
-        <Button onClick={handleClose}>Close</Button>
-        <Button onClick={handleSubmit}>Submit</Button>
+        <Button onClick={handleClose}>Đóng</Button>
+        <Button onClick={handleSubmit}>Gửi đánh giá</Button>
       </Modal.Footer>
     </Modal>
   );
