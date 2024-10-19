@@ -4,6 +4,7 @@ import CartItem from "./CartItem";
 import TotalPrice from "./TotalPrice";
 import { useNavigate } from "react-router-dom";
 import CartAPI from "../../../api/CartAPI";
+import { toast } from "react-toastify";
 
 const Cart = () => {
   const [cart, setCart] = useState([]);
@@ -29,6 +30,7 @@ const Cart = () => {
     try {
       const data = { deleteProduct: [productId] };
       await CartAPI.UpdateQuantity(data);
+      toast.success("Xóa sản phẩm khỏi giỏ hàng thành công");
       const newCart = cart.filter((item) => item.product._id !== productId);
       setCart(newCart);
     } catch (error) {

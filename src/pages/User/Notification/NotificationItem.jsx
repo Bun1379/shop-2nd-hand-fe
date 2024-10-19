@@ -2,7 +2,7 @@ const NotificationItem = ({ notification, handleOnClickOrder }) => {
   console.log(notification);
   return (
     <div
-      className="bg-white w-75 border border-2 border-success d-flex flex-row mb-2 align-items-center gap-3 p-2"
+      className="bg-white w-100 border border-2 border-success d-flex flex-row mb-2 align-items-center gap-3 p-2"
       style={{ height: "100px", margin: "0 auto" }}
       onClick={() => handleOnClickOrder(notification.order)}
     >

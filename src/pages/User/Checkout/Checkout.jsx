@@ -4,6 +4,9 @@ import { useEffect, useState } from "react";
 import OrderAPI from "../../../api/OrderAPI";
 import Select from "react-select";
 import { toast } from "react-toastify";
+import DiscountAPI from "../../../api/DiscountAPI";
+import PaymentAPI from "../../../api/PaymentAPI";
+import UserAPI from "../../../api/UserAPI";
 
 const Checkout = () => {
   const location = useLocation();
@@ -21,10 +24,17 @@ const Checkout = () => {
     address: "",
   });
   const [total, setTotal] = useState(0);
+  const [afterDiscount, setAfterDiscount] = useState(0);
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState({
     value: "COD",
     label: "Tiền mặt",
   });
+  const [coupon, setCoupon] = useState({
+    value: "",
+    label: "",
+  });
+  const [discountCode, setDiscountCode] = useState("");
+  const [listDiscount, setListDiscount] = useState([]);
 
   const fetchDataUser = async () => {
     try {
@@ -39,36 +49,85 @@ const Checkout = () => {
   };
 
   const handleCheckout = async () => {
+    if (!userInfo.username || !userInfo.phone || !userInfo.address) {
+      toast.error("Vui lòng nhập đầy đủ thông tin người nhận");
+      return;
+    }
     const data = {
       products: items.map((item) => ({
         productId: item.product._id,
         quantity: item.quantity,
       })),
-      totalAmount: total,
+      totalAmount: afterDiscount,
       address: userInfo.address,
       phone: userInfo.phone,
       name: userInfo.username,
       paymentMethod: selectedPaymentMethod.value,
+      discountCode: discountCode,
     };
     try {
-      await OrderAPI.CreateOrder(data);
-      alert("Mua hàng thành công");
-      toast.success("Mua hàng thành công");
-      navigation("/user-profile", { state: { initialSection: "orders" } });
+      if (selectedPaymentMethod.value === "ONLINE") {
+        const PaymentData = { amount: afterDiscount };
+        const response = await PaymentAPI.postPayments(PaymentData);
+        if (response.status === 200) {
+          const paymentUrl = response.data.DT;
+          window.location.href = paymentUrl;
+        }
+      } else if (selectedPaymentMethod.value === "COD") {
+        await OrderAPI.CreateOrder(data);
+        toast.success("Đặt hàng thành công");
+        navigation("/user-profile", { state: { initialSection: "orders" } });
+      }
     } catch (error) {
       toast.error(error.response?.data?.EM);
+      console.log(error);
+    }
+  };
+
+  const handleCouponClick = async () => {
+    try {
+      const response = await DiscountAPI.getDiscountPercentages(coupon.value);
+      if (response.status === 200) {
+        setAfterDiscount(
+          (total * (100 - response.data.DT.discountPercentage)) / 100
+        );
+        setDiscountCode(response.data.DT._id);
+        toast.success("Áp dụng mã giảm giá thành công");
+      }
+    } catch (error) {
+      toast.error(error.response.data.EM);
+    }
+  };
+
+  const fetchListDiscount = async () => {
+    try {
+      const response = await UserAPI.GetUserInfo();
+      if (response.status === 200) {
+        setListDiscount(
+          response.data.DT.discounts.map((item) => {
+            return {
+              value: item._id,
+              label: item.discountCode + " - " + item.discountPercentage + "%",
+            };
+          })
+        );
+      }
+    } catch (error) {
+      toast.error(error.response.data.EM);
     }
   };
 
   useEffect(() => {
     fetchDataUser();
+    fetchListDiscount();
     let total = 0;
     items.forEach((item) => {
       total += item.price;
     });
     setTotal(total);
+    setAfterDiscount(total);
   }, []);
-  console.log(items);
+
   return (
     <>
       <h1 className="text-center p-2">Thanh toán</h1>
@@ -87,9 +146,12 @@ const Checkout = () => {
             <p className="mb-0 fw-bold">Thành tiền</p>
           </div>
         </div>
-        {items.map((item) => (
-          <CheckoutItem key={item.product._id} item={item} />
-        ))}
+        <div className="w-75" style={{ margin: "0 auto" }}>
+          {items.map((item) => (
+            <CheckoutItem key={item.product._id} item={item} />
+          ))}
+        </div>
+
         <div
           className="d-flex flex-column shadow border w-75 border-success mb-2 border-2 p-4 gap-3"
           style={{ height: "auto", margin: "0 auto" }}
@@ -132,16 +194,19 @@ const Checkout = () => {
             </div>
 
             <div className="d-flex flex-column justify-content-between gap-4">
-              <p className="fw-bold mb-0 ms-3">
-                Phương thức thanh toán:
-                <Select
-                  options={options}
-                  defaultValue={selectedPaymentMethod}
-                  onChange={setSelectedPaymentMethod}
-                />
-              </p>
-              <p className="fw-bold mb-0 ms-3">Mã khuyến mãi: ...</p>
-              <p className="fw-bold mb-0 ms-3">Tổng tiền: {total}</p>
+              <span className="fw-bold mb-0 ms-3">Phương thức thanh toán:</span>
+              <Select
+                options={options}
+                defaultValue={selectedPaymentMethod}
+                onChange={setSelectedPaymentMethod}
+              />
+
+              <span className="fw-bold mb-0 ms-3">Mã khuyến mãi: </span>
+              <Select options={listDiscount} onChange={setCoupon} />
+              <button className="btn btn-primary" onClick={handleCouponClick}>
+                Áp dụng
+              </button>
+              <p className="fw-bold mb-0 ms-3">Tổng tiền: {afterDiscount}</p>
             </div>
           </div>
           <button

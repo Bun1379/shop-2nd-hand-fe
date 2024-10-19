@@ -3,6 +3,7 @@ import { FaTachometerAlt, FaUserCog, FaBox, FaHome } from "react-icons/fa";
 import { CiBoxList, CiLogout } from "react-icons/ci";
 import { GiClothes } from "react-icons/gi";
 import { Link, useNavigate } from "react-router-dom";
+import { RiCoupon2Fill } from "react-icons/ri";
 
 const SideBar = ({ image, collapsed, toggled, handleToggleSidebar }) => {
   const navigate = useNavigate();
@@ -39,13 +40,23 @@ const SideBar = ({ image, collapsed, toggled, handleToggleSidebar }) => {
               {" "}
               Sản phẩm
             </MenuItem>
-            <MenuItem icon={<FaUserCog />} component={<Link to="/dashboard" />}>
+            <MenuItem
+              icon={<FaUserCog />}
+              component={<Link to="/admin/user" />}
+            >
               {" "}
               Người dùng
             </MenuItem>
-            <MenuItem icon={<FaBox />} component={<Link to="/dashboard" />}>
+            <MenuItem icon={<FaBox />} component={<Link to="/admin/order" />}>
               {" "}
               Đơn hàng
+            </MenuItem>
+            <MenuItem
+              icon={<RiCoupon2Fill />}
+              component={<Link to="/admin/discount" />}
+            >
+              {" "}
+              Mã giảm giá
             </MenuItem>
           </SubMenu>
           <MenuItem icon={<CiLogout />} onClick={() => navigate("/login")}>

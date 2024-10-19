@@ -24,7 +24,7 @@ const Search = () => {
       const response = await ProductAPI.GetProducts({
         search: searchQuery,
         sortOrder: sort.value,
-        category: selectedCategories.join(","),
+        category: selectedCategories,
         page: 1,
       });
       //   console.log(search);
@@ -42,6 +42,7 @@ const Search = () => {
       const response = await ProductAPI.GetProducts({
         search: searchParams.get("query"),
         sortOrder: sort.value,
+        category: selectedCategories,
         page: page + 1,
       });
       // console.log(sort.value, page + 1);

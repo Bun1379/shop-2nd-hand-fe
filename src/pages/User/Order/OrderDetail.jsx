@@ -1,10 +1,12 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import CheckoutItem from "../Checkout/CheckoutItem";
 import OrderAPI from "../../../api/OrderAPI";
 import { useEffect, useState } from "react";
 import { MdArrowBackIos } from "react-icons/md";
+import { toast } from "react-toastify";
 
 const OrderDetail = ({}) => {
+  const navigate = useNavigate();
   const params = useParams();
   const orderId = params.orderId;
   const [order, setOrder] = useState({});
@@ -14,6 +16,16 @@ const OrderDetail = ({}) => {
       console.log(response.data.DT);
       const order = response.data.DT;
       setOrder(order);
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+  const handleCancelOrder = async () => {
+    try {
+      await OrderAPI.CancelOrder(orderId);
+      toast.success("Hủy đơn hàng thành công");
+      navigate("/user-profile", { state: { initialSection: "orders" } });
     } catch (error) {
       console.error("Error:", error);
     }
@@ -57,9 +69,12 @@ const OrderDetail = ({}) => {
               <p className="mb-0 fw-bold">Thành tiền</p>
             </div>
           </div>
-          {order.products.map((item) => (
-            <CheckoutItem key={item.product._id} item={item} />
-          ))}
+          <div className="w-75" style={{ margin: "0 auto" }}>
+            {order.products.map((item) => (
+              <CheckoutItem key={item.product._id} item={item} />
+            ))}
+          </div>
+
           <div
             className="d-flex flex-column shadow border w-75 border-success mb-2 border-2 p-4 gap-3"
             style={{ height: "auto", margin: "0 auto" }}
@@ -83,13 +98,26 @@ const OrderDetail = ({}) => {
                   Phương thức thanh toán:
                   {order.paymentMethod === "COD" ? "Tiền mặt" : "Chuyển khoản"}
                 </p>
-                <p className="fw-bold mb-0 ms-3">Mã khuyến mãi: ...</p>
+                {order.discountCode && (
+                  <p className="fw-bold mb-0 ms-3">
+                    Mã khuyến mãi: {order.discountCode.discountCode} -{" "}
+                    {order.discountCode.discountPercentage}%
+                  </p>
+                )}
                 <p className="fw-bold mb-0 ms-3">
                   Tổng tiền: {order.totalAmount}
                 </p>
               </div>
             </div>
           </div>
+        </div>
+      )}
+      {/* Nút hủy đơn */}
+      {order.status === "PENDING" && (
+        <div className="d-flex justify-content-center">
+          <button className="btn btn-danger" onClick={handleCancelOrder}>
+            Hủy đơn hàng
+          </button>
         </div>
       )}
     </>
