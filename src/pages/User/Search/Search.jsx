@@ -42,6 +42,7 @@ const Search = () => {
       const response = await ProductAPI.GetProducts({
         search: searchParams.get("query"),
         sortOrder: sort.value,
+        category: selectedCategories,
         page: page + 1,
       });
       // console.log(sort.value, page + 1);
