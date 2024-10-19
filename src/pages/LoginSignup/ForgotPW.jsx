@@ -11,7 +11,6 @@ const ForgotPW = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            toast.success(`Đang gửi OTP cho ${email}. Vui lòng kiểm tra email của bạn.`);
             await AuthAPI.SendOTP({
                 email
             });
