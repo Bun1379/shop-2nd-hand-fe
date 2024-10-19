@@ -4,6 +4,7 @@ import "./UserProfile.css";
 import UpdateUser from "./UpdateUser";
 import Order from "../Order/Order";
 import Notification from "../Notification/Notification";
+import UpdatePassword from "./UpdatePassword";
 
 const UserAccount = ({ initialSection }) => {
   const location = useLocation();
@@ -16,6 +17,8 @@ const UserAccount = ({ initialSection }) => {
     switch (activeSection) {
       case "profile":
         return <UpdateUser />;
+      case "update-password":
+        return <UpdatePassword />;
       case "orders":
         return <Order />;
       case "notifications":
@@ -49,6 +52,13 @@ const UserAccount = ({ initialSection }) => {
               onClick={() => setActiveSection("profile")}
             >
               Thông tin cá nhân
+            </li>
+            <li
+              className={`list-group-item ${activeSection === "update-password" ? "active" : ""
+                }`}
+              onClick={() => setActiveSection("update-password")}
+            >
+              Đổi mật khẩu
             </li>
             <li
               className={`list-group-item ${activeSection === "orders" ? "active" : ""
