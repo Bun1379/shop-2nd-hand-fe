@@ -10,6 +10,10 @@ import Discount from "../Discount/Discount";
 import UpdatePassword from "./UpdatePassword";
 
 const UserAccount = ({ initialSection }) => {
+  const token = localStorage.getItem("token");
+  if (!token) {
+    window.location.href = "/login";
+  }
   const location = useLocation();
   const user = JSON.parse(localStorage.getItem("user"));
   const [activeSection, setActiveSection] = useState(

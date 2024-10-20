@@ -87,13 +87,23 @@ const ModalAddProduct = ({ showAdd, setShowAdd }) => {
 
   const handleUploadImage = (event) => {
     if (event.target && event.target.files && event.target.files.length > 0) {
+      const file = event.target.files[0];
+      const validImageTypes = ['image/jpeg', 'image/png'];
+
+      // Kiểm tra định dạng ảnh
+      if (!validImageTypes.includes(file.type)) {
+        toast.error("Chỉ chấp nhận các tệp ảnh có định dạng JPG hoặc PNG");
+        return;
+      }
+
       setListPreviewImage([
         ...listPreviewImage,
-        URL.createObjectURL(event.target.files[0]),
+        URL.createObjectURL(file),
       ]);
-      setImage([...image, event.target.files[0]]);
+      setImage([...image, file]);
     }
   };
+
 
   const handleDeleteImage = (index) => {
     const newImage = image.filter((item, idx) => idx !== index);
@@ -265,10 +275,10 @@ const ModalAddProduct = ({ showAdd, setShowAdd }) => {
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose}>
-            Close
+            Đóng
           </Button>
           <Button variant="primary" onClick={handleCreateProduct}>
-            Save Changes
+            Thêm sản phẩm
           </Button>
         </Modal.Footer>
       </Modal>

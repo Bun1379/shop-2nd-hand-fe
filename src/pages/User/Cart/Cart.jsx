@@ -7,6 +7,10 @@ import CartAPI from "../../../api/CartAPI";
 import { toast } from "react-toastify";
 
 const Cart = () => {
+  const token = localStorage.getItem("token");
+  if (!token) {
+    window.location.href = "/login";
+  }
   const [cart, setCart] = useState([]);
   const [total, setTotal] = useState(0);
 
@@ -51,10 +55,10 @@ const Cart = () => {
     const newCart = cart.map((item) =>
       item.product._id === productId
         ? {
-            ...item,
-            quantity: newQuantity,
-            price: item.product.price * newQuantity,
-          }
+          ...item,
+          quantity: newQuantity,
+          price: item.product.price * newQuantity,
+        }
         : item
     );
     setCart(newCart);

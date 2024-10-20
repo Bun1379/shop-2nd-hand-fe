@@ -9,6 +9,10 @@ import PaymentAPI from "../../../api/PaymentAPI";
 import UserAPI from "../../../api/UserAPI";
 
 const Checkout = () => {
+  const token = localStorage.getItem("token");
+  if (!token) {
+    window.location.href = "/login";
+  }
   const location = useLocation();
   const items = location.state;
   const navigation = useNavigate();

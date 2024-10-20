@@ -5,6 +5,10 @@ import OrderAPI from "../../../api/OrderAPI";
 import { useNavigate } from "react-router-dom";
 
 const Order = () => {
+  const token = localStorage.getItem("token");
+  if (!token) {
+    window.location.href = "/login";
+  }
   const [status, setStatus] = useState("PENDING");
   const [listOrder, setListOrder] = useState([]);
   const [totalOrder, setTotalOrder] = useState([]);

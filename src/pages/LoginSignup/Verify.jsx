@@ -20,7 +20,7 @@ const Verify = () => {
 
             if (response.status === 200) {
                 toast.success('Xác thực thành công!');
-                navigate('/');
+                navigate('/login');
             }
         } catch (error) {
             toast.error('Xác thực thất bại: ' + error.response.data.EM);

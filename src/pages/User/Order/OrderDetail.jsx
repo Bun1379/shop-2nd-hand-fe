@@ -5,7 +5,11 @@ import { useEffect, useState } from "react";
 import { MdArrowBackIos } from "react-icons/md";
 import { toast } from "react-toastify";
 
-const OrderDetail = ({}) => {
+const OrderDetail = ({ }) => {
+  const token = localStorage.getItem("token");
+  if (!token) {
+    window.location.href = "/login";
+  }
   const navigate = useNavigate();
   const params = useParams();
   const orderId = params.orderId;
