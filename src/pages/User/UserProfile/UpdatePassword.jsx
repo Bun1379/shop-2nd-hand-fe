@@ -2,23 +2,26 @@ import React, { useState } from "react";
 import { toast } from "react-toastify";
 import AuthAPI from "../../../api/AuthAPI";
 
-const UpdatePassword = () => {
+const UpdatePassword = ({ email }) => {
     const [currentPassword, setCurrentPassword] = useState("");
     const [newPassword, setNewPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
     const [isPasswordVerified, setIsPasswordVerified] = useState(false);
-
+    const [OTP, setOTP] = useState("");
     const handleVerifyPassword = async (e) => {
         e.preventDefault();
         try {
-            const response = await AuthAPI.VerifyPassword(currentPassword);
-            if (response.data.success) {
-                setIsPasswordVerified(true);
-                toast.success("Mật khẩu hợp lệ, vui lòng nhập mật khẩu mới.");
-            } else {
-                toast.error("Mật khẩu hiện tại không đúng.");
-            }
-        } catch (error) {
+            await AuthAPI.VerifyPassword({
+                email: email,
+                password: currentPassword
+            });
+            toast.success("Mật khẩu chính xác, vui lòng đợi trong giây lát");
+            AuthAPI.SendOTP({
+                email,
+            });
+            setIsPasswordVerified(true);
+        }
+        catch (error) {
             toast.error("Đã xảy ra lỗi: " + error.message);
         }
     };
@@ -31,15 +34,19 @@ const UpdatePassword = () => {
         }
 
         try {
-            // Gọi API thay đổi mật khẩu
-            const response = await AuthAPI.ResetPW(newPassword);
-            if (response.data.success) {
-                toast.success("Mật khẩu đã được thay đổi thành công!");
-            } else {
-                toast.error("Đã xảy ra lỗi, vui lòng thử lại.");
-            }
+            await AuthAPI.ResetPW({
+                email: email,
+                otp: OTP,
+                newPassword: newPassword
+            });
+            toast.success("Mật khẩu đã được thay đổi thành công!");
+            setCurrentPassword("");
+            setNewPassword("");
+            setConfirmPassword("");
+            setOTP("");
+            setIsPasswordVerified(false);
         } catch (error) {
-            toast.error("Đã xảy ra lỗi khi cập nhật mật khẩu.");
+            toast.error("Đã xảy ra lỗi: " + error.message);
         }
     };
 
@@ -70,6 +77,19 @@ const UpdatePassword = () => {
             {/* Nhập mật khẩu mới nếu đã xác nhận mật khẩu hiện tại thành công */}
             {isPasswordVerified && (
                 <>
+                    <div className="mb-3">
+                        <label htmlFor="OTP" className="form-label">
+                            Nhập OTP được gửi đến email của bạn:
+                        </label>
+                        <input
+                            type="text"
+                            className="form-control"
+                            id="OTP"
+                            value={OTP}
+                            onChange={(e) => setOTP(e.target.value)}
+                            required
+                        />
+                    </div>
                     <div className="mb-3">
                         <label htmlFor="newPassword" className="form-label">
                             Mật khẩu mới:

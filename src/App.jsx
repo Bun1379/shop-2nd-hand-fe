@@ -27,10 +27,6 @@ import ManageOrder from "./pages/Admin/Order/MangeOrder";
 import PaymentResult from "./pages/User/Checkout/PaymentResult";
 
 function App() {
-  useEffect(() => {
-    localStorage.clear();
-    console.log("localStorage đã được xóa");
-  }, []);
   return (
     <>
       <BrowserRouter>

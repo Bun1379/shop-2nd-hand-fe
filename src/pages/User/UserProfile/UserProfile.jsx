@@ -23,9 +23,9 @@ const UserAccount = ({ initialSection }) => {
   const renderContent = () => {
     switch (activeSection) {
       case "profile":
-        return <UpdateUser />;
+        return <UpdateUser userInfo={user} />;
       case "update-password":
-        return <UpdatePassword />;
+        return <UpdatePassword email={user.email} />;
       case "orders":
         return <Order />;
       case "notifications":
@@ -37,16 +37,20 @@ const UserAccount = ({ initialSection }) => {
       case "discounts":
         return <Discount />;
       case "logout":
-        return (
-          <div>
-            <h4>Đăng xuất</h4>
-            <p>Bạn đã đăng xuất.</p>
-          </div>
-        );
+        handleLogout();
       default:
         return null;
     }
   };
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    localStorage.removeItem("is_admin");
+    setIsLoggedIn(false);
+    toast.success("Đăng xuất thành công!");
+    navigate("/login");
+  };
+
   return (
     <div className="container" style={{ marginTop: "100px" }}>
       <div className="row">

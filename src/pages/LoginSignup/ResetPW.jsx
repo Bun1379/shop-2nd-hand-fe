@@ -3,7 +3,7 @@ import LoginLayout from '../../layouts/LoginLayout/LoginLayout';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { FaArrowLeft } from "react-icons/fa";
 import { useState } from 'react';
-import AuthAPI from '../../api/authAPI';
+import AuthAPI from '../../api/AuthAPI';
 import { toast } from 'react-toastify';
 const ResetPW = () => {
     const [otp, setotp] = useState('');

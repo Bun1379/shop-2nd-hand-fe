@@ -2,9 +2,7 @@ import React, { useState, useEffect } from 'react';
 import UserAPI from '../../../api/UserAPI';
 import { toast } from 'react-toastify';
 import UploadAPI from '../../../api/UploadAPI';
-const UpdateUser = () => {
-    const userInfo = JSON.parse(localStorage.getItem("user"));
-
+const UpdateUser = ({ userInfo }) => {
     const [formData, setFormData] = useState({
         username: '',
         email: '',

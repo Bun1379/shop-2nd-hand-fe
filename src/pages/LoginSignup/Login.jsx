@@ -3,7 +3,7 @@ import { toast } from "react-toastify";
 import { Link, useNavigate } from "react-router-dom";
 import { FaArrowLeft } from "react-icons/fa";
 import LoginLayout from "../../layouts/LoginLayout/LoginLayout";
-import AuthAPI from "../../api/authAPI";
+import AuthAPI from "../../api/AuthAPI";
 import "./Login.css";
 const Login = () => {
   const navigate = useNavigate();

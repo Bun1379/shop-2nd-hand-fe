@@ -2,7 +2,7 @@ import React from 'react';
 import LoginLayout from '../../layouts/LoginLayout/LoginLayout';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useState } from 'react';
-import AuthAPI from '../../api/authAPI';
+import AuthAPI from '../../api/AuthAPI';
 import { toast } from 'react-toastify';
 
 const Verify = () => {

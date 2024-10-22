@@ -4,7 +4,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { FaArrowLeft } from "react-icons/fa";
 import { useState } from 'react';
 import { toast } from 'react-toastify';
-import AuthAPI from '../../api/authAPI';
+import AuthAPI from '../../api/AuthAPI';
 const ForgotPW = () => {
     const navigate = useNavigate();
     const [email, setEmail] = useState('');
