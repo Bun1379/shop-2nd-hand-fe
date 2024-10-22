@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
-import UserAPI from "../../../api/UserAPI";
+import AuthAPI from "../../../api/AuthAPI";
 
 const UpdatePassword = () => {
     const [currentPassword, setCurrentPassword] = useState("");
@@ -11,7 +11,7 @@ const UpdatePassword = () => {
     const handleVerifyPassword = async (e) => {
         e.preventDefault();
         try {
-            const response = await UserAPI.verifyPassword(currentPassword);
+            const response = await AuthAPI.VerifyPassword(currentPassword);
             if (response.data.success) {
                 setIsPasswordVerified(true);
                 toast.success("Mật khẩu hợp lệ, vui lòng nhập mật khẩu mới.");
@@ -19,7 +19,7 @@ const UpdatePassword = () => {
                 toast.error("Mật khẩu hiện tại không đúng.");
             }
         } catch (error) {
-            toast.error("Đã xảy ra lỗi, vui lòng thử lại.");
+            toast.error("Đã xảy ra lỗi: " + error.message);
         }
     };
 
@@ -32,7 +32,7 @@ const UpdatePassword = () => {
 
         try {
             // Gọi API thay đổi mật khẩu
-            const response = await UserAPI.updatePassword(newPassword);
+            const response = await AuthAPI.ResetPW(newPassword);
             if (response.data.success) {
                 toast.success("Mật khẩu đã được thay đổi thành công!");
             } else {

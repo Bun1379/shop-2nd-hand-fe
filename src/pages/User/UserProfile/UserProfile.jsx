@@ -74,13 +74,6 @@ const UserAccount = ({ initialSection }) => {
               Đổi mật khẩu
             </li>
             <li
-              className={`list-group-item ${activeSection === "update-password" ? "active" : ""
-                }`}
-              onClick={() => setActiveSection("update-password")}
-            >
-              Đổi mật khẩu
-            </li>
-            <li
               className={`list-group-item ${activeSection === "orders" ? "active" : ""
                 }`}
               onClick={() => setActiveSection("orders")}

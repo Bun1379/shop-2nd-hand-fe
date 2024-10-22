@@ -20,9 +20,15 @@ class AuthAPI {
         const url = "/auth/reset-password";
         return axiosClient.post(url, data);
     }
+
     static async VerifiedUser(data) {
         const url = "/auth/verified-user";
         return axiosClient.post(url, data);
+    }
+
+    static async VerifyPassword(data) {
+        const url = "/auth/verify-password";
+        return axiosPrivate.post(url, data);
     }
 }
 

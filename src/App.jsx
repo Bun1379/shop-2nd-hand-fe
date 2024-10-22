@@ -1,5 +1,6 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
+import { useEffect } from "react";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
@@ -26,6 +27,10 @@ import ManageOrder from "./pages/Admin/Order/MangeOrder";
 import PaymentResult from "./pages/User/Checkout/PaymentResult";
 
 function App() {
+  useEffect(() => {
+    localStorage.clear();
+    console.log("localStorage đã được xóa");
+  }, []);
   return (
     <>
       <BrowserRouter>
