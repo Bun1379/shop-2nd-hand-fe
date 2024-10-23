@@ -8,6 +8,7 @@ import PurchasedProducts from "../Review/PurchasedProducts";
 import Favoutite from "../Favourite/Favourite";
 import Discount from "../Discount/Discount";
 import UpdatePassword from "./UpdatePassword";
+import Address from "../Address/Address";
 
 const UserAccount = ({ initialSection }) => {
   const token = localStorage.getItem("token");
@@ -36,6 +37,8 @@ const UserAccount = ({ initialSection }) => {
         return <Favoutite />;
       case "discounts":
         return <Discount />;
+      case "addresses":
+        return <Address />;
       case "logout":
         handleLogout();
       default:
@@ -47,7 +50,7 @@ const UserAccount = ({ initialSection }) => {
     localStorage.removeItem("user");
     localStorage.removeItem("is_admin");
     setIsLoggedIn(false);
-    toast.success("Đăng xuất thành công!");
+    toast.success("Đăng xuất thành công !");
     navigate("/login");
   };
 
@@ -97,6 +100,13 @@ const UserAccount = ({ initialSection }) => {
               onClick={() => setActiveSection("notifications")}
             >
               Thông báo
+            </li>
+            <li
+              className={`list-group-item ${activeSection === "addresses" ? "active" : ""
+                }`}
+              onClick={() => setActiveSection("addresses")}
+            >
+              Sổ địa chỉ
             </li>
             <li
               className={`list-group-item ${activeSection === "favourites" ? "active" : ""

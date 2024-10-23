@@ -8,10 +8,14 @@ const UpdateUser = ({ userInfo }) => {
         email: '',
         phone: '',
         gender: '',
-        address: '',
     });
     const [newAvatar, setNewAvatar] = useState(userInfo?.image || '');
     const [fileAvatar, setFileAvatar] = useState(null);
+
+    const isValidPhoneNumber = (phone) => {
+        const phoneRegex = /^(0[3|5|7|8|9]\d{8})$/;
+        return phoneRegex.test(phone);
+    };
 
     useEffect(() => {
         if (userInfo) {
@@ -20,7 +24,6 @@ const UpdateUser = ({ userInfo }) => {
                 email: userInfo.email || "",
                 phone: userInfo.phone || "",
                 gender: userInfo.gender || "",
-                address: userInfo.address || "",
             });
         }
     }, []);
@@ -50,9 +53,12 @@ const UpdateUser = ({ userInfo }) => {
         try {
             const formDataToSend = new FormData();
             formDataToSend.append('username', formData.username);
+            if (!isValidPhoneNumber(formData.phone)) {
+                toast.error('Số điện thoại không hợp lệ!');
+                return;
+            }
             formDataToSend.append('phone', formData.phone);
             formDataToSend.append('gender', formData.gender);
-            formDataToSend.append('address', formData.address);
             let avatarUrl = userInfo.image;
             if (fileAvatar) {
                 try {
@@ -126,18 +132,6 @@ const UpdateUser = ({ userInfo }) => {
                             <option value="FEMALE">Nữ</option>
                             <option value="OTHER">Khác</option>
                         </select>
-                    </div>
-                    <div className="mb-3">
-                        <label htmlFor="address" className="form-label">Địa chỉ:</label>
-                        <input
-                            type="text"
-                            className="form-control"
-                            id="address"
-                            name="address"
-                            placeholder="Nhập địa chỉ"
-                            value={formData.address}
-                            onChange={handleChange}
-                        />
                     </div>
                     <button type="submit" className="btn btn-primary w-100">Cập nhật</button>
                 </form>
