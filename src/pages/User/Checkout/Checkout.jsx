@@ -45,9 +45,11 @@ const Checkout = () => {
         const addresses = response.data.DT;
         setAddressList(addresses);
 
-        const defaultAddress = addresses.find(address => address.is_default === true);
+        const defaultAddress = addresses.find(address => address.isDefault === true);
+        console.log(defaultAddress);
         if (defaultAddress) {
           setSelectedAddress(defaultAddress);
+          console.log(selectedAddress);
         }
       }
     }
@@ -162,43 +164,29 @@ const Checkout = () => {
         >
           <div className="d-flex align-items-center justify-content-around">
             <div className="d-flex flex-column justify-content-between gap-4">
-              <Form>
-                <Button onClick={() => setIsModalOpen(true)}>Chọn Địa Chỉ</Button>
-
-                {/* Hiển thị thông tin địa chỉ trong form */}
-                <Form.Group className="mt-3">
-                  <Form.Label>Người nhận:</Form.Label>
-                  <Form.Control
-                    type="text"
-                    value={selectedAddress ? selectedAddress.name : ''}
-                    readOnly
-                  />
-                </Form.Group>
-                <Form.Group>
-                  <Form.Label>Địa chỉ nhận hàng:</Form.Label>
-                  <Form.Control
-                    type="text"
-                    value={selectedAddress ? `${selectedAddress.address}, ${selectedAddress.district}, ${selectedAddress.ward}, ${selectedAddress.city}` : ''}
-                    readOnly
-                  />
-                </Form.Group>
-                <Form.Group>
-                  <Form.Label>Số điện thoại:</Form.Label>
-                  <Form.Control
-                    type="text"
-                    value={selectedAddress ? selectedAddress.phone : ''}
-                    readOnly
-                  />
-                </Form.Group>
-
-                <ModalSelectAddress
-                  isOpen={isModalOpen}
-                  onRequestClose={() => setIsModalOpen(false)}
-                  addresses={addressList}
-                  selectedAddress={selectedAddress}
-                  setSelectedAddress={setSelectedAddress}
-                />
-              </Form>
+              <Button
+                className="btn w-25"
+                onClick={() => setIsModalOpen(true)}>
+                Chọn Địa Chỉ
+              </Button>
+              {selectedAddress && (
+                <div className="card">
+                  <div className="card-body">
+                    <h5 className="card-title">{selectedAddress.name}</h5>
+                    <p className="card-text mt-1">
+                      Số điện thoại: {selectedAddress.phone}<br />
+                      Địa chỉ: {selectedAddress.address}, {selectedAddress.district}, {selectedAddress.ward}, {selectedAddress.city}
+                    </p>
+                  </div>
+                </div>
+              )}
+              <ModalSelectAddress
+                isOpen={isModalOpen}
+                onRequestClose={() => setIsModalOpen(false)}
+                addresses={addressList}
+                selectedAddress={selectedAddress}
+                setSelectedAddress={setSelectedAddress}
+              />
             </div>
 
             <div className="d-flex flex-column justify-content-between gap-4">
