@@ -7,7 +7,9 @@ import { toast } from "react-toastify";
 import DiscountAPI from "../../../api/DiscountAPI";
 import PaymentAPI from "../../../api/PaymentAPI";
 import UserAPI from "../../../api/UserAPI";
-
+import AddressAPI from "../../../api/AddressAPI";
+import ModalSelectAddress from "./ModalSelectAddress";
+import { Modal, Button, Form } from "react-bootstrap";
 const Checkout = () => {
   const token = localStorage.getItem("token");
   if (!token) {
@@ -16,17 +18,13 @@ const Checkout = () => {
   const location = useLocation();
   const items = location.state;
   const navigation = useNavigate();
-
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedAddress, setSelectedAddress] = useState(null);
+  const [addressList, setAddressList] = useState([]);
   const options = [
     { value: "COD", label: "Tiền mặt" },
     { value: "ONLINE", label: "Chuyển khoản" },
   ];
-
-  const [userInfo, setUserInfo] = useState({
-    username: "",
-    phone: "",
-    address: "",
-  });
   const [total, setTotal] = useState(0);
   const [afterDiscount, setAfterDiscount] = useState(0);
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState({
@@ -40,32 +38,34 @@ const Checkout = () => {
   const [discountCode, setDiscountCode] = useState("");
   const [listDiscount, setListDiscount] = useState([]);
 
-  const fetchDataUser = async () => {
+  const loadAddressList = async () => {
     try {
-      const user = localStorage.getItem("user");
-      if (user !== null) {
-        const parsedUser = JSON.parse(user);
-        setUserInfo(parsedUser);
+      const response = await AddressAPI.GetAddressByUser();
+      if (response.status === 200) {
+        const addresses = response.data.DT;
+        setAddressList(addresses);
+
+        const defaultAddress = addresses.find(address => address.is_default === true);
+        if (defaultAddress) {
+          setSelectedAddress(defaultAddress);
+        }
       }
-    } catch (error) {
-      console.log(error);
+    }
+    catch (error) {
+      toast.error("Lỗi: " + error.response.data.EM);
     }
   };
 
   const handleCheckout = async () => {
-    if (!userInfo.username || !userInfo.phone || !userInfo.address) {
-      toast.error("Vui lòng nhập đầy đủ thông tin người nhận");
-      return;
-    }
     const data = {
       products: items.map((item) => ({
         productId: item.product._id,
         quantity: item.quantity,
       })),
       totalAmount: afterDiscount,
-      address: userInfo.address,
-      phone: userInfo.phone,
-      name: userInfo.username,
+      address: `${selectedAddress.address}, ${selectedAddress.district}, ${selectedAddress.ward}, ${selectedAddress.city}`,
+      phone: selectedAddress.phone,
+      name: selectedAddress.name,
       paymentMethod: selectedPaymentMethod.value,
       discountCode: discountCode,
     };
@@ -122,7 +122,7 @@ const Checkout = () => {
   };
 
   useEffect(() => {
-    fetchDataUser();
+    loadAddressList();
     fetchListDiscount();
     let total = 0;
     items.forEach((item) => {
@@ -160,41 +160,45 @@ const Checkout = () => {
           className="d-flex flex-column shadow border w-75 border-success mb-2 border-2 p-4 gap-3"
           style={{ height: "auto", margin: "0 auto" }}
         >
-          <div className="  d-flex align-items-center justify-content-around">
+          <div className="d-flex align-items-center justify-content-around">
             <div className="d-flex flex-column justify-content-between gap-4">
-              <p className="fw-bold mb-0 ms-3 d-flex gap-3">
-                Người nhận:
-                <input
-                  className="form-control"
-                  type="text"
-                  value={userInfo.username}
-                  onChange={(event) =>
-                    setUserInfo({ ...userInfo, username: event.target.value })
-                  }
+              <Form>
+                <Button onClick={() => setIsModalOpen(true)}>Chọn Địa Chỉ</Button>
+
+                {/* Hiển thị thông tin địa chỉ trong form */}
+                <Form.Group className="mt-3">
+                  <Form.Label>Người nhận:</Form.Label>
+                  <Form.Control
+                    type="text"
+                    value={selectedAddress ? selectedAddress.name : ''}
+                    readOnly
+                  />
+                </Form.Group>
+                <Form.Group>
+                  <Form.Label>Địa chỉ nhận hàng:</Form.Label>
+                  <Form.Control
+                    type="text"
+                    value={selectedAddress ? `${selectedAddress.address}, ${selectedAddress.district}, ${selectedAddress.ward}, ${selectedAddress.city}` : ''}
+                    readOnly
+                  />
+                </Form.Group>
+                <Form.Group>
+                  <Form.Label>Số điện thoại:</Form.Label>
+                  <Form.Control
+                    type="text"
+                    value={selectedAddress ? selectedAddress.phone : ''}
+                    readOnly
+                  />
+                </Form.Group>
+
+                <ModalSelectAddress
+                  isOpen={isModalOpen}
+                  onRequestClose={() => setIsModalOpen(false)}
+                  addresses={addressList}
+                  selectedAddress={selectedAddress}
+                  setSelectedAddress={setSelectedAddress}
                 />
-              </p>
-              <p className="fw-bold mb-0 ms-3 d-flex gap-3">
-                Địa chỉ nhận hàng:{" "}
-                <input
-                  className="form-control"
-                  type="text"
-                  value={userInfo.address}
-                  onChange={(event) =>
-                    setUserInfo({ ...userInfo, address: event.target.value })
-                  }
-                />
-              </p>
-              <p className="fw-bold mb-0 ms-3 d-flex gap-3">
-                Số điện thoại:{" "}
-                <input
-                  className="form-control"
-                  type="text"
-                  value={userInfo.phone}
-                  onChange={(event) =>
-                    setUserInfo({ ...userInfo, phone: event.target.value })
-                  }
-                />
-              </p>
+              </Form>
             </div>
 
             <div className="d-flex flex-column justify-content-between gap-4">
