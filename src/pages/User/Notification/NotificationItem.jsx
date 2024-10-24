@@ -1,5 +1,4 @@
 const NotificationItem = ({ notification, handleOnClickOrder }) => {
-  console.log(notification);
   return (
     <div
       className="bg-white w-100 border border-2 border-success d-flex flex-row mb-2 align-items-center gap-3 p-2"

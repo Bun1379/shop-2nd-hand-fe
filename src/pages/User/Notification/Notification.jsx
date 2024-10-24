@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import NotificationItem from "./NotificationItem";
 import NotificationAPI from "../../../api/Notification";
 import { useNavigate } from "react-router-dom";
+import { io } from "socket.io-client";
 
 const Notification = () => {
   const [notifications, setNotifications] = useState([]);
@@ -15,7 +16,6 @@ const Notification = () => {
   const fetchNotifications = async () => {
     try {
       const response = await NotificationAPI.GetNotifications();
-      console.log(response.data.DT);
       setNotifications(response.data.DT);
     } catch (error) {
       console.error("Error: ", error);
@@ -23,6 +23,15 @@ const Notification = () => {
   };
   useEffect(() => {
     fetchNotifications();
+  }, []);
+  useEffect(() => {
+    const socket = io("http://localhost:3000");
+    socket.on("notification", (data) => {
+      setNotifications((prevNotifications) => [...prevNotifications, data]);
+    });
+    return () => {
+      socket.disconnect();
+    };
   }, []);
   return (
     <>
