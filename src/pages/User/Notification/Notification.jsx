@@ -3,11 +3,13 @@ import NotificationItem from "./NotificationItem";
 import NotificationAPI from "../../../api/Notification";
 import { useNavigate } from "react-router-dom";
 import { io } from "socket.io-client";
+import { useSocket } from "../../../layouts/SocketContext";
 
 const Notification = () => {
   const [notifications, setNotifications] = useState([]);
 
   const navigate = useNavigate();
+  const socket = useSocket();
 
   const handleOnClickOrder = (orderId) => {
     navigate(`/order/${orderId}`);
@@ -21,17 +23,15 @@ const Notification = () => {
       console.error("Error: ", error);
     }
   };
+
   useEffect(() => {
     fetchNotifications();
   }, []);
+
   useEffect(() => {
-    const socket = io("http://localhost:3000");
     socket.on("notification", (data) => {
       setNotifications((prevNotifications) => [...prevNotifications, data]);
     });
-    return () => {
-      socket.disconnect();
-    };
   }, []);
   return (
     <>
