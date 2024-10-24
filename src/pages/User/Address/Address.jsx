@@ -20,7 +20,7 @@ const Address = () => {
                 setAddresses(response.data.DT);
         }
         catch (error) {
-            toast.error("Lỗi: " + error.response.data.EM);
+            toast.error("Lỗi khi lấy địa chỉ: " + error.response.data.EM);
         }
     };
 
@@ -43,7 +43,7 @@ const Address = () => {
             }
             toast.success("Lưu địa chỉ thành công!");
         } catch (error) {
-            toast.error("Lỗi: " + error.response.data.EM);
+            toast.error("Lỗi khi lưu: " + error.response.data.EM);
         }
         closeModal();
         loadAddresses();
@@ -55,7 +55,7 @@ const Address = () => {
             loadAddresses();
             toast.success("Xóa địa chỉ thành công!");
         } catch (error) {
-            toast.error("Lỗi: " + error.response.data.EM);
+            toast.error("Lỗi khi xóa: " + error.response.data.EM);
         }
     };
 
@@ -65,7 +65,7 @@ const Address = () => {
             loadAddresses();
             toast.success("Đặt địa chỉ mặc định thành công!");
         } catch (error) {
-            toast.error("Lỗi: " + error.response.data.EM);
+            toast.error("Lỗi khi đặt mặc định: " + error.response.data.EM);
         }
     }
 
