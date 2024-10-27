@@ -1,22 +1,41 @@
 import "./SearchFilter.css";
 import { FaList, FaSearch } from "react-icons/fa";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import CategoryAPI from "../../../api/categoryAPI";
+import ColorAPI from "../../../api/ColorAPI";
+import ReactSelect from "react-select";
 
-const SearchFilter = ({ onSelectCategory, onSearch }) => {
+const SearchFilter = ({
+  onSelectCategory,
+  onSearch,
+  optionConditions,
+  setSelectedCondition,
+  listColor,
+  setSelectedColor,
+  resetFilter,
+  selectedColor,
+  selectedCondition,
+}) => {
   const [categories, setCategories] = useState([]);
   const [searchText, setSearchText] = useState("");
   const [selectedCategories, setSelectedCategories] = useState([]);
 
+  const fetchCategories = async () => {
+    try {
+      const response = await CategoryAPI.getAllCategories();
+      setCategories(response.data.DT);
+    } catch (error) {
+      console.error("Lỗi khi lấy danh mục: ", error);
+    }
+  };
+
+  const handleResetFilter = () => {
+    setSelectedCategories([]);
+
+    resetFilter();
+  };
+
   useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const response = await CategoryAPI.getAllCategories();
-        setCategories(response.data.DT);
-      } catch (error) {
-        console.error("Lỗi khi lấy danh mục: ", error);
-      }
-    };
     fetchCategories();
   }, []);
 
@@ -72,6 +91,27 @@ const SearchFilter = ({ onSelectCategory, onSearch }) => {
           ) : (
             <p>Không có danh mục nào để hiển thị</p>
           )}
+        </div>
+        <div className="mt-3">
+          <ReactSelect
+            options={optionConditions}
+            value={selectedCondition}
+            onChange={(selectedOption) => setSelectedCondition(selectedOption)}
+            placeholder="Chọn điều kiện"
+          />
+        </div>
+        <div className="mt-3">
+          <ReactSelect
+            options={listColor}
+            value={selectedColor}
+            onChange={(selectedOption) => setSelectedColor(selectedOption)}
+            placeholder="Chọn màu"
+          />
+        </div>
+        <div className="mt-3">
+          <button className="btn btn-danger w-100" onClick={handleResetFilter}>
+            Xóa bộ lọc
+          </button>
         </div>
       </div>
     </div>

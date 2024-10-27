@@ -5,6 +5,7 @@ import ProductAPI from "../../../api/ProductAPI";
 import { toast } from "react-toastify";
 import { Button, Modal } from "react-bootstrap";
 import ReactSelect from "react-select";
+import ColorAPI from "../../../api/ColorAPI";
 
 const ModalUpdateProduct = ({ showUpdate, setShowUpdate, product }) => {
   const setShow = setShowUpdate;
@@ -31,6 +32,20 @@ const ModalUpdateProduct = ({ showUpdate, setShowUpdate, product }) => {
       label: "XXL",
     },
   ];
+  const optionConditions = [
+    {
+      value: "NEW",
+      label: "Mới",
+    },
+    {
+      value: "99%",
+      label: "99%",
+    },
+    {
+      value: "98%",
+      label: "98%",
+    },
+  ];
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [size, setSize] = useState({
@@ -44,6 +59,13 @@ const ModalUpdateProduct = ({ showUpdate, setShowUpdate, product }) => {
   //   const [image, setImage] = useState([]);
   const [listPreviewImage, setListPreviewImage] = useState([]);
   const [actionsImage, setActionsImage] = useState([]);
+  const [condition, setCondition] = useState({
+    value: "NEW",
+    label: "Mới",
+  });
+  const [color, setColor] = useState([]);
+  const [selectedColor, setSelectedColor] = useState("");
+  const [isLoad, setIsLoad] = useState(false);
 
   const handleClose = () => {
     setShow(false);
@@ -119,6 +141,8 @@ const ModalUpdateProduct = ({ showUpdate, setShowUpdate, product }) => {
       category: selectedCategory.map((item) => item._id),
       price,
       quantity,
+      condition: condition.value,
+      color: selectedColor.value,
       // actionsImage,
     };
     let actions = [];
@@ -148,22 +172,47 @@ const ModalUpdateProduct = ({ showUpdate, setShowUpdate, product }) => {
     }
   };
 
+  const fetchColor = async () => {
+    try {
+      const response = await ColorAPI.GetAllColors();
+      setColor(
+        response.data.DT.map((item) => {
+          return {
+            value: item._id,
+            label: item.name,
+          };
+        })
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
     fetchCategory();
-  });
+    fetchColor();
+  }, []);
 
   useEffect(() => {
     if (product) {
-      setName(product.productName);
-      setDescription(product.description);
+      setName(product?.productName);
+      setDescription(product?.description);
       setSize({
-        value: product.size,
-        label: product.size,
+        value: product?.size,
+        label: product?.size,
       });
-      setPrice(product.price);
-      setQuantity(product.quantity);
-      setSelectedCategory(product.category);
-      setListPreviewImage(product.images);
+      setPrice(product?.price);
+      setQuantity(product?.quantity);
+      setSelectedCategory(product?.category);
+      setListPreviewImage(product?.images);
+      setCondition({
+        value: product?.condition,
+        label: product?.condition,
+      });
+      setSelectedColor({
+        value: product?.color?._id,
+        label: product?.color?.name,
+      });
     }
   }, [product]);
 
@@ -272,13 +321,29 @@ const ModalUpdateProduct = ({ showUpdate, setShowUpdate, product }) => {
                 <span>Preview Image</span>
               )}
             </div>
-            <div className="col-md-6">
+            <div className="col-md-4">
               <label className="form-label">Số lượng:</label>
               <input
                 type="number"
                 className="form-control"
                 value={quantity}
                 onChange={(event) => setQuantity(event.target.value)}
+              />
+            </div>
+            <div className="col-md-4">
+              <label className="form-label">Tình trạng:</label>
+              <ReactSelect
+                options={optionConditions}
+                value={condition}
+                onChange={(selected) => setCondition(selected)}
+              />
+            </div>
+            <div className="col-md-4">
+              <label className="form-label">Màu sắc:</label>
+              <ReactSelect
+                options={color}
+                value={selectedColor}
+                onChange={(selected) => setSelectedColor(selected)}
               />
             </div>
           </form>
