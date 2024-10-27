@@ -15,10 +15,10 @@ const SearchFilter = ({
   resetFilter,
   selectedColor,
   selectedCondition,
+  selectedCategories,
 }) => {
   const [categories, setCategories] = useState([]);
   const [searchText, setSearchText] = useState("");
-  const [selectedCategories, setSelectedCategories] = useState([]);
 
   const fetchCategories = async () => {
     try {
@@ -29,25 +29,12 @@ const SearchFilter = ({
     }
   };
 
-  const handleResetFilter = () => {
-    setSelectedCategories([]);
-
-    resetFilter();
-  };
-
   useEffect(() => {
     fetchCategories();
   }, []);
 
   const handleCategorySelect = (categoryId) => {
-    if (selectedCategories.includes(categoryId)) {
-      setSelectedCategories(
-        selectedCategories.filter((id) => id !== categoryId)
-      );
-    } else {
-      setSelectedCategories([...selectedCategories, categoryId]);
-    }
-    onSelectCategory(categoryId, "");
+    onSelectCategory(categoryId);
   };
 
   return (
@@ -109,7 +96,7 @@ const SearchFilter = ({
           />
         </div>
         <div className="mt-3">
-          <button className="btn btn-danger w-100" onClick={handleResetFilter}>
+          <button className="btn btn-danger w-100" onClick={resetFilter}>
             Xóa bộ lọc
           </button>
         </div>

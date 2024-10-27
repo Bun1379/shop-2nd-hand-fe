@@ -84,7 +84,6 @@ const Search = () => {
       // console.log(sort.value, page + 1);
       // console.log(response.data.DT.products);
       setProducts([...products, ...response.data.DT.products]);
-      console.log(products);
       setPage(page + 1);
     } catch (error) {
       console.error("Error:", error);
@@ -135,6 +134,7 @@ const Search = () => {
         resetFilter={resetFilter}
         selectedColor={selectedColor}
         selectedCondition={selectedCondition}
+        selectedCategories={selectedCategories}
       />
       <div className="text-center w-75">
         Kết quả tìm kiếm cho: {searchParams.get("query")}
