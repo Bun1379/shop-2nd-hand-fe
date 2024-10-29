@@ -5,6 +5,7 @@ import ProductItem from "../../../components/ProductItem/ProductItem";
 import { useState, useEffect } from "react";
 import ProductAPI from "../../../api/ProductAPI";
 import { Carousel } from "react-bootstrap";
+import HomeDiscount from "./Discount/HomeDiscount";
 
 function Home() {
   const [arrayProducts, setArrayProducts] = useState([]);
@@ -24,7 +25,7 @@ function Home() {
   return (
     <>
       <div className="home-new-product-container">
-        <Carousel>
+        <Carousel className="z-0">
           <Carousel.Item>
             <img
               className="d-block w-100"
@@ -49,6 +50,9 @@ function Home() {
             </Carousel.Caption>
           </Carousel.Item>
         </Carousel>
+        <div className="my-5">
+          <HomeDiscount />
+        </div>
         <h1 className="mt-2">Hàng mới về</h1>
         <div className="home-new-product-container-list">
           {arrayProducts.map((product) => (

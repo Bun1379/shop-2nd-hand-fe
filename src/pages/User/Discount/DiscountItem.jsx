@@ -2,7 +2,7 @@ const DiscountItem = ({ discount }) => {
   const user = JSON.parse(localStorage.getItem("user"));
   const isUsed = discount.usersUsed.includes(user._id);
   return (
-    <div className="card" style={{ width: "49%" }}>
+    <div className="card my-2" style={{ width: "49%" }}>
       <div className="card-body">
         <h5 className="card-title">{discount.discountCode}</h5>
         <p className="card-text">

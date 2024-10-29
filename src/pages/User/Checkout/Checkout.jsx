@@ -45,15 +45,16 @@ const Checkout = () => {
         const addresses = response.data.DT;
         setAddressList(addresses);
 
-        const defaultAddress = addresses.find(address => address.isDefault === true);
+        const defaultAddress = addresses.find(
+          (address) => address.isDefault === true
+        );
         console.log(defaultAddress);
         if (defaultAddress) {
           setSelectedAddress(defaultAddress);
           console.log(selectedAddress);
         }
       }
-    }
-    catch (error) {
+    } catch (error) {
       toast.error("Lỗi: " + error.response.data.EM);
     }
   };
@@ -110,12 +111,14 @@ const Checkout = () => {
       const response = await UserAPI.GetUserInfo();
       if (response.status === 200) {
         setListDiscount(
-          response.data.DT.discounts.map((item) => {
-            return {
-              value: item._id,
-              label: item.discountCode + " - " + item.discountPercentage + "%",
-            };
-          })
+          response.data.DT.discounts
+            .filter(
+              (discount) => !discount?.usersUsed?.includes(response.data.DT._id)
+            )
+            .map((discount) => ({
+              value: discount._id,
+              label: discount.discountCode,
+            }))
         );
       }
     } catch (error) {
@@ -164,9 +167,7 @@ const Checkout = () => {
         >
           <div className="d-flex align-items-center justify-content-around">
             <div className="d-flex flex-column justify-content-between gap-4">
-              <Button
-                className="btn w-25"
-                onClick={() => setIsModalOpen(true)}>
+              <Button className="btn w-25" onClick={() => setIsModalOpen(true)}>
                 Chọn Địa Chỉ
               </Button>
               {selectedAddress && (
@@ -174,8 +175,11 @@ const Checkout = () => {
                   <div className="card-body">
                     <h5 className="card-title">{selectedAddress.name}</h5>
                     <p className="card-text mt-1">
-                      Số điện thoại: {selectedAddress.phone}<br />
-                      Địa chỉ: {selectedAddress.address}, {selectedAddress.district}, {selectedAddress.ward}, {selectedAddress.city}
+                      Số điện thoại: {selectedAddress.phone}
+                      <br />
+                      Địa chỉ: {selectedAddress.address},{" "}
+                      {selectedAddress.district}, {selectedAddress.ward},{" "}
+                      {selectedAddress.city}
                     </p>
                   </div>
                 </div>
