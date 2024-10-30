@@ -41,7 +41,7 @@ const Address = () => {
             } else {
                 await AddressAPI.CreateAddress(addressData);
             }
-            toast.success("Lưu địa chỉ thành công!");
+            toast.success("Lưu địa chỉ thành công !");
         } catch (error) {
             toast.error("Lỗi: " + error.response.data.EM);
         }
@@ -53,7 +53,7 @@ const Address = () => {
         try {
             await AddressAPI.DeleteAddress(id);
             loadAddresses();
-            toast.success("Xóa địa chỉ thành công!");
+            toast.success("Xóa địa chỉ thành công !");
         } catch (error) {
             toast.error("Lỗi: " + error.response.data.EM);
         }
@@ -63,7 +63,7 @@ const Address = () => {
         try {
             await AddressAPI.SetDefaultAddress(id);
             loadAddresses();
-            toast.success("Đặt địa chỉ mặc định thành công!");
+            toast.success("Đặt địa chỉ mặc định thành công !");
         } catch (error) {
             toast.error("Lỗi: " + error.response.data.EM);
         }
