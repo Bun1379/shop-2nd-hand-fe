@@ -55,10 +55,10 @@ const Cart = () => {
     const newCart = cart.map((item) =>
       item.product._id === productId
         ? {
-          ...item,
-          quantity: newQuantity,
-          price: item.product.price * newQuantity,
-        }
+            ...item,
+            quantity: newQuantity,
+            price: item.product.price * newQuantity,
+          }
         : item
     );
     setCart(newCart);
@@ -83,6 +83,14 @@ const Cart = () => {
   return (
     <div>
       <p className="fw-bold fs-3 p-3">Giỏ hàng</p>
+      {cart.length === 0 && (
+        <div className="text-center">
+          <p>Giỏ hàng của bạn đang trống</p>
+          <button className="btn btn-primary" onClick={() => navigate("/")}>
+            Tiếp tục mua hàng
+          </button>
+        </div>
+      )}
       <div className="">
         {cart.map((item) => (
           <CartItem

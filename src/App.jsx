@@ -1,6 +1,5 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
-import { useEffect } from "react";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
@@ -25,10 +24,11 @@ import Discount from "./pages/Admin/Discount/Discount";
 import User from "./pages/Admin/User/User";
 import ManageOrder from "./pages/Admin/Order/MangeOrder";
 import PaymentResult from "./pages/User/Checkout/PaymentResult";
+import { SocketProvider } from "./layouts/SocketContext";
 
 function App() {
   return (
-    <>
+    <SocketProvider>
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<UserLayout />}>
@@ -75,7 +75,7 @@ function App() {
         draggable
         pauseOnHover
       />
-    </>
+    </SocketProvider>
   );
 }
 

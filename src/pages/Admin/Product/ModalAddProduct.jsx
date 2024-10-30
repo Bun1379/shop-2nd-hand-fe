@@ -7,6 +7,8 @@ import ReactSelect from "react-select";
 import CategoryAPI from "../../../api/categoryAPI";
 import UploadAPI from "../../../api/UploadAPI";
 import ProductAPI from "../../../api/ProductAPI";
+import ColorAPI from "../../../api/ColorAPI";
+
 const ModalAddProduct = ({ showAdd, setShowAdd }) => {
   // const [show, setShow] = useState(false);
   const setShow = setShowAdd;
@@ -33,6 +35,22 @@ const ModalAddProduct = ({ showAdd, setShowAdd }) => {
       label: "XXL",
     },
   ];
+  // condition: { type: String, enum: ["NEW", "99%", "98%"], required: true },
+
+  const optionConditions = [
+    {
+      value: "NEW",
+      label: "Mới",
+    },
+    {
+      value: "99%",
+      label: "99%",
+    },
+    {
+      value: "98%",
+      label: "98%",
+    },
+  ];
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [size, setSize] = useState({
@@ -45,6 +63,13 @@ const ModalAddProduct = ({ showAdd, setShowAdd }) => {
   const [quantity, setQuantity] = useState(0);
   const [image, setImage] = useState([]);
   const [listPreviewImage, setListPreviewImage] = useState([]);
+  const [condition, setCondition] = useState({
+    value: "NEW",
+    label: "Mới",
+  });
+  const [color, setColor] = useState([]);
+  const [selectedColor, setSelectedColor] = useState("");
+  const [isLoad, setIsLoad] = useState(false);
 
   const handleClose = () => {
     setShow(false);
@@ -70,6 +95,22 @@ const ModalAddProduct = ({ showAdd, setShowAdd }) => {
     }
   };
 
+  const fetchColor = async () => {
+    try {
+      const response = await ColorAPI.GetAllColors();
+      setColor(
+        response.data.DT.map((item) => {
+          return {
+            value: item._id,
+            label: item.name,
+          };
+        })
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const handleChangeCate = (event) => {
     const cateId = event.target.value;
     const cate = category.find((item) => item._id === cateId);
@@ -88,7 +129,7 @@ const ModalAddProduct = ({ showAdd, setShowAdd }) => {
   const handleUploadImage = (event) => {
     if (event.target && event.target.files && event.target.files.length > 0) {
       const file = event.target.files[0];
-      const validImageTypes = ['image/jpeg', 'image/png'];
+      const validImageTypes = ["image/jpeg", "image/png"];
 
       // Kiểm tra định dạng ảnh
       if (!validImageTypes.includes(file.type)) {
@@ -96,14 +137,10 @@ const ModalAddProduct = ({ showAdd, setShowAdd }) => {
         return;
       }
 
-      setListPreviewImage([
-        ...listPreviewImage,
-        URL.createObjectURL(file),
-      ]);
+      setListPreviewImage([...listPreviewImage, URL.createObjectURL(file)]);
       setImage([...image, file]);
     }
   };
-
 
   const handleDeleteImage = (index) => {
     const newImage = image.filter((item, idx) => idx !== index);
@@ -113,6 +150,7 @@ const ModalAddProduct = ({ showAdd, setShowAdd }) => {
   };
 
   const handleCreateProduct = async () => {
+    setIsLoad(true);
     if (
       !name ||
       !description ||
@@ -120,7 +158,11 @@ const ModalAddProduct = ({ showAdd, setShowAdd }) => {
       !price ||
       !image ||
       !selectedCategory ||
-      !quantity
+      !quantity ||
+      image.length === 0 ||
+      selectedCategory.length === 0 ||
+      !condition ||
+      !selectedColor
     ) {
       toast.error("Vui lòng nhập đầy đủ thông tin");
       return;
@@ -132,6 +174,8 @@ const ModalAddProduct = ({ showAdd, setShowAdd }) => {
       price,
       quantity,
       category: selectedCategory.map((item) => item._id),
+      condition: condition.value,
+      color: selectedColor.value,
     };
     const images = [];
     for (let i = 0; i < image.length; i++) {
@@ -143,6 +187,7 @@ const ModalAddProduct = ({ showAdd, setShowAdd }) => {
     data.images = images;
     console.log(data);
     const response = await ProductAPI.CreateProduct(data);
+    setIsLoad(false);
     if (response.status === 200) {
       toast.success("Tạo sản phẩm thành công");
       handleClose();
@@ -153,6 +198,7 @@ const ModalAddProduct = ({ showAdd, setShowAdd }) => {
 
   useEffect(() => {
     fetchCategory();
+    fetchColor();
   }, []);
 
   return (
@@ -262,13 +308,29 @@ const ModalAddProduct = ({ showAdd, setShowAdd }) => {
                 <span>Preview Image</span>
               )}
             </div>
-            <div className="col-md-6">
+            <div className="col-md-4">
               <label className="form-label">Số lượng:</label>
               <input
                 type="number"
                 className="form-control"
                 value={quantity}
                 onChange={(event) => setQuantity(event.target.value)}
+              />
+            </div>
+            <div className="col-md-4">
+              <label className="form-label">Tình trạng:</label>
+              <ReactSelect
+                options={optionConditions}
+                value={condition}
+                onChange={(selected) => setCondition(selected)}
+              />
+            </div>
+            <div className="col-md-4">
+              <label className="form-label">Màu sắc:</label>
+              <ReactSelect
+                options={color}
+                value={selectedColor}
+                onChange={(selected) => setSelectedColor(selected)}
               />
             </div>
           </form>
@@ -278,6 +340,7 @@ const ModalAddProduct = ({ showAdd, setShowAdd }) => {
             Đóng
           </Button>
           <Button variant="primary" onClick={handleCreateProduct}>
+            {isLoad ? "Loading..." : " "}
             Thêm sản phẩm
           </Button>
         </Modal.Footer>

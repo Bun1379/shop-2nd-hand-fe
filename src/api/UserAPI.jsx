@@ -21,6 +21,10 @@ class UserAPI {
     const url = "/user/favorite";
     return axiosPrivate.put(url, { productId });
   }
+  static async PutUpdateDiscount(discountCode) {
+    const url = "/user/discount";
+    return axiosPrivate.put(url, { discountCode });
+  }
 }
 
 export default UserAPI;

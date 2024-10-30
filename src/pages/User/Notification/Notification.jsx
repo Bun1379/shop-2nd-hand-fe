@@ -2,11 +2,14 @@ import { useEffect, useState } from "react";
 import NotificationItem from "./NotificationItem";
 import NotificationAPI from "../../../api/Notification";
 import { useNavigate } from "react-router-dom";
+import { io } from "socket.io-client";
+import { useSocket } from "../../../layouts/SocketContext";
 
 const Notification = () => {
   const [notifications, setNotifications] = useState([]);
 
   const navigate = useNavigate();
+  const socket = useSocket();
 
   const handleOnClickOrder = (orderId) => {
     navigate(`/order/${orderId}`);
@@ -15,14 +18,20 @@ const Notification = () => {
   const fetchNotifications = async () => {
     try {
       const response = await NotificationAPI.GetNotifications();
-      console.log(response.data.DT);
       setNotifications(response.data.DT);
     } catch (error) {
       console.error("Error: ", error);
     }
   };
+
   useEffect(() => {
     fetchNotifications();
+  }, []);
+
+  useEffect(() => {
+    socket.on("notification", (data) => {
+      setNotifications((prevNotifications) => [...prevNotifications, data]);
+    });
   }, []);
   return (
     <>

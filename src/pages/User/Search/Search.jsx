@@ -4,6 +4,7 @@ import { useSearchParams } from "react-router-dom";
 import ProductItem from "../../../components/ProductItem/ProductItem";
 import SearchFilter from "./SearchFilter";
 import ReactSelect from "react-select";
+import ColorAPI from "../../../api/ColorAPI";
 
 const Search = () => {
   const [searchParams] = useSearchParams();
@@ -12,6 +13,23 @@ const Search = () => {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [selectedCategories, setSelectedCategories] = useState([]);
+  const optionConditions = [
+    {
+      value: "NEW",
+      label: "Mới",
+    },
+    {
+      value: "99%",
+      label: "99%",
+    },
+    {
+      value: "98%",
+      label: "98%",
+    },
+  ];
+  const [selectedCondition, setSelectedCondition] = useState("");
+  const [listColor, setListColor] = useState([]);
+  const [selectedColor, setSelectedColor] = useState("");
 
   const options = [
     { value: 0, label: "Mặc định" },
@@ -19,12 +37,30 @@ const Search = () => {
     { value: 2, label: "Giá giảm dần" },
   ];
 
+  const fetchColor = async () => {
+    try {
+      const response = await ColorAPI.GetAllColors();
+      setListColor(
+        response.data.DT.map((item) => {
+          return {
+            value: item._id,
+            label: item.name,
+          };
+        })
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const fetchData = async (searchQuery) => {
     try {
       const response = await ProductAPI.GetProducts({
         search: searchQuery,
         sortOrder: sort.value,
         category: selectedCategories,
+        condition: selectedCondition.value,
+        color: selectedColor.value,
         page: 1,
       });
       //   console.log(search);
@@ -48,7 +84,6 @@ const Search = () => {
       // console.log(sort.value, page + 1);
       // console.log(response.data.DT.products);
       setProducts([...products, ...response.data.DT.products]);
-      console.log(products);
       setPage(page + 1);
     } catch (error) {
       console.error("Error:", error);
@@ -68,13 +103,38 @@ const Search = () => {
   useEffect(() => {
     const search = searchParams.get("query");
     fetchData(search);
-  }, [searchParams, sort, selectedCategories]);
+  }, [
+    searchParams,
+    sort,
+    selectedCategories,
+    selectedCondition,
+    selectedColor,
+  ]);
+
+  const resetFilter = () => {
+    setSelectedCategories([]);
+    setSelectedCondition("");
+    setSelectedColor("");
+    setSort({ value: 0, label: "Mặc định" });
+  };
+
+  useEffect(() => {
+    fetchColor();
+  }, []);
 
   return (
     <div className="d-flex flex-row gap-3">
       <SearchFilter
         onSelectCategory={handleCategorySelect}
         onSearch={fetchData}
+        listColor={listColor}
+        optionConditions={optionConditions}
+        setSelectedCondition={setSelectedCondition}
+        setSelectedColor={setSelectedColor}
+        resetFilter={resetFilter}
+        selectedColor={selectedColor}
+        selectedCondition={selectedCondition}
+        selectedCategories={selectedCategories}
       />
       <div className="text-center w-75">
         Kết quả tìm kiếm cho: {searchParams.get("query")}
