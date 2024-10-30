@@ -28,10 +28,14 @@ class AddressAPI {
     }
 
     static async CheckAddress(city, district, ward, specificAddress) {
-        const address = `${specificAddress}, ${ward}, ${district}, ${city}, Vietnam`;
+        if (district === "Quận Thủ Đức") {
+            district = "Thành phố Thủ Đức";
+        }
+        const address = `${specificAddress}, ${ward}, ${district}, ${city}, VietNam`;
         const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(address)}&format=json`;
         try {
             const response = await axios.get(url);
+            console.log(response.data);
             return response.data.length > 0;
         } catch (error) {
             console.error("Error checking address:", error);
