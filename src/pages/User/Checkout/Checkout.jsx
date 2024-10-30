@@ -73,21 +73,27 @@ const Checkout = () => {
       discountCode: discountCode,
     };
     try {
+      const rs = await OrderAPI.CreateOrder(data);
+      if (rs.status === 200) {
+        toast.success("Đăt hàng thành công");
+      }
       if (selectedPaymentMethod.value === "ONLINE") {
-        const PaymentData = { amount: afterDiscount };
-        const response = await PaymentAPI.postPayments(PaymentData);
+        const PaymentData = {
+          amount: afterDiscount,
+          orderId: rs.data.DT._id,
+          returnUrl: "http://localhost:5173/payment/result",
+        };
+        const response = await PaymentAPI.postPayment(PaymentData);
         if (response.status === 200) {
           const paymentUrl = response.data.DT;
           window.location.href = paymentUrl;
         }
-      } else if (selectedPaymentMethod.value === "COD") {
-        await OrderAPI.CreateOrder(data);
-        toast.success("Đặt hàng thành công");
+      }
+      else {
         navigation("/user-profile", { state: { initialSection: "orders" } });
       }
     } catch (error) {
       toast.error(error.response?.data?.EM);
-      console.log(error);
     }
   };
 

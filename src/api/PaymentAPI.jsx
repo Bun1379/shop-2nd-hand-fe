@@ -1,14 +1,14 @@
 import { axiosClient, axiosPrivate } from "./Axios";
 
 class PaymentAPI {
-    static async postPayments(data) {
-        const url = "/payment";
+    static async postPayment(data) {
+        const url = "/payment/create_payment_url";
         return axiosPrivate.post(url, data);
     }
 
-    static async getPaymentsResult(params = {}) {
-        const url = "/payment/result";
-        return axiosClient.get(url, params);
+    static async getPaymentVerify(params = {}) {
+        const url = "/payment/vnpay_verify";
+        return axiosClient.get(url, { params });
     }
 }
 
