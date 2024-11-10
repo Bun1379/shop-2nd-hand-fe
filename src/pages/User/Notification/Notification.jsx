@@ -29,9 +29,20 @@ const Notification = () => {
   }, []);
 
   useEffect(() => {
-    socket.on("notification", (data) => {
-      setNotifications((prevNotifications) => [...prevNotifications, data]);
-    });
+    const handleNotification = (data) => {
+      setNotifications((prevNotifications) => {
+        if (
+          !prevNotifications.some(
+            (notification) => notification._id === data._id
+          )
+        ) {
+          return [data, ...prevNotifications];
+        }
+        return prevNotifications;
+      });
+    };
+
+    socket.on("notification", handleNotification);
   }, []);
   return (
     <>

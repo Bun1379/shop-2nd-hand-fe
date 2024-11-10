@@ -42,7 +42,6 @@ const DiscountSlider = () => {
     try {
       const response = await UserAPI.GetUserInfo();
       setUserDiscounts(response.data.DT.discounts);
-      console.log(response.data.DT.discounts);
     } catch (error) {
       console.error("Chi tiết lỗi:", error.message);
     }
@@ -76,7 +75,7 @@ const DiscountSlider = () => {
         {discounts.length > 0 &&
           userDiscounts.length > 0 &&
           groupedDiscounts[currentIndex]?.map((discount) => (
-            <Col md={3} key={discount.id}>
+            <Col md={3} key={discount._id}>
               <Card className="h-100">
                 <Card.Body>
                   <Card.Title>Mã: {discount.discountCode}</Card.Title>

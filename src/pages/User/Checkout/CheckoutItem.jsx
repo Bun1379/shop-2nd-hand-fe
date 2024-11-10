@@ -1,5 +1,4 @@
 const CheckoutItem = ({ item }) => {
-  console.log(item);
   return (
     <div
       className="shadow border w-100 border-success mb-2 border-2 p-2 d-flex align-items-center justify-content-between"

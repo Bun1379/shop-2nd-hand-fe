@@ -48,7 +48,6 @@ const Checkout = () => {
         const defaultAddress = addresses.find(
           (address) => address.isDefault === true
         );
-        console.log(defaultAddress);
         if (defaultAddress) {
           setSelectedAddress(defaultAddress);
           console.log(selectedAddress);
@@ -88,8 +87,7 @@ const Checkout = () => {
           const paymentUrl = response.data.DT;
           window.location.href = paymentUrl;
         }
-      }
-      else {
+      } else {
         navigation("/user-profile", { state: { initialSection: "orders" } });
       }
     } catch (error) {
