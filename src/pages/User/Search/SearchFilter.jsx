@@ -1,9 +1,9 @@
 import "./SearchFilter.css";
 import { FaList, FaSearch } from "react-icons/fa";
 import React, { useEffect, useState } from "react";
-import CategoryAPI from "../../../api/categoryAPI";
 import ColorAPI from "../../../api/ColorAPI";
 import ReactSelect from "react-select";
+import CategoryAPI from "@/api/categoryAPI";
 
 const SearchFilter = ({
   onSelectCategory,
