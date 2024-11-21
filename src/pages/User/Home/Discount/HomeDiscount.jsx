@@ -65,10 +65,10 @@ const DiscountSlider = () => {
   return (
     <Container>
       <h1 className="text-center">Discounts</h1>
-      <Row className="align-items-center">
+      <Row className="align-items-center d-flex justify-content-center">
         <Col xs="auto">
           <Button variant="primary" onClick={handlePrev} className="mx-2">
-            Previous
+            {"<"}
           </Button>
         </Col>
 
@@ -76,7 +76,7 @@ const DiscountSlider = () => {
           userDiscounts.length > 0 &&
           groupedDiscounts[currentIndex]?.map((discount) => (
             <Col md={3} key={discount._id}>
-              <Card className="h-100">
+              <Card style={{ height: "150px" }}>
                 <Card.Body>
                   <Card.Title>Mã: {discount.discountCode}</Card.Title>
                   <Card.Text>Giảm: {discount.discountPercentage}%</Card.Text>
@@ -104,7 +104,7 @@ const DiscountSlider = () => {
 
         <Col xs="auto">
           <Button variant="primary" onClick={handleNext} className="mx-2">
-            Next
+            {">"}
           </Button>
         </Col>
       </Row>
