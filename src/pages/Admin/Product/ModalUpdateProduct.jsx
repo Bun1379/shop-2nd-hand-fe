@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import CategoryAPI from "../../../api/categoryAPI";
+import CategoryAPI from "../../../api/CategoryAPI";
 import UploadAPI from "../../../api/UploadAPI";
 import ProductAPI from "../../../api/ProductAPI";
 import { toast } from "react-toastify";

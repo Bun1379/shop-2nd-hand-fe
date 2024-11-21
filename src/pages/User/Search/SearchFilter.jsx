@@ -3,7 +3,7 @@ import { FaList, FaSearch } from "react-icons/fa";
 import React, { useEffect, useState } from "react";
 import ColorAPI from "../../../api/ColorAPI";
 import ReactSelect from "react-select";
-import CategoryAPI from "@/api/categoryAPI";
+import CategoryAPI from "../../../api/CategoryAPI";
 
 const SearchFilter = ({
   onSelectCategory,

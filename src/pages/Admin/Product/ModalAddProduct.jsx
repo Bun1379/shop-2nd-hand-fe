@@ -4,7 +4,7 @@ import Modal from "react-bootstrap/Modal";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import ReactSelect from "react-select";
-import CategoryAPI from "../../../api/categoryAPI";
+import CategoryAPI from "../../../api/CategoryAPI";
 import UploadAPI from "../../../api/UploadAPI";
 import ProductAPI from "../../../api/ProductAPI";
 import ColorAPI from "../../../api/ColorAPI";
