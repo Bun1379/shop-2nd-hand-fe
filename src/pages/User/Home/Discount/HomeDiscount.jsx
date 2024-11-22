@@ -73,7 +73,6 @@ const DiscountSlider = () => {
         </Col>
 
         {discounts.length > 0 &&
-          userDiscounts.length > 0 &&
           groupedDiscounts[currentIndex]?.map((discount) => (
             <Col md={3} key={discount._id}>
               <Card style={{ height: "150px" }}>
@@ -85,7 +84,8 @@ const DiscountSlider = () => {
                   ) : (
                     <Button variant="success">Nhận</Button>
                   )} */}
-                  {userDiscounts.find(
+                  {userDiscounts.length > 0 &&
+                  userDiscounts.find(
                     (userDiscount) => userDiscount._id === discount._id
                   ) ? (
                     <Card.Text className="text-danger">Đã nhận</Card.Text>
