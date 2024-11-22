@@ -62,6 +62,11 @@ const Product = () => {
     setSearch("");
   };
 
+  const onClickSearch = () => {
+    if (page !== 1) setPage(1);
+    fetchDataProduct();
+  };
+
   useEffect(() => {
     fetchDataProduct();
   }, [page, showAddProduct, showUpdateProduct]);
@@ -104,7 +109,7 @@ const Product = () => {
               />
             </div>
             <div className="d-flex justify-content-end gap-2 mt-2">
-              <button className="btn btn-primary" onClick={fetchDataProduct}>
+              <button className="btn btn-primary" onClick={onClickSearch}>
                 Tìm kiếm
               </button>
               <button className="btn btn-primary" onClick={handleResetButton}>

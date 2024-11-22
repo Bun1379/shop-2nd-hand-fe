@@ -3,7 +3,6 @@ import { Button, Modal } from "react-bootstrap";
 import CheckoutItem from "../../User/Checkout/CheckoutItem";
 
 const ModalViewOrder = ({ show, setShowView, order }) => {
-  console.log(order);
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
@@ -63,7 +62,7 @@ const ModalViewOrder = ({ show, setShowView, order }) => {
               {products &&
                 products.length > 0 &&
                 products.map((product) => {
-                  return <CheckoutItem item={product} />;
+                  return <CheckoutItem item={product} key={product._id} />;
                 })}
             </div>
             <div className="col-md-4">

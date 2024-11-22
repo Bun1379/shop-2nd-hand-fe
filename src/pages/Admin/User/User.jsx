@@ -19,7 +19,7 @@ const User = () => {
 
   const fetchDataUser = async () => {
     try {
-      const res = await UserAPI.GetUserAdmin();
+      const res = await UserAPI.GetUserAdmin({ page });
       if (res.status === 200) {
         setUsers(res.data.DT.users);
         setTotalPages(res.data.DT.totalPages);

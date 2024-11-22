@@ -8,7 +8,22 @@ const OrderTable = ({
   setPage,
   UpdateOrderStatus,
   handleViewOrder,
+  UpdateOrderPaymentStatus,
 }) => {
+  const optionsPayment = [
+    {
+      value: "PENDING",
+      label: "Chưa thanh toán",
+    },
+    {
+      value: "PAID",
+      label: "Đã thanh toán",
+    },
+    {
+      value: "FAILED",
+      label: "Thanh toán thất bại",
+    },
+  ];
   const options = [
     {
       value: "PENDING",
@@ -47,6 +62,7 @@ const OrderTable = ({
             <th>Trạng thái đơn hàng</th>
             <th>Tổng tiền đơn hàng</th>
             <th>Phương thức thanh toán</th>
+            <th>Tình trạng thanh toán</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -68,8 +84,20 @@ const OrderTable = ({
                     }
                   />
                 </td>
+
                 <td>{order.totalAmount}</td>
                 <td>{order.paymentMethod}</td>
+                <td>
+                  <Select
+                    options={optionsPayment}
+                    defaultValue={optionsPayment.find(
+                      (option) => option.value === order.paymentStatus
+                    )}
+                    onChange={(selected) =>
+                      UpdateOrderPaymentStatus(order._id, selected.value)
+                    }
+                  />
+                </td>
                 <td className="d-flex gap-3">
                   <button
                     className="btn btn-primary"
