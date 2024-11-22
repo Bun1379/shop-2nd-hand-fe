@@ -5,6 +5,7 @@ import { FaArrowLeft } from "react-icons/fa";
 import LoginLayout from "../../layouts/LoginLayout/LoginLayout";
 import AuthAPI from "../../api/AuthAPI";
 import "./Login.css";
+import { setUserInLocalStorage } from "../../layouts/SocketContext";
 const Login = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
@@ -23,7 +24,7 @@ const Login = () => {
           toast.error("Tài khoản của bạn đã bị khóa");
         } else {
           localStorage.setItem("token", response.data.DT.token);
-          localStorage.setItem("user", JSON.stringify(response.data.DT.user));
+          setUserInLocalStorage(response.data.DT.user);
           localStorage.setItem("is_admin", response.data.DT.user.is_admin);
           toast.success("Đăng nhập thành công!");
           if (response.data.DT.user.is_verified === true) {
