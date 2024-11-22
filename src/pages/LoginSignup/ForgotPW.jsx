@@ -22,6 +22,7 @@ const ForgotPW = () => {
       setLoading(false);
       navigate("/reset-pw", { state: { email } });
     } catch (error) {
+      setLoading(false);
       toast.error("Gửi OTP thất bại: " + error.response.data.EM);
     }
   };
