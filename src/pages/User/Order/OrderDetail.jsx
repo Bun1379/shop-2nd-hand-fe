@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { MdArrowBackIos } from "react-icons/md";
 import { toast } from "react-toastify";
 
-const OrderDetail = ({ }) => {
+const OrderDetail = ({}) => {
   const token = localStorage.getItem("token");
   if (!token) {
     window.location.href = "/login";
@@ -36,7 +36,7 @@ const OrderDetail = ({ }) => {
   };
   useEffect(() => {
     fetchDataOrder();
-  }, []);
+  }, [orderId]);
   return (
     <>
       <div
@@ -46,7 +46,7 @@ const OrderDetail = ({ }) => {
         <span
           className="d-flex align-items-center gap-2 ms-5"
           onClick={() => {
-            window.history.back();
+            navigate("/user-profile", { state: { initialSection: "orders" } });
           }}
         >
           <MdArrowBackIos />

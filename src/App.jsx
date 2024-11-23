@@ -25,6 +25,7 @@ import User from "./pages/Admin/User/User";
 import ManageOrder from "./pages/Admin/Order/MangeOrder";
 import PaymentResult from "./pages/User/Checkout/PaymentResult";
 import { SocketProvider } from "./layouts/SocketContext";
+import DashBoard from "./pages/Admin/DashBoard/DashBoard";
 
 function App() {
   return (
@@ -53,15 +54,15 @@ function App() {
           <Route path="/product" element={<ProductItem />} />
 
           <Route path="/admin" element={<AdminLayout />}>
-            <Route index element={<h1>Hello Admin</h1>} />
+            <Route index element={<DashBoard />} />
             <Route path="product" element={<Product />} />
             <Route path="discount" element={<Discount />} />
             <Route path="user" element={<User />} />
             <Route path="order" element={<ManageOrder />} />
           </Route>
 
-          <Route path="*" element={<h1>404 Not Found</h1>} />
           <Route path="/payment/result" element={<PaymentResult />} />
+          <Route path="*" element={<h1>404 Not Found</h1>} />
         </Routes>
       </BrowserRouter>
       <ToastContainer
