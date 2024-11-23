@@ -4,6 +4,7 @@ import { FaBell, FaShoppingCart, FaSearch } from "react-icons/fa";
 import { toast } from "react-toastify";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./Header.css"; // Import CSS với class .header
+import NotificationBell from "./NotificationBell";
 
 function Header() {
   const navigate = useNavigate();
@@ -104,9 +105,7 @@ function Header() {
               {isLoggedIn ? (
                 <>
                   <li className="nav-item">
-                    <NavLink className="nav-link" to="/notifications">
-                      <FaBell />
-                    </NavLink>
+                    <NotificationBell />
                   </li>
                   <li className="nav-item">
                     <NavLink className="nav-link" to="/cart">
