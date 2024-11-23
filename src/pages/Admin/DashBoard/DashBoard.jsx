@@ -1,3 +1,6 @@
+import { Row } from "react-bootstrap";
+import DashBoardStats from "./DashBoardStats";
+import OrderStatus from "./OrderStatus";
 import RevenueChart from "./RevenueChart";
 
 const DashBoard = () => {
@@ -5,7 +8,11 @@ const DashBoard = () => {
     <div className="p-4">
       <h1>Admin DashBoard</h1>
       <hr />
-      <RevenueChart />
+      <DashBoardStats />
+      <Row>
+        <RevenueChart />
+        <OrderStatus />
+      </Row>
     </div>
   );
 };
