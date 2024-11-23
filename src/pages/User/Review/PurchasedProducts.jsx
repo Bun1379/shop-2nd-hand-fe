@@ -12,11 +12,15 @@ const PurchasedProducts = () => {
 
   const handleSubmitReview = async (review) => {
     if (!review.rating) {
-      toast.error("Rating is required");
+      toast.error("Vui lòng chọn số sao");
       return;
     }
     if (!review.comment) {
-      toast.error("Comment is required");
+      toast.error("Vui lòng nhập bình luận");
+      return;
+    }
+    if (review.comment.length < 10) {
+      toast.error("Bình luận phải có ít nhất 10 ký tự");
       return;
     }
     review.product = selectedProduct._id;
@@ -25,15 +29,15 @@ const PurchasedProducts = () => {
       if (response.data.DT.discount) {
         const discount = response.data.DT.discount;
         toast.success(
-          "Review successfully, you gain a discount: " +
-            discount.discountCode +
-            "-" +
-            discount.discountPercentage +
-            "%"
+          "Đánh giá thành công, bạn nhận được mã giảm giá: " +
+          discount.discountCode +
+          "-" +
+          discount.discountPercentage +
+          "%"
         );
       } else {
         toast.success(
-          "Review successfully, we don't have any valid discount for you, sorry!"
+          "Đánh giá thành công, xin lỗi chúng tôi không còn mã giảm giá cho bạn"
         );
       }
       setShowReviewModal(false);
