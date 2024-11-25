@@ -66,57 +66,58 @@ const CartItem = ({
   }, [quantity]);
 
   return (
-    <div
-      className="shadow w-75 border border-success mb-2 border-2 p-2 d-flex align-items-center"
-      style={{ height: "100px" }}
-    >
-      <input
-        className="form-check-input"
-        type="checkbox"
-        // id={`flexCheckDefault${index}`}
-        checked={isChecked}
-        onChange={handleCheckbox}
-      />
-      <img
-        src={item.product.images[0]}
-        alt="product"
-        style={{ width: "75px", height: "75px" }}
-        className="ms-4"
-      />
-      <div className="d-flex flex-column ms-4">
-        <p className="fw-bold">{item.product.productName}</p>
-        <p>Phân loại: </p>
-      </div>
-      <div className="d-flex flex-row ms-auto gap-3 align-items-center">
-        <p className="mb-0">{item.product.price}</p>
-        <div className="d-flex">
-          <button
-            className="btn btn-outline-secondary"
-            onClick={() => handleQuantityButton(parseInt(quantity) - 1)}
-          >
-            -
-          </button>
+    <div className="card shadow-sm mb-3 p-3 w-75">
+      <div className="row align-items-center">
+        <div className="col-auto">
           <input
-            type="text"
-            className="form-control mx-2"
-            onChange={handleQuantity}
-            value={quantity}
-            style={{ width: "50px" }}
+            className="form-check-input"
+            type="checkbox"
+            checked={isChecked}
+            onChange={handleCheckbox}
           />
-          <button
-            className="btn btn-outline-secondary"
-            onClick={() => handleQuantityButton(parseInt(quantity) + 1)}
-          >
-            +
-          </button>
         </div>
-        <p className="mb-0">{totalPrice}</p>
-        <button
-          className="btn btn-danger"
-          onClick={() => handleDeleteProduct(item.product._id)}
-        >
-          Xóa
-        </button>
+        <div className="col-auto">
+          <img
+            src={item.product.images[0]}
+            alt="product"
+            className="img-fluid rounded"
+            style={{ width: "80px", height: "80px" }}
+          />
+        </div>
+        <div className="col">
+          <h5 className="card-title">{item.product.productName}</h5>
+          <p className="mb-0 me-3">Giá: {item.product.price} VNĐ</p>
+        </div>
+        <div className="col-auto d-flex align-items-center">
+          <div className="d-flex align-items-center">
+            <p className="mb-0 fw-bold mx-2">{totalPrice} VNĐ</p>
+            <button
+              className="btn btn-outline-secondary btn-sm"
+              onClick={() => handleQuantityButton(parseInt(quantity) - 1)}
+            >
+              -
+            </button>
+            <input
+              type="text"
+              className="form-control mx-2 text-center"
+              onChange={handleQuantity}
+              value={quantity}
+              style={{ width: "50px" }}
+            />
+            <button
+              className="btn btn-outline-secondary btn-sm"
+              onClick={() => handleQuantityButton(parseInt(quantity) + 1)}
+            >
+              +
+            </button>
+            <button
+              className="btn btn-danger btn-sm mx-2"
+              onClick={() => handleDeleteProduct(item.product._id)}
+            >
+              Xóa
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   );

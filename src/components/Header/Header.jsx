@@ -119,7 +119,7 @@ function Header() {
                   >
                     <NavLink
                       className="nav-link dropdown-toggle"
-                      to="#"
+                      to="/user-profile"
                       role="button"
                       data-bs-toggle="dropdown"
                       aria-expanded={dropdownOpen}
