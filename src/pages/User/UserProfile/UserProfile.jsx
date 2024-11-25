@@ -85,7 +85,7 @@ const UserAccount = ({ initialSection }) => {
                 }`}
               onClick={() => setActiveSection("orders")}
             >
-              Đơn mua
+              Đơn hàng
             </li>
             <li
               className={`list-group-item ${activeSection === "productsPurchase" ? "active" : ""
