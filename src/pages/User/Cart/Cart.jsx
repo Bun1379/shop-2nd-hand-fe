@@ -13,6 +13,7 @@ const Cart = () => {
   }
   const [cart, setCart] = useState([]);
   const [total, setTotal] = useState(0);
+  const [totalProduct, setTotalProduct] = useState(0);
 
   const navigate = useNavigate();
 
@@ -79,6 +80,8 @@ const Cart = () => {
       .filter((item) => item.selected)
       .reduce((sum, item) => sum + item.product.price * item.quantity, 0);
     setTotal(total);
+    const totalProduct = cart.filter((item) => item.selected).length;
+    setTotalProduct(totalProduct);
   }, [cart]);
   return (
     <div>
@@ -101,7 +104,11 @@ const Cart = () => {
             handleDeleteProduct={handleDeleteProduct}
           />
         ))}
-        <TotalPrice total={total} handleCheckOut={handleCheckOut} />
+        <TotalPrice
+          total={total}
+          handleCheckOut={handleCheckOut}
+          totalProduct={totalProduct}
+        />
       </div>
     </div>
   );
