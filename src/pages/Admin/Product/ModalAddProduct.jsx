@@ -89,6 +89,7 @@ const ModalAddProduct = ({ showAdd, setShowAdd }) => {
       label: "Mới",
     });
     setSelectedColor({});
+    setIsLoad(false);
   };
 
   const fetchCategory = async () => {

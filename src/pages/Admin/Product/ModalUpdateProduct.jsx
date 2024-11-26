@@ -85,6 +85,7 @@ const ModalUpdateProduct = ({ showUpdate, setShowUpdate, product }) => {
       label: "Mới",
     });
     setSelectedColor({});
+    setIsLoad(false);
   };
   const fetchCategory = async () => {
     try {
@@ -127,13 +128,12 @@ const ModalUpdateProduct = ({ showUpdate, setShowUpdate, product }) => {
 
   const handleDeleteImage = (index) => {
     const urlDeleted = listPreviewImage[index];
-    const newImage = listPreviewImage.filter((item, idx) => idx !== index);
-    setListPreviewImage(newImage);
-    if (actionsImage[index] && actionsImage[index].action === "add") {
-      const newActions = actionsImage.filter((item, idx) => idx !== index);
-      setActionsImage(newActions);
+    if (urlDeleted.includes("blob")) {
+      toast.error("Không thể xóa ảnh vừa được thêm");
       return;
     }
+    const newImage = listPreviewImage.filter((item, idx) => idx !== index);
+    setListPreviewImage(newImage);
     setActionsImage([
       ...actionsImage,
       {
@@ -151,7 +151,7 @@ const ModalUpdateProduct = ({ showUpdate, setShowUpdate, product }) => {
       !price ||
       !quantity ||
       !selectedCategory ||
-      !selectedCategory.length === 0 ||
+      selectedCategory.length === 0 ||
       !selectedColor ||
       !selectedColor.value
     ) {
@@ -178,7 +178,6 @@ const ModalUpdateProduct = ({ showUpdate, setShowUpdate, product }) => {
     for (const item of actionsImage) {
       if (item.action === "add") {
         let response = await UploadAPI.Upload(item.image);
-        console.log(response);
         actions.push({
           action: "add",
           url: response.data.DT,
@@ -195,6 +194,7 @@ const ModalUpdateProduct = ({ showUpdate, setShowUpdate, product }) => {
       const response = await ProductAPI.UpdateProduct(product._id, data);
       if (response.status === 200) {
         toast.success("Update product successfully");
+        setActionsImage([]);
         setShow(false);
       } else {
         toast.error("Update product failed");
