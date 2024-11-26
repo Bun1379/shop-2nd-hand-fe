@@ -68,7 +68,7 @@ const ModalAddProduct = ({ showAdd, setShowAdd }) => {
     label: "Mới",
   });
   const [color, setColor] = useState([]);
-  const [selectedColor, setSelectedColor] = useState("");
+  const [selectedColor, setSelectedColor] = useState({});
   const [isLoad, setIsLoad] = useState(false);
 
   const handleClose = () => {
@@ -84,6 +84,11 @@ const ModalAddProduct = ({ showAdd, setShowAdd }) => {
     setQuantity(0);
     setListPreviewImage([]);
     setImage([]);
+    setCondition({
+      value: "NEW",
+      label: "Mới",
+    });
+    setSelectedColor({});
   };
 
   const fetchCategory = async () => {
@@ -165,6 +170,12 @@ const ModalAddProduct = ({ showAdd, setShowAdd }) => {
       !selectedColor
     ) {
       toast.error("Vui lòng nhập đầy đủ thông tin");
+      setIsLoad(false);
+      return;
+    }
+    if (quantity < 0) {
+      toast.error("Số lượng phải lớn hơn 0");
+      setIsLoad(false);
       return;
     }
     const data = {
@@ -185,14 +196,18 @@ const ModalAddProduct = ({ showAdd, setShowAdd }) => {
       }
     }
     data.images = images;
-    console.log(data);
-    const response = await ProductAPI.CreateProduct(data);
-    setIsLoad(false);
-    if (response.status === 200) {
-      toast.success("Tạo sản phẩm thành công");
-      handleClose();
-    } else {
-      toast.error("Tạo sản phẩm thất bại");
+    try {
+      const response = await ProductAPI.CreateProduct(data);
+      if (response.status === 200) {
+        toast.success("Tạo sản phẩm thành công");
+        handleClose();
+      } else {
+        toast.error("Tạo sản phẩm thất bại");
+      }
+    } catch (error) {
+      toast.error(error.response.data.EM);
+    } finally {
+      setIsLoad(false);
     }
   };
 
@@ -339,9 +354,12 @@ const ModalAddProduct = ({ showAdd, setShowAdd }) => {
           <Button variant="secondary" onClick={handleClose}>
             Đóng
           </Button>
-          <Button variant="primary" onClick={handleCreateProduct}>
-            {isLoad ? "Loading..." : " "}
-            Thêm sản phẩm
+          <Button
+            variant="primary"
+            onClick={handleCreateProduct}
+            disabled={isLoad}
+          >
+            {isLoad ? "Đang thêm sản phẩm..." : "Thêm sản phẩm"}
           </Button>
         </Modal.Footer>
       </Modal>

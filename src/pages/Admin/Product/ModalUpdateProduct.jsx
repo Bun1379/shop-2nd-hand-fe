@@ -64,7 +64,7 @@ const ModalUpdateProduct = ({ showUpdate, setShowUpdate, product }) => {
     label: "Mới",
   });
   const [color, setColor] = useState([]);
-  const [selectedColor, setSelectedColor] = useState("");
+  const [selectedColor, setSelectedColor] = useState({});
   const [isLoad, setIsLoad] = useState(false);
 
   const handleClose = () => {
@@ -80,6 +80,11 @@ const ModalUpdateProduct = ({ showUpdate, setShowUpdate, product }) => {
     setQuantity(0);
     setListPreviewImage([]);
     setActionsImage([]);
+    setCondition({
+      value: "NEW",
+      label: "Mới",
+    });
+    setSelectedColor({});
   };
   const fetchCategory = async () => {
     try {
@@ -124,6 +129,11 @@ const ModalUpdateProduct = ({ showUpdate, setShowUpdate, product }) => {
     const urlDeleted = listPreviewImage[index];
     const newImage = listPreviewImage.filter((item, idx) => idx !== index);
     setListPreviewImage(newImage);
+    if (actionsImage[index] && actionsImage[index].action === "add") {
+      const newActions = actionsImage.filter((item, idx) => idx !== index);
+      setActionsImage(newActions);
+      return;
+    }
     setActionsImage([
       ...actionsImage,
       {
@@ -134,6 +144,26 @@ const ModalUpdateProduct = ({ showUpdate, setShowUpdate, product }) => {
   };
 
   const handleUpdateProduct = async () => {
+    setIsLoad(true);
+    if (
+      !name ||
+      !description ||
+      !price ||
+      !quantity ||
+      !selectedCategory ||
+      !selectedCategory.length === 0 ||
+      !selectedColor ||
+      !selectedColor.value
+    ) {
+      toast.error("Please fill in all fields");
+      setIsLoad(false);
+      return;
+    }
+    if (quantity < 0) {
+      toast.error("Quantity must be greater than 0");
+      setIsLoad(false);
+      return;
+    }
     const data = {
       productName: name,
       description,
@@ -143,7 +173,6 @@ const ModalUpdateProduct = ({ showUpdate, setShowUpdate, product }) => {
       quantity,
       condition: condition.value,
       color: selectedColor.value,
-      // actionsImage,
     };
     let actions = [];
     for (const item of actionsImage) {
@@ -162,13 +191,18 @@ const ModalUpdateProduct = ({ showUpdate, setShowUpdate, product }) => {
       }
     }
     data.actions = actions;
-    console.log(data);
-    let response = await ProductAPI.UpdateProduct(product._id, data);
-    if (response.status === 200) {
-      toast.success("Update product successfully");
-      setShow(false);
-    } else {
-      toast.error("Update product failed");
+    try {
+      const response = await ProductAPI.UpdateProduct(product._id, data);
+      if (response.status === 200) {
+        toast.success("Update product successfully");
+        setShow(false);
+      } else {
+        toast.error("Update product failed");
+      }
+    } catch (error) {
+      toast.error(error.response.data.EM);
+    } finally {
+      setIsLoad(false);
     }
   };
 
@@ -352,8 +386,12 @@ const ModalUpdateProduct = ({ showUpdate, setShowUpdate, product }) => {
           <Button variant="secondary" onClick={handleClose}>
             Close
           </Button>
-          <Button variant="primary" onClick={handleUpdateProduct}>
-            Save Changes
+          <Button
+            variant="primary"
+            onClick={handleUpdateProduct}
+            disabled={isLoad}
+          >
+            {isLoad ? "Đang cập nhật..." : "Cập nhật"}
           </Button>
         </Modal.Footer>
       </Modal>
