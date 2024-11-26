@@ -26,20 +26,7 @@ const PurchasedProducts = () => {
     review.product = selectedProduct._id;
     const response = await ReviewAPI.CreateReview(review);
     if (response.status === 200) {
-      if (response.data.DT.discount) {
-        const discount = response.data.DT.discount;
-        toast.success(
-          "Đánh giá thành công, bạn nhận được mã giảm giá: " +
-          discount.discountCode +
-          "-" +
-          discount.discountPercentage +
-          "%"
-        );
-      } else {
-        toast.success(
-          "Đánh giá thành công, xin lỗi chúng tôi không còn mã giảm giá cho bạn"
-        );
-      }
+      toast.success("Đánh giá thành công");
       setShowReviewModal(false);
     } else {
       toast.error("Error: " + response.data.EM);
