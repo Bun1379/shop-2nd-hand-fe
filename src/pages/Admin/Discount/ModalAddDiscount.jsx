@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Modal } from "react-bootstrap";
+import { Modal, Toast } from "react-bootstrap";
 import DiscountAPI from "../../../api/DiscountAPI";
 import { toast } from "react-toastify";
 
@@ -19,7 +19,7 @@ const ModalAddDiscount = ({ show, setShow }) => {
 
   const handleAddDiscount = async () => {
     if (!code || !discount) {
-      setError("Please fill in all fields");
+      toast.error("Please fill in all fields");
       return;
     }
     try {
