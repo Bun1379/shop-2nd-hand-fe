@@ -19,7 +19,11 @@ const ModalAddDiscount = ({ show, setShow }) => {
 
   const handleAddDiscount = async () => {
     if (!code || !discount) {
-      toast.error("Please fill in all fields");
+      toast.error("Vui lòng điền đầy đủ thông tin");
+      return;
+    }
+    if (discount < 0 || discount > 100) {
+      toast.error("Vui lòng nhập % giảm giá hợp lệ");
       return;
     }
     try {
