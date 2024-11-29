@@ -1,20 +1,20 @@
+import React from "react";
+import { Card, Row, Col } from "react-bootstrap";
 import OrderProductItem from "./OrderProductItem";
 
 const OrderItem = ({ order, handleOnClickOrder }) => {
   return (
-    <div
-      className="bg-white w-100 border border-2 border-success d-flex flex-column justify-content-center mb-2"
-      style={{ height: "auto", margin: "0 auto" }}
+    <Card
+      className="mb-3"
+      style={{ cursor: "pointer" }}
       onClick={() => handleOnClickOrder(order._id)}
     >
-      <div
-        className="d-flex flex-row justify-content-between align-items-center border-bottom border-2"
-        style={{ height: "60px" }}
-      >
-        <p className="fw-bold mb-0 ms-3">Mã đơn hàng: {order._id}</p>
-        <p className="fw-bold mb-0 me-3 text-success">{order.status}</p>
-      </div>
-      <div>
+      <Card.Header className="d-flex justify-content-between align-items-center bg-success text-white">
+        <span className="fw-bold">Mã đơn hàng: {order._id}</span>
+        <span className="fw-bold">{order.status}</span>
+      </Card.Header>
+
+      <Card.Body>
         {order.products.map((product) => (
           <OrderProductItem
             key={product._id}
@@ -22,14 +22,15 @@ const OrderItem = ({ order, handleOnClickOrder }) => {
             quantity={product.quantity}
           />
         ))}
-      </div>
-      <div
-        className="border-top border-2 d-flex justify-content-end align-items-center"
-        style={{ height: "60px" }}
-      >
-        <span className="fw-bold me-3">Tổng tiền: {order.totalAmount}</span>
-      </div>
-    </div>
+      </Card.Body>
+
+      <Card.Footer className="d-flex justify-content-end bg-light">
+        <span className="fw-bold">
+          Tổng tiền: {order.totalAmount.toLocaleString("vi-VN")}
+        </span>
+      </Card.Footer>
+    </Card>
   );
 };
+
 export default OrderItem;

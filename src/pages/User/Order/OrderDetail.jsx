@@ -1,29 +1,31 @@
+import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { MdArrowBack, MdArrowBackIos } from "react-icons/md";
+import { toast } from "react-toastify";
 import CheckoutItem from "../Checkout/CheckoutItem";
 import OrderAPI from "../../../api/OrderAPI";
-import { useEffect, useState } from "react";
-import { MdArrowBackIos } from "react-icons/md";
-import { toast } from "react-toastify";
+import { Container, Row, Col, Button } from "react-bootstrap";
 
-const OrderDetail = ({}) => {
-  const token = localStorage.getItem("token");
-  if (!token) {
-    window.location.href = "/login";
-  }
+const OrderDetail = () => {
   const navigate = useNavigate();
-  const params = useParams();
-  const orderId = params.orderId;
+  const { orderId } = useParams();
   const [order, setOrder] = useState({});
-  const fetchDataOrder = async () => {
-    try {
-      const response = await OrderAPI.GetOrderById(orderId);
-      console.log(response.data.DT);
-      const order = response.data.DT;
-      setOrder(order);
-    } catch (error) {
-      console.error("Error:", error);
-    }
-  };
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) return (window.location.href = "/login");
+
+    const fetchDataOrder = async () => {
+      try {
+        const response = await OrderAPI.GetOrderById(orderId);
+        setOrder(response.data.DT);
+      } catch (error) {
+        console.error("Error:", error);
+      }
+    };
+
+    fetchDataOrder();
+  }, [orderId]);
 
   const handleCancelOrder = async () => {
     try {
@@ -34,92 +36,90 @@ const OrderDetail = ({}) => {
       console.error("Error:", error);
     }
   };
-  useEffect(() => {
-    fetchDataOrder();
-  }, [orderId]);
+
+  const renderOrderInfo = () => (
+    <div className="d-flex flex-column gap-4">
+      <p className="fw-bold">Người nhận: {order.name || ""}</p>
+      <p className="fw-bold">Địa chỉ nhận hàng: {order.address || ""}</p>
+      <p className="fw-bold">Số điện thoại: {order.phone || ""}</p>
+    </div>
+  );
+
+  const renderPaymentInfo = () => (
+    <div className="d-flex flex-column gap-4">
+      <p className="fw-bold">
+        Phương thức thanh toán:{" "}
+        {order.paymentMethod === "COD" ? "Tiền mặt" : "Chuyển khoản"}
+      </p>
+      {order.discountCode && (
+        <p className="fw-bold">
+          Mã khuyến mãi: {order.discountCode.discountCode} -{" "}
+          {order.discountCode.discountPercentage}%
+        </p>
+      )}
+      <p className="fw-bold">Tổng tiền: {order.totalAmount}</p>
+    </div>
+  );
+
   return (
     <>
-      <div
-        className="d-flex justify-content-between w-75 align-items-center"
-        style={{ height: "75px", margin: "0 auto" }}
-      >
-        <span
-          className="d-flex align-items-center gap-2 ms-5"
-          onClick={() => {
-            navigate("/user-profile", { state: { initialSection: "orders" } });
-          }}
-        >
-          <MdArrowBackIos />
-          Trở lại
-        </span>
-        <div>
-          <span className="text-center p-2">Mã đơn hàng: {order._id}</span>
-          <span className="text-success p-2">Trạng thái: {order.status}</span>
-        </div>
-      </div>
-      {order && order.products && order.products.length > 0 && (
-        <div className="d-flex justify-content-center flex-column">
-          <div
-            className="shadow border w-75 border-success mb-2 border-2 p-2 d-flex align-items-center justify-content-between"
-            style={{ height: "75px", margin: "0 auto" }}
-          >
-            <div className="d-flex align-items-center">
-              <p className="fw-bold mb-0 ms-3">Sản phẩm</p>{" "}
-            </div>
-
-            <div className="d-flex flex-row gap-3 align-items-center">
+      <Container fluid className="py-3 shadow-sm bg-light">
+        <Row className="align-items-center">
+          <Col xs="auto">
+            <Button
+              variant="link"
+              className="text-primary d-flex align-items-center gap-2 p-0"
+              onClick={() =>
+                navigate("/user-profile", {
+                  state: { initialSection: "orders" },
+                })
+              }
+            >
+              <MdArrowBack /> Trở lại
+            </Button>
+          </Col>
+          <Col className="text-center">
+            <p className="mb-1 fw-bold">Mã đơn hàng: {order._id}</p>
+            <p className="text-success fw-bold">Trạng thái: {order.status}</p>
+          </Col>
+          <Col xs="auto"></Col>
+        </Row>
+      </Container>
+      {order.products?.length > 0 && (
+        <div className="container my-4">
+          {/* Header */}
+          <div className="d-flex justify-content-between align-items-center bg-success text-white p-3 rounded">
+            <p className="mb-0 fw-bold">Sản phẩm</p>
+            <div className="d-flex gap-3">
               <p className="mb-0 fw-bold">Đơn giá</p>
               <p className="mb-0 fw-bold">Số lượng</p>
               <p className="mb-0 fw-bold">Thành tiền</p>
             </div>
           </div>
-          <div className="w-75" style={{ margin: "0 auto" }}>
+
+          {/* Product list */}
+          <div className="mt-3">
             {order.products.map((item) => (
               <CheckoutItem key={item.product._id} item={item} />
             ))}
           </div>
 
-          <div
-            className="d-flex flex-column shadow border w-75 border-success mb-2 border-2 p-4 gap-3"
-            style={{ height: "auto", margin: "0 auto" }}
-          >
-            <div className="  d-flex align-items-center justify-content-around">
-              <div className="d-flex flex-column justify-content-between gap-4">
-                <p className="fw-bold mb-0 ms-3 d-flex gap-3">
-                  Người nhận:
-                  {order.name ? order.name : ""}
-                </p>
-                <p className="fw-bold mb-0 ms-3 d-flex gap-3">
-                  Địa chỉ nhận hàng: {order.address ? order.address : ""}
-                </p>
-                <p className="fw-bold mb-0 ms-3 d-flex gap-3">
-                  Số điện thoại: {order.phone ? order.phone : ""}
-                </p>
-              </div>
-
-              <div className="d-flex flex-column justify-content-between gap-4">
-                <p className="fw-bold mb-0 ms-3">
-                  Phương thức thanh toán:
-                  {order.paymentMethod === "COD" ? "Tiền mặt" : "Chuyển khoản"}
-                </p>
-                {order.discountCode && (
-                  <p className="fw-bold mb-0 ms-3">
-                    Mã khuyến mãi: {order.discountCode.discountCode} -{" "}
-                    {order.discountCode.discountPercentage}%
-                  </p>
-                )}
-                <p className="fw-bold mb-0 ms-3">
-                  Tổng tiền: {order.totalAmount}
-                </p>
-              </div>
+          {/* Order Details */}
+          <div className="bg-light shadow-sm p-4 mt-4 rounded">
+            <div className="d-flex justify-content-between">
+              {renderOrderInfo()}
+              {renderPaymentInfo()}
             </div>
           </div>
         </div>
       )}
-      {/* Nút hủy đơn */}
+      {/* Cancel Button */}
       {order.status === "PENDING" && (
-        <div className="d-flex justify-content-center">
-          <button className="btn btn-danger" onClick={handleCancelOrder}>
+        <div className="d-flex justify-content-center mt-4">
+          <button
+            className="btn btn-danger px-5 py-2"
+            onClick={handleCancelOrder}
+          >
             Hủy đơn hàng
           </button>
         </div>
@@ -127,4 +127,5 @@ const OrderDetail = ({}) => {
     </>
   );
 };
+
 export default OrderDetail;

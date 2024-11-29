@@ -1,26 +1,40 @@
+import React from "react";
+import { Card, Image } from "react-bootstrap";
+
 const OrderProductItem = ({ product, quantity }) => {
   return (
-    <div
-      className="w-100 mb-2 border-2 p-2 d-flex align-items-center justify-content-between"
-      style={{ height: "75px", margin: "0 auto" }}
-    >
-      <div className="d-flex align-items-center">
-        <img
-          src={product.images[0] || "https://via.placeholder.com/150"}
-          alt="product"
-          style={{ width: "50px", height: "50px" }}
-          className="ms-4"
-        />
-        <p className="fw-bold mb-0 ms-3">{product.productName}</p>{" "}
-      </div>
+    <Card className="mb-3 p-3">
+      <div className="d-flex align-items-center justify-content-between">
+        {/* Hình ảnh và tên sản phẩm */}
+        <div className="d-flex align-items-center">
+          <Image
+            src={product.images[0] || "https://via.placeholder.com/150"}
+            alt={product.productName}
+            rounded
+            style={{ width: "60px", height: "60px", objectFit: "cover" }}
+            className="me-3"
+          />
+          <div>
+            <h6 className="fw-bold mb-1">{product.productName}</h6>
+            <p className="text-muted mb-0">Phân loại: Size {product.size}</p>
+          </div>
+        </div>
 
-      <p className="mb-0">Phân loại: Size {product.size}</p>
-
-      <div className="d-flex flex-row gap-5 align-items-center pe-5">
-        <p className="mb-0">Số lượng: {quantity}</p>
-        <p className="mb-0">Thành tiền: {product.price * quantity}</p>
+        {/* Số lượng và thành tiền */}
+        <div className="text-end">
+          <p className="mb-1">
+            Số lượng: <span className="fw-bold">{quantity}</span>
+          </p>
+          <p className="mb-0">
+            Thành tiền:{" "}
+            <span className="fw-bold text-success">
+              {(product.price * quantity).toLocaleString("vi-VN")}₫
+            </span>
+          </p>
+        </div>
       </div>
-    </div>
+    </Card>
   );
 };
+
 export default OrderProductItem;

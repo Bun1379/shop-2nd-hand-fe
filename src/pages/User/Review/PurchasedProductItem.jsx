@@ -1,50 +1,30 @@
+import { Card, Row, Col, Button, Image } from "react-bootstrap";
+
 const PurchasedProductItem = ({ product, handleShowReviewModal }) => {
   return (
-    // <div
-    //   className="w-100 mb-2 border border-2 p-2 d-flex align-items-center justify-content-between shadow border-success"
-    //   style={{ height: "75px", margin: "0 auto" }}
-    // >
-    //   <div className="d-flex align-items-center">
-    //     <img
-    //       src={product.images[0] || "https://via.placeholder.com/150"}
-    //       alt="product"
-    //       style={{ width: "50px", height: "50px" }}
-    //       className="ms-2"
-    //     />
-    //     <p className="fw-bold mb-0 ms-3">{product.productName}</p>{" "}
-    //   </div>
-
-    //   <p className="mb-0">Phân loại: Size {product.size}</p>
-    //   <button
-    //     className="btn btn-danger"
-    //     onClick={() => handleShowReviewModal(product)}
-    //   >
-    //     Đánh giá
-    //   </button>
-    // </div>
-    <div className="card position-relative my-2">
-      <div className="card-body d-flex flex-row justify-content-between align-items-center">
+    <Card className="my-3 shadow-sm border-0">
+      <Card.Body className="d-flex justify-content-between align-items-center">
+        {/* Left side - Image and Product Name */}
         <div className="d-flex align-items-center">
-          <img
+          <Image
             src={product.images[0] || "https://via.placeholder.com/150"}
             alt="product"
-            style={{ width: "75px", height: "75px" }}
-            className="img-fluid rounded"
+            rounded
+            fluid
+            style={{ width: "60px", height: "60px", objectFit: "cover" }}
           />
-          <div className="d-flex flex-column gap-2 ms-3 justify-content-between">
+          <div className="ms-3">
             <h5 className="mb-0">{product.productName}</h5>
-            <p className="mb-0">Phân loại: Size {product.size}</p>
+            <p className="mb-0 text-muted">Phân loại: Size {product.size}</p>
           </div>
         </div>
-        <button
-          className="btn btn-danger "
-          onClick={() => handleShowReviewModal(product)}
-          style={{ height: "fit-content" }}
-        >
+
+        {/* Right side - Review Button */}
+        <Button variant="danger" onClick={() => handleShowReviewModal(product)}>
           Đánh giá
-        </button>
-      </div>
-    </div>
+        </Button>
+      </Card.Body>
+    </Card>
   );
 };
 

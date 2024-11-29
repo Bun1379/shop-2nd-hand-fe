@@ -19,6 +19,7 @@ const Order = () => {
     try {
       const response = await OrderAPI.GetOrders();
       const listOrder = response.data.DT;
+      listOrder.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
       setTotalOrder(listOrder);
     } catch (error) {
       console.error("Error:", error);
@@ -46,6 +47,7 @@ const Order = () => {
 
   return (
     <div>
+      <h3 className="text-center">Đơn hàng của bạn</h3>
       <OrderStatusBar
         status={status}
         setStatus={setStatus}

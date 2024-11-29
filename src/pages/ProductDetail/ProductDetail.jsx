@@ -5,7 +5,7 @@ import { useState } from "react";
 import { FaPlus, FaMinus } from "react-icons/fa";
 import { toast } from "react-toastify";
 import { FaHeart } from "react-icons/fa";
-
+import { Row, Col, Card, Button, Image, Form } from "react-bootstrap";
 import CartAPI from "../../api/CartAPI";
 import ReviewAPI from "../../api/ReviewAPI";
 import Review from "../User/Review/Review";
@@ -20,6 +20,7 @@ const ProductDetail = () => {
   const [selectedImage, setSelectedImage] = useState(product.images[0]);
   const [reviews, setReviews] = useState([]);
   const [favouriteText, setFavouriteText] = useState("Yêu thích");
+  const [outOfStock, setOutOfStock] = useState(false);
 
   const handleAddToCart = async () => {
     try {
@@ -70,13 +71,21 @@ const ProductDetail = () => {
     const recentlyViewed =
       JSON.parse(localStorage.getItem("recentlyViewed")) || [];
 
-    if (!recentlyViewed.some((item) => item._id === product._id)) {
+    const existingProductIndex = recentlyViewed.findIndex(
+      (item) => item._id === product._id
+    );
+
+    if (existingProductIndex !== -1) {
+      recentlyViewed[existingProductIndex] = product;
+      recentlyViewed.unshift(recentlyViewed.splice(existingProductIndex, 1)[0]);
+    } else {
       recentlyViewed.unshift(product);
       if (recentlyViewed.length > 5) {
         recentlyViewed.pop();
       }
-      localStorage.setItem("recentlyViewed", JSON.stringify(recentlyViewed));
     }
+
+    localStorage.setItem("recentlyViewed", JSON.stringify(recentlyViewed));
   };
 
   const handleFavourite = async (productId) => {
@@ -112,115 +121,153 @@ const ProductDetail = () => {
     fetchReviews();
     setMainImage(product.images[0]);
     fetchFavourite();
+    setQuantity(1);
+    if (product.quantity === 0) {
+      setOutOfStock(true);
+    } else {
+      setOutOfStock(false);
+    }
   }, [product]);
 
   useEffect(() => {
     addToRecentlyViewed(product);
-  }, []);
+  }, [product]);
 
   return (
-    <div className="product-detail-container border border-success p-3 border-2">
-      <div className="row">
+    <Card className="product-detail-container border  p-4">
+      <Row>
         {/* Phần hình ảnh sản phẩm */}
-        <div className="col-md-6">
-          <div className="product-image">
-            <img
-              src={selectedImage}
-              alt={product.productName}
-              className="img-fluid"
-              style={{ width: "400px", height: "auto" }}
-            />
-          </div>
-          {/* Hình ảnh phụ */}
-          <div className="product-thumbnails mt-2">
-            {product.images &&
-              product.images.map((image, index) => (
-                <img
-                  key={index}
-                  src={image}
-                  alt={`Thumbnail ${index}`}
-                  className="img-thumbnail me-2"
-                  style={{ width: "80px", height: "80px" }}
-                  onClick={() => setMainImage(image)}
-                />
-              ))}
-          </div>
-        </div>
+        <Col md={6}>
+          <Card>
+            <Card.Body>
+              <Image
+                src={selectedImage}
+                alt={product.productName}
+                fluid
+                className="mb-3 rounded"
+                style={{ maxWidth: "100%" }}
+              />
+              {/* Hình ảnh phụ */}
+              <div className="product-thumbnails d-flex gap-2">
+                {product.images?.map((image, index) => (
+                  <Image
+                    key={index}
+                    src={image}
+                    alt={`Thumbnail ${index}`}
+                    thumbnail
+                    style={{ width: "80px", height: "80px", cursor: "pointer" }}
+                    onClick={() => setMainImage(image)}
+                  />
+                ))}
+              </div>
+            </Card.Body>
+          </Card>
+        </Col>
 
         {/* Phần chi tiết sản phẩm */}
-        <div className="col-md-6">
-          <h1>{product.productName}</h1>
-          <h3 className="text-danger mt-5">
+        <Col md={6}>
+          <h1 className="product-title">{product.productName}</h1>
+          <h3 className="text-danger mt-3 product-price">
             {product.price.toLocaleString()} đ
           </h3>
-          <p className="mt-3">
+          <p className="mt-3 product-quantity">
             <span className="fw-bold">Số lượng hiện có:</span>{" "}
             {product.quantity}
           </p>
+
           {/* Lựa chọn số lượng và thêm vào giỏ hàng */}
-          <div className="product-actions">
-            <div className="d-flex flex-row ms-auto gap-3 align-items-center">
-              <label htmlFor="quantity" className="me-2">
-                Số lượng:
-              </label>
-              <button
-                className="btn btn-outline-secondary"
-                onClick={handleDecrease}
-              >
-                <FaMinus />
-              </button>
-              <input
-                className="form-control"
-                type="text"
-                id="quantity"
-                min="1"
-                value={quantity}
-                onChange={handleQuantityChange}
-                style={{ width: "50px", height: "50px", marginRight: "10px" }}
-              />
-              <button
-                className="btn btn-outline-secondary"
-                onClick={handleIncrease}
-              >
-                <FaPlus />
-              </button>
-            </div>
-            <div className="mt-1">
-              <button
-                className="btn btn-success d-flex align-items-center gap-2"
+          <div className="product-actions mt-4">
+            <Row className="align-items-center justify-content-start">
+              {/* Số lượng */}
+              <Col xs="auto">
+                <Button
+                  variant="outline-secondary"
+                  onClick={handleDecrease}
+                  className="action-btn"
+                  disabled={quantity <= 1}
+                >
+                  <FaMinus />
+                </Button>
+              </Col>
+              <Col xs="auto">
+                <Form.Control
+                  type="number"
+                  id="quantity"
+                  value={quantity}
+                  onChange={handleQuantityChange}
+                  min="1"
+                  className="quantity-input text-center"
+                  style={{ width: "80px", maxWidth: "80px" }} // Ensure the input size is fixed
+                />
+              </Col>
+              <Col xs="auto">
+                <Button
+                  variant="outline-secondary"
+                  onClick={handleIncrease}
+                  className="action-btn"
+                  disabled={quantity >= product.quantity}
+                >
+                  <FaPlus />
+                </Button>
+              </Col>
+            </Row>
+
+            {/* Thêm vào yêu thích */}
+            <div className="mt-3">
+              <Button
+                variant="danger"
+                className="d-flex align-items-center gap-2"
                 onClick={() => handleFavourite(product._id)}
               >
                 {favouriteText}
                 <FaHeart color="white" />
-              </button>
+              </Button>
             </div>
-            <div className="mt-2">
-              <button
-                className="btn btn-success bg-opacity-"
-                onClick={handleAddToCart}
-              >
-                Thêm vào giỏ hàng
-              </button>
-              <button className="btn btn-success me-3" onClick={handleBuyNow}>
-                Mua ngay
-              </button>
-            </div>
+            {outOfStock ? (
+              <p className="text-danger mt-3">Sản phẩm đã hết hàng</p>
+            ) : (
+              <div className="mt-3 d-flex gap-1">
+                <Button variant="success" onClick={handleAddToCart}>
+                  Thêm vào giỏ hàng
+                </Button>
+                <Button variant="warning" onClick={handleBuyNow}>
+                  Mua ngay
+                </Button>
+              </div>
+            )}
           </div>
-        </div>
-      </div>
+        </Col>
+      </Row>
 
       {/* Mô tả chi tiết */}
-      <div className="row mt-4">
-        <div className="col">
+      <Row className="mt-5">
+        <Col>
           <h4>Chi tiết sản phẩm</h4>
           <p>{product.description || "Không có thông tin mô tả chi tiết."}</p>
-        </div>
-      </div>
-      {reviews.length === 0 && <h4>Chưa có đánh giá nào</h4>}
-      {reviews.length > 0 && <h4>Đánh giá sản phẩm ({reviews.length})</h4>}
-      {reviews.length > 0 && <Review reviews={reviews} />}
-      <RecentlyViewedProducts />
-    </div>
+        </Col>
+      </Row>
+
+      {/* Đánh giá sản phẩm */}
+      <Row className="mt-4">
+        <Col>
+          {reviews.length === 0 ? (
+            <h4>Chưa có đánh giá nào</h4>
+          ) : (
+            <>
+              <h4>Đánh giá sản phẩm ({reviews.length})</h4>
+              <Review reviews={reviews} />
+            </>
+          )}
+        </Col>
+      </Row>
+
+      {/* Sản phẩm đã xem gần đây */}
+      <Row className="mt-5">
+        <Col>
+          <RecentlyViewedProducts />
+        </Col>
+      </Row>
+    </Card>
   );
 };
 

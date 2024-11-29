@@ -1,42 +1,54 @@
-import { useState } from "react";
+import React from "react";
+import { Nav, Badge } from "react-bootstrap";
 
 const OrderStatusBar = ({ status, setStatus, totalOrder }) => {
   const statusList = [
-    "ALL",
-    "PENDING",
-    "CONFIRMED",
-    "SHIPPED",
-    "DELIVERED",
-    "CANCELLED",
+    { key: "ALL", label: "Tất cả" },
+    { key: "PENDING", label: "Chờ xác nhận" },
+    { key: "CONFIRMED", label: "Đã xác nhận" },
+    { key: "SHIPPED", label: "Đang giao" },
+    { key: "DELIVERED", label: "Đã giao" },
+    { key: "CANCELLED", label: "Đã hủy" },
   ];
+
+  const getOrderCount = (key) =>
+    key === "ALL"
+      ? totalOrder.length
+      : totalOrder.filter((order) => order.status === key).length;
+
   return (
-    <div className="d-flex justify-content-center flex-column">
-      <h3 className="text-center">Order Status</h3>
-      <div
-        className="bg-white w-100 align-items-center justify-content-between d-flex flex-row"
-        style={{ height: "75px", margin: "0 auto" }}
-      >
-        {statusList.map((item, index) => (
-          <div
-            key={index}
-            className={`d-flex justify-content-center align-items-center border-bottom border-2 p-2 flex-row ${
-              status === item ? "border-success" : ""
+    <Nav
+      variant="pills"
+      className="justify-content-center flex-wrap mb-4 bg-light p-3 rounded shadow-sm"
+    >
+      {statusList.map((item) => (
+        <Nav.Item key={item.key} className="mx-2">
+          <Nav.Link
+            active={status === item.key}
+            onClick={() => setStatus(item.key)}
+            className={`d-flex align-items-center px-3 py-2 ${
+              status === item.key ? "text-white bg-success" : "text-dark"
             }`}
-            style={{ width: "20%" }}
-            onClick={() => setStatus(item)}
+            style={{
+              borderRadius: "50px",
+              transition: "all 0.3s ease",
+              fontWeight: "bold",
+            }}
           >
-            {item}{" "}
-            <p className="mb-0">
-              (
-              {item === "ALL"
-                ? totalOrder.length
-                : totalOrder.filter((order) => order.status === item).length}
-              )
-            </p>
-          </div>
-        ))}
-      </div>
-    </div>
+            {item.label}
+            <Badge
+              bg={status === item.key ? "light" : "secondary"}
+              className="ms-2"
+              pill
+              text={status === item.key ? "dark" : "light"}
+            >
+              {getOrderCount(item.key)}
+            </Badge>
+          </Nav.Link>
+        </Nav.Item>
+      ))}
+    </Nav>
   );
 };
+
 export default OrderStatusBar;
