@@ -9,6 +9,7 @@ import Favoutite from "../Favourite/Favourite";
 import Discount from "../Discount/Discount";
 import UpdatePassword from "./UpdatePassword";
 import Address from "../Address/Address";
+import CancelRequest from "../CancelRequest/CancelRequest";
 
 const UserAccount = ({ initialSection }) => {
   const token = localStorage.getItem("token");
@@ -29,6 +30,8 @@ const UserAccount = ({ initialSection }) => {
         return <UpdatePassword email={user.email} />;
       case "orders":
         return <Order />;
+      case "cancelRequest":
+        return <CancelRequest />;
       case "notifications":
         return <Notification />;
       case "productsPurchase":
@@ -67,64 +70,81 @@ const UserAccount = ({ initialSection }) => {
 
           <ul className="list-group mt-3">
             <li
-              className={`list-group-item ${activeSection === "profile" ? "active" : ""
-                }`}
+              className={`list-group-item ${
+                activeSection === "profile" ? "active" : ""
+              }`}
               onClick={() => setActiveSection("profile")}
             >
               Thông tin cá nhân
             </li>
             <li
-              className={`list-group-item ${activeSection === "update-password" ? "active" : ""
-                }`}
+              className={`list-group-item ${
+                activeSection === "update-password" ? "active" : ""
+              }`}
               onClick={() => setActiveSection("update-password")}
             >
               Đổi mật khẩu
             </li>
             <li
-              className={`list-group-item ${activeSection === "orders" ? "active" : ""
-                }`}
+              className={`list-group-item ${
+                activeSection === "orders" ? "active" : ""
+              }`}
               onClick={() => setActiveSection("orders")}
             >
               Đơn hàng
             </li>
             <li
-              className={`list-group-item ${activeSection === "productsPurchase" ? "active" : ""
-                }`}
+              className={`list-group-item ${
+                activeSection === "cancelRequest" ? "active" : ""
+              }`}
+              onClick={() => setActiveSection("cancelRequest")}
+            >
+              Yêu cầu hủy đơn hàng
+            </li>
+            <li
+              className={`list-group-item ${
+                activeSection === "productsPurchase" ? "active" : ""
+              }`}
               onClick={() => setActiveSection("productsPurchase")}
             >
               Sản phẩm đã mua
             </li>
             <li
-              className={`list-group-item ${activeSection === "notifications" ? "active" : ""
-                }`}
+              className={`list-group-item ${
+                activeSection === "notifications" ? "active" : ""
+              }`}
               onClick={() => setActiveSection("notifications")}
             >
               Thông báo
             </li>
             <li
-              className={`list-group-item ${activeSection === "addresses" ? "active" : ""
-                }`}
+              className={`list-group-item ${
+                activeSection === "addresses" ? "active" : ""
+              }`}
               onClick={() => setActiveSection("addresses")}
             >
               Sổ địa chỉ
             </li>
             <li
-              className={`list-group-item ${activeSection === "favourites" ? "active" : ""
-                }`}
+              className={`list-group-item ${
+                activeSection === "favourites" ? "active" : ""
+              }`}
               onClick={() => setActiveSection("favourites")}
             >
               Sản phẩm yêu thích
             </li>
             <li
-              className={`list-group-item ${activeSection === "discounts" ? "active" : ""
-                }`}
+              className={`list-group-item ${
+                activeSection === "discounts" ? "active" : ""
+              }`}
               onClick={() => setActiveSection("discounts")}
             >
               Túi mã giảm giá
             </li>
             <li
-              className={`list-group-item ${activeSection === "logout" ? "active" : ""
-                }`}
+              className={`list-group-item ${
+                activeSection === "logout" ? "active" : ""
+              }`}
               onClick={() => setActiveSection("logout")}
             >
               Đăng xuất

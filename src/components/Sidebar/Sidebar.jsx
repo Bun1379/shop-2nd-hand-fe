@@ -58,6 +58,13 @@ const SideBar = ({ image, collapsed, toggled, handleToggleSidebar }) => {
               {" "}
               Mã giảm giá
             </MenuItem>
+            <MenuItem
+              icon={<RiCoupon2Fill />}
+              component={<Link to="/admin/cancel-request" />}
+            >
+              {" "}
+              Yêu cầu hủy đơn
+            </MenuItem>
           </SubMenu>
           <MenuItem icon={<CiLogout />} onClick={() => navigate("/login")}>
             {" "}

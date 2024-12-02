@@ -5,11 +5,26 @@ import { toast } from "react-toastify";
 import CheckoutItem from "../Checkout/CheckoutItem";
 import OrderAPI from "../../../api/OrderAPI";
 import { Container, Row, Col, Button } from "react-bootstrap";
+import ModalCancelRequest from "./ModalCancelRequest";
+import CancelRequestAPI from "../../../api/CancelRequestAPI";
 
 const OrderDetail = () => {
   const navigate = useNavigate();
   const { orderId } = useParams();
   const [order, setOrder] = useState({});
+  const [showModal, setShowModal] = useState(false);
+
+  const handleSubmitCancelOrder = async (data) => {
+    try {
+      const { reason } = data;
+      await CancelRequestAPI.CreateCancelRequest({ orderId, reason });
+      toast.success("Gửi yêu cầu hủy đơn hàng thành công");
+      setShowModal(false);
+    } catch (error) {
+      toast.error(error.response.data.message);
+      console.error("Error:", error);
+    }
+  };
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -124,6 +139,21 @@ const OrderDetail = () => {
           </button>
         </div>
       )}
+      {order.status === "CONFIRMED" && (
+        <div className="d-flex justify-content-center mt-4">
+          <button
+            className="btn btn-danger px-5 py-2"
+            onClick={() => setShowModal(true)}
+          >
+            Gửi yêu cầu hủy đơn hàng
+          </button>
+        </div>
+      )}
+      <ModalCancelRequest
+        show={showModal}
+        setShow={setShowModal}
+        handleSubmitCancelOrder={handleSubmitCancelOrder}
+      />
     </>
   );
 };

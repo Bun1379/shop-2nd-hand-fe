@@ -26,6 +26,7 @@ import ManageOrder from "./pages/Admin/Order/MangeOrder";
 import PaymentResult from "./pages/User/Checkout/PaymentResult";
 import { SocketProvider } from "./layouts/SocketContext";
 import DashBoard from "./pages/Admin/DashBoard/DashBoard";
+import CancelRequestAdmin from "./pages/Admin/CancelRequest/CancelRequestAdmin";
 
 function App() {
   return (
@@ -59,6 +60,7 @@ function App() {
             <Route path="discount" element={<Discount />} />
             <Route path="user" element={<User />} />
             <Route path="order" element={<ManageOrder />} />
+            <Route path="cancel-request" element={<CancelRequestAdmin />} />
           </Route>
 
           <Route path="/payment/result" element={<PaymentResult />} />
