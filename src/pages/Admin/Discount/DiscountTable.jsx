@@ -17,7 +17,6 @@ const DiscountTable = ({ discounts, setPage, totalPages }) => {
               <th>Ngày hết hạn</th>
               <th>GIới hạn sử dụng</th>
               <th>Đã sử dụng</th>
-              <th>Action</th>
             </tr>
           </thead>
           <tbody>
@@ -34,15 +33,6 @@ const DiscountTable = ({ discounts, setPage, totalPages }) => {
                   </td>
                   <td>{discount.usageLimit ? discount.usageLimit : "Không"}</td>
                   <td>{discount.usersUsed.length}</td>
-                  <td className="d-flex gap-3">
-                    <button
-                      className="btn btn-primary"
-                      // onClick={() => handleClickUpdate(product)}
-                    >
-                      Edit
-                    </button>
-                    <button className="btn btn-danger">Delete</button>
-                  </td>
                 </tr>
               ))}
           </tbody>
