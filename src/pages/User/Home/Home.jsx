@@ -6,11 +6,24 @@ import { useState, useEffect } from "react";
 import ProductAPI from "../../../api/ProductAPI";
 import { Carousel } from "react-bootstrap";
 import HomeDiscount from "./Discount/HomeDiscount";
+import BannerAPI from "../../../api/BannerAPI";
 
 function Home() {
   const [arrayProducts, setArrayProducts] = useState([]);
+  const [banner, setBanner] = useState([]);
+
+  const fetchDataBanner = async () => {
+    try {
+      const response = await BannerAPI.GetBanners();
+      setBanner(response.data.DT);
+    } catch (error) {
+      console.error("Chi tiết lỗi:", error.message);
+    }
+  };
+
   useEffect(() => {
     fetchDataProducts();
+    fetchDataBanner();
   }, []);
 
   const fetchDataProducts = async () => {
@@ -26,29 +39,25 @@ function Home() {
     <>
       <div className="home-new-product-container">
         <Carousel className="z-0">
-          <Carousel.Item>
-            <img
-              className="d-block w-100"
-              src="https://im.uniqlo.com/global-cms/spa/resf4d43f245d6bc6c5086983a35ccb5238fr.jpg"
-              alt="Slide 1"
-            />
-            <Carousel.Caption>
-              <h3>Nam</h3>
-              <p>Xem những đồ dành cho nam</p>
-            </Carousel.Caption>
-          </Carousel.Item>
-
-          <Carousel.Item>
-            <img
-              className="d-block w-100"
-              src="https://im.uniqlo.com/global-cms/spa/resf6d6f43f7aed4e5342cc1b8ff118894bfr.jpg"
-              alt="Slide 2"
-            />
-            <Carousel.Caption>
-              <h3>Nữ</h3>
-              <p>Xem những đồ dành cho nữ</p>
-            </Carousel.Caption>
-          </Carousel.Item>
+          {banner.map((banner, index) => (
+            <Carousel.Item
+              key={index}
+              onClick={(event) => {
+                window.location.href = banner.url;
+                event.preventDefault();
+              }}
+            >
+              <img
+                className="d-block w-100"
+                src={banner.image}
+                alt={`Slide ${index + 1}`}
+              />
+              <Carousel.Caption>
+                <h3>{banner.title}</h3>
+                <p>{banner.description}</p>
+              </Carousel.Caption>
+            </Carousel.Item>
+          ))}
         </Carousel>
         <div className="my-5">
           <HomeDiscount />

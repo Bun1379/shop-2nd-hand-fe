@@ -33,6 +33,10 @@ const SideBar = ({ image, collapsed, toggled, handleToggleSidebar }) => {
             Thống kê
           </MenuItem>
           <SubMenu label="Quản lý" icon={<CiBoxList />}>
+            <MenuItem icon={<FaHome />} component={<Link to="/admin/banner" />}>
+              {" "}
+              Banner
+            </MenuItem>
             <MenuItem
               icon={<GiClothes />}
               component={<Link to="/admin/product" />}
@@ -59,7 +63,7 @@ const SideBar = ({ image, collapsed, toggled, handleToggleSidebar }) => {
               Mã giảm giá
             </MenuItem>
             <MenuItem
-              icon={<RiCoupon2Fill />}
+              icon={<CiBoxList />}
               component={<Link to="/admin/cancel-request" />}
             >
               {" "}

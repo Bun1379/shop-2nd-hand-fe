@@ -27,6 +27,7 @@ import PaymentResult from "./pages/User/Checkout/PaymentResult";
 import { SocketProvider } from "./layouts/SocketContext";
 import DashBoard from "./pages/Admin/DashBoard/DashBoard";
 import CancelRequestAdmin from "./pages/Admin/CancelRequest/CancelRequestAdmin";
+import ManageBanner from "./pages/Admin/Banner/ManageBanner";
 
 function App() {
   return (
@@ -61,6 +62,7 @@ function App() {
             <Route path="user" element={<User />} />
             <Route path="order" element={<ManageOrder />} />
             <Route path="cancel-request" element={<CancelRequestAdmin />} />
+            <Route path="banner" element={<ManageBanner />} />
           </Route>
 
           <Route path="/payment/result" element={<PaymentResult />} />

@@ -12,7 +12,6 @@ const User = () => {
   const [showUpdate, setShowUpdate] = useState(false);
 
   const handleUpdateUser = (user) => {
-    console.log(user);
     setDataUpdate(user);
     setShowUpdate(true);
   };
