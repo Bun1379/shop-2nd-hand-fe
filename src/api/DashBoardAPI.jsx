@@ -6,6 +6,11 @@ class DashBoardAPI {
     return axiosPrivate.get(url);
   }
 
+  static async GetRevenueChartByMonth(year) {
+    const url = `/dashboard/revenue-chart-by-month?year=${year}`;
+    return axiosPrivate.get(url);
+  }
+
   static async GetDashboardStats() {
     const url = "/dashboard/stats";
     return axiosPrivate.get(url);

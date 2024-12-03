@@ -1,12 +1,14 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Dropdown, Spinner, Badge } from "react-bootstrap";
 import { FaBell } from "react-icons/fa";
 import NotificationAPI from "../../api/Notification";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const NotificationBell = () => {
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [unreadCount, setUnreadCount] = useState(0);
   const navigate = useNavigate();
 
   const handleItemClick = (orderId) => {
@@ -25,6 +27,24 @@ const NotificationBell = () => {
     }
   };
 
+  const markAsRead = async (notificationId) => {
+    try {
+      await NotificationAPI.ReadNotificatin(notificationId); // Giả sử API có hàm này
+      setNotifications((prev) =>
+        prev.map((notif) =>
+          notif._id === notificationId ? { ...notif, isRead: true } : notif
+        )
+      );
+    } catch (error) {
+      toast.error("Có lỗi xảy ra khi đánh dấu đã đọc thông báo");
+      console.error("Error marking notification as read: ", error);
+    }
+  };
+
+  useEffect(() => {
+    setUnreadCount(notifications.filter((n) => !n.isRead).length);
+  }, [notifications]);
+
   return (
     <Dropdown align="end" onToggle={(isOpen) => isOpen && fetchNotifications()}>
       <Dropdown.Toggle
@@ -34,6 +54,16 @@ const NotificationBell = () => {
         style={{ textDecoration: "none" }}
       >
         <FaBell size={24} />
+        {unreadCount > 0 && (
+          <Badge
+            bg="danger"
+            pill
+            className="position-absolute top-0 start-100 translate-middle"
+            style={{ fontSize: "0.75rem" }}
+          >
+            {unreadCount}
+          </Badge>
+        )}
       </Dropdown.Toggle>
 
       <Dropdown.Menu style={{ maxHeight: "300px", overflowY: "auto" }}>
@@ -49,13 +79,25 @@ const NotificationBell = () => {
             <React.Fragment key={notification._id}>
               <Dropdown.Item
                 onClick={() => handleItemClick(notification.order)}
-                //   className={notification.read ? "" : "fw-bold"}
+                className={notification.isRead ? "" : "fw-bold"}
               >
                 {notification.message}
                 <p className="card-text mt-1">
                   {/* {notification.createdAt} */}
                   {new Date(notification.createdAt).toLocaleString()}
                 </p>
+                {!notification.isRead && (
+                  <button
+                    className="btn btn-sm btn-outline-primary mt-2"
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      markAsRead(notification._id);
+                    }}
+                  >
+                    Đánh dấu đã đọc
+                  </button>
+                )}
               </Dropdown.Item>
               {index < notifications.length - 1 && <Dropdown.Divider />}
             </React.Fragment>

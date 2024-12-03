@@ -3,7 +3,7 @@ import OrderAPI from "../../../api/OrderAPI";
 import OrderTable from "./OrderTable";
 import ModalViewOrder from "./ModalViewOrder";
 import { toast } from "react-toastify";
-import { Accordion } from "react-bootstrap";
+import { Accordion, Button } from "react-bootstrap";
 import Select from "react-select";
 
 const ManageOrder = () => {
@@ -114,15 +114,26 @@ const ManageOrder = () => {
         <Accordion.Item eventKey="0">
           <Accordion.Header>Lọc tìm kiếm</Accordion.Header>
           <Accordion.Body>
-            {/* Nhập số lượng, giá */}
             <div className="d-flex flex-row gap-3 my-2">
-              <Select
+              {/* <Select
                 options={optionsStatus}
                 placeholder="Chọn trạng thái"
                 className="w-50"
                 value={selectedStatus}
                 onChange={setSelectedStatus}
-              />
+              /> */}
+              {optionsStatus.map((option) => (
+                <Button
+                  key={option.value}
+                  variant="outline-primary"
+                  onClick={() => setSelectedStatus(option)}
+                  {...(selectedStatus?.value === option.value && {
+                    variant: "primary",
+                  })}
+                >
+                  {option.label}
+                </Button>
+              ))}
             </div>
             <div className="d-flex justify-content-end gap-2 mt-2">
               <button className="btn btn-primary" onClick={onClickSearch}>

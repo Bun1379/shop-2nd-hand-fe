@@ -39,7 +39,7 @@ const OrderStatus = () => {
   }
 
   return (
-    <div style={{ width: "45%" }}>
+    <div>
       <h5>Thống kê tỷ lệ trạng thái đơn hàng</h5>
       <Pie
         data={{
