@@ -15,6 +15,7 @@ const ModalUpdateBanner = ({
   const [image, setImage] = useState(null);
   const [position, setPosition] = useState(0);
   const [previewImage, setPreviewImage] = useState("");
+  const [status, setStatus] = useState(true);
   const [loading, setLoading] = useState(false);
 
   const handleUploadImage = (event) => {
@@ -27,6 +28,8 @@ const ModalUpdateBanner = ({
     setShowUpdate(false);
     setName("");
     setLink("");
+    setPosition(0);
+    setStatus(true);
     setImage(null);
     setPreviewImage("");
   };
@@ -38,13 +41,14 @@ const ModalUpdateBanner = ({
       formData.append("title", name);
       formData.append("url", link);
       formData.append("position", position);
+      formData.append("status", status);
       if (image) {
         const respone = await UploadAPI.Upload(image);
         formData.append("image", respone.data.DT);
       }
       const response = await BannerAPI.UpdateBanner(dataUpdate._id, formData);
       if (response.status === 200) {
-        toast.success("Update banner successfully");
+        toast.success("Cập nhật banner thành công");
         fetchDataBanner();
         handleClose();
       }
@@ -59,6 +63,7 @@ const ModalUpdateBanner = ({
     if (showUpdate && dataUpdate) {
       setName(dataUpdate.title || "");
       setLink(dataUpdate.url || "");
+      setStatus(dataUpdate.status);
       setPreviewImage(dataUpdate.image || "");
       setPosition(dataUpdate.position || 0);
     }
@@ -96,6 +101,14 @@ const ModalUpdateBanner = ({
               placeholder="Nhập vị trí"
               value={position}
               onChange={(e) => setPosition(e.target.value)}
+            />
+          </Form.Group>
+          <Form.Group className="mb-3" controlId="formBasicStatus">
+            <Form.Check
+              type="checkbox"
+              label="Trạng thái"
+              checked={status}
+              onChange={(e) => setStatus(e.target.checked)}
             />
           </Form.Group>
           <Form.Group className="mb-3" controlId="formBasicImage">

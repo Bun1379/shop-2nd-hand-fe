@@ -15,7 +15,9 @@ function Home() {
   const fetchDataBanner = async () => {
     try {
       const response = await BannerAPI.GetBanners();
-      setBanner(response.data.DT);
+      const rawBanner = response.data.DT;
+      const activeBanner = rawBanner.filter((banner) => banner.status === true);
+      setBanner(activeBanner);
     } catch (error) {
       console.error("Chi tiết lỗi:", error.message);
     }
@@ -46,11 +48,23 @@ function Home() {
                 window.location.href = banner.url;
                 event.preventDefault();
               }}
+              style={{
+                width: "100%",
+                height: "600px",
+                overflow: "hidden",
+                cursor: "pointer",
+              }}
             >
               <img
                 className="d-block w-100"
                 src={banner.image}
                 alt={`Slide ${index + 1}`}
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  objectFit: "cover",
+                  objectPosition: "center",
+                }}
               />
               <Carousel.Caption>
                 <h3>{banner.title}</h3>

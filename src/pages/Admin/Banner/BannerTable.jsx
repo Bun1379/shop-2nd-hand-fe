@@ -5,17 +5,16 @@ const BannerTable = ({ banners, handleUpdateBanner, handleDeleteBanner }) => {
     <Table striped bordered hover className="mt-2">
       <thead>
         <tr>
-          <th>Id</th>
           <th>Tiêu đề</th>
           <th>Image</th>
           <th>Vị trí</th>
+          <th>Trạng thái</th>
           <th>Actions</th>
         </tr>
       </thead>
       <tbody>
         {banners.map((banner) => (
           <tr key={banner._id}>
-            <td>{banner._id}</td>
             <td>{banner.title}</td>
             <td>
               <img
@@ -27,6 +26,7 @@ const BannerTable = ({ banners, handleUpdateBanner, handleDeleteBanner }) => {
               />
             </td>
             <td>{banner.position}</td>
+            <td>{banner.status ? "Đang hoạt động" : "Đã tắt"}</td>
             <td>
               <Button onClick={() => handleUpdateBanner(banner)}>Edit</Button>
               <Button
