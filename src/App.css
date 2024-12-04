@@ -47,8 +47,8 @@ body {
 }
 
 .btn-primary {
-  background-color: #397D54;
-  border-color: #397D54;
+  background-color: #208454;
+  border-color: #208454;
 }
 
 /* Khi nút btn-primary bị hover */
@@ -59,13 +59,13 @@ body {
 }
 
 .border-primary {
-  border-color: #397D54 !important;
+  border-color: #208454 !important;
 }
 
 .text-primary {
-  color: #397D54 !important;
+  color: #208454 !important;
 }
 
 .bg-primary {
-  background-color: #397D54 !important;
+  background-color: #208454 !important;
 }

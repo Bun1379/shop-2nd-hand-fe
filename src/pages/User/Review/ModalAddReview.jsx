@@ -1,12 +1,19 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button, Modal } from "react-bootstrap";
 import { Rating } from "@smastrom/react-rating";
 
 import "@smastrom/react-rating/style.css";
 
-const ModalAddReview = ({ show, setShow, handleSubmitReview }) => {
+const ModalAddReview = ({ show, setShow, handleSubmitReview, review }) => {
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState("");
+
+  useEffect(() => {
+    if (review.rating && review.comment) {
+      setRating(review.rating);
+      setComment(review.comment);
+    }
+  }, [review]);
 
   const handleRatingChange = (event, newValue) => {
     setRating(newValue);
@@ -43,7 +50,9 @@ const ModalAddReview = ({ show, setShow, handleSubmitReview }) => {
       </Modal.Body>
       <Modal.Footer>
         <Button onClick={handleClose}>Đóng</Button>
-        <Button onClick={handleSubmit}>Gửi đánh giá</Button>
+        <Button onClick={handleSubmit}>
+          Gửi đánh giá
+        </Button>
       </Modal.Footer>
     </Modal>
   );
