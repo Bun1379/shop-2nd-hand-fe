@@ -159,8 +159,14 @@ const ModalUpdateProduct = ({ showUpdate, setShowUpdate, product }) => {
       setIsLoad(false);
       return;
     }
+    if (price <= 0) {
+      toast.error("Giá phải lớn hơn 0");
+      setIsLoad(false);
+      return;
+    }
+
     if (quantity < 0) {
-      toast.error("Quantity must be greater than 0");
+      toast.error("Số lượng phải lớn hơn 0");
       setIsLoad(false);
       return;
     }

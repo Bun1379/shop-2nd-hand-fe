@@ -174,6 +174,12 @@ const ModalAddProduct = ({ showAdd, setShowAdd }) => {
       setIsLoad(false);
       return;
     }
+    if (price < 0) {
+      toast.error("Giá phải lớn hơn 0");
+      setIsLoad(false);
+      return;
+    }
+
     if (quantity < 0) {
       toast.error("Số lượng phải lớn hơn 0");
       setIsLoad(false);

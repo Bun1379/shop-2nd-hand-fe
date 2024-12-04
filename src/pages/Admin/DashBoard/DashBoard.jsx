@@ -25,7 +25,6 @@ const DashBoard = () => {
   const fetchDataRevenueByMonth = async () => {
     try {
       const year = new Date().getFullYear();
-      console.log(year);
       const response = await DashBoardAPI.GetRevenueChartByMonth(year);
       let rawData = response.data.DT;
       rawData.dates = rawData.months.map((month) => "Tháng " + month);

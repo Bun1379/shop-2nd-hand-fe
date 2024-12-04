@@ -43,6 +43,13 @@ const Checkout = () => {
       const response = await AddressAPI.GetAddressByUser();
       if (response.status === 200) {
         const addresses = response.data.DT;
+        if (addresses.length === 0) {
+          toast.error("Vui lòng thêm địa chỉ giao hàng");
+          navigation("/user-profile", {
+            state: { initialSection: "addresses" },
+          });
+          return;
+        }
         setAddressList(addresses);
 
         const defaultAddress = addresses.find(
@@ -96,6 +103,10 @@ const Checkout = () => {
   };
 
   const handleCouponClick = async () => {
+    if (!coupon.value) {
+      toast.error("Vui lòng chọn mã giảm giá");
+      return;
+    }
     try {
       const response = await DiscountAPI.getDiscountPercentages(coupon.value);
       if (response.status === 200) {
