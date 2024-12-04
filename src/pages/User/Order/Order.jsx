@@ -3,6 +3,7 @@ import OrderStatusBar from "./OrderStatusBar";
 import OrderItem from "./OrderItem";
 import OrderAPI from "../../../api/OrderAPI";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const Order = () => {
   const token = localStorage.getItem("token");
@@ -35,6 +36,21 @@ const Order = () => {
     navigate(`/order/${orderId}`);
   };
 
+  const handleReceive = async (orderId) => {
+    try {
+      const data = {
+        status: "DELIVERED",
+      };
+      const res = await OrderAPI.UpdateOrderStatus(orderId, data);
+      if (res.status === 200) {
+        toast.success("Nhận hàng thành công");
+        fetchDataOrder();
+      }
+    } catch (error) {
+      toast.error("Lỗi: " + error.message);
+    }
+  };
+
   useEffect(() => {
     fetchDataOrder();
   }, []);
@@ -64,6 +80,7 @@ const Order = () => {
             key={index}
             order={order}
             handleOnClickOrder={handleOnClickOrder}
+            handleReceive={handleReceive}
           />
         ))}
     </div>

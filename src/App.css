@@ -65,3 +65,7 @@ body {
 .text-primary {
   color: #397D54 !important;
 }
+
+.bg-primary {
+  background-color: #397D54 !important;
+}

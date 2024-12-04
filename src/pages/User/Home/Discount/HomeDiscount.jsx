@@ -3,7 +3,7 @@ import { Card, Row, Col, Button, Container } from "react-bootstrap";
 import DiscountAPI from "../../../../api/DiscountAPI";
 import UserAPI from "../../../../api/UserAPI";
 import { toast } from "react-toastify";
-
+import "../Home.css";
 const DiscountSlider = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [discounts, setDiscounts] = useState([]);
@@ -64,7 +64,7 @@ const DiscountSlider = () => {
 
   return (
     <Container>
-      <h1 className="text-center">Discounts</h1>
+      <h1 className="text-center">Mã giảm giá</h1>
       <Row className="align-items-center d-flex justify-content-center">
         <Col xs="auto">
           <Button variant="primary" onClick={handlePrev} className="mx-2">
@@ -85,9 +85,9 @@ const DiscountSlider = () => {
                     <Button variant="success">Nhận</Button>
                   )} */}
                   {userDiscounts.length > 0 &&
-                  userDiscounts.find(
-                    (userDiscount) => userDiscount._id === discount._id
-                  ) ? (
+                    userDiscounts.find(
+                      (userDiscount) => userDiscount._id === discount._id
+                    ) ? (
                     <Card.Text className="text-danger">Đã nhận</Card.Text>
                   ) : (
                     <Button

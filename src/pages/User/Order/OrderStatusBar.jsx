@@ -22,13 +22,12 @@ const OrderStatusBar = ({ status, setStatus, totalOrder }) => {
       className="justify-content-center flex-wrap mb-4 bg-light p-3 rounded shadow-sm"
     >
       {statusList.map((item) => (
-        <Nav.Item key={item.key} className="mx-2">
+        <Nav.Item key={item.key} className="mx-1">
           <Nav.Link
             active={status === item.key}
             onClick={() => setStatus(item.key)}
-            className={`d-flex align-items-center px-3 py-2 ${
-              status === item.key ? "text-white bg-success" : "text-dark"
-            }`}
+            className={`d-flex align-items-center px-3 py-2 ${status === item.key ? "text-white bg-success" : "text-dark"
+              }`}
             style={{
               borderRadius: "50px",
               transition: "all 0.3s ease",
@@ -37,7 +36,7 @@ const OrderStatusBar = ({ status, setStatus, totalOrder }) => {
           >
             {item.label}
             <Badge
-              bg={status === item.key ? "light" : "secondary"}
+              bg={status === item.key ? "light" : "primary"}
               className="ms-2"
               pill
               text={status === item.key ? "dark" : "light"}
