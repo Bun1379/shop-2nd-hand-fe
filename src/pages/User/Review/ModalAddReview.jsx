@@ -13,6 +13,10 @@ const ModalAddReview = ({ show, setShow, handleSubmitReview, review }) => {
       setRating(review.rating);
       setComment(review.comment);
     }
+    else {
+      setRating(0);
+      setComment("");
+    }
   }, [review]);
 
   const handleRatingChange = (event, newValue) => {
@@ -30,8 +34,6 @@ const ModalAddReview = ({ show, setShow, handleSubmitReview, review }) => {
 
   const handleClose = () => {
     setShow(false);
-    setRating(0);
-    setComment("");
   };
 
   return (

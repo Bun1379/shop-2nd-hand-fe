@@ -76,7 +76,7 @@ function Home() {
         <div className="my-5">
           <HomeDiscount />
         </div>
-        <h1 className="mt-2">Hàng mới về</h1>
+        <h1 className="mt-2" id="new-products">Hàng mới về</h1>
         <div className="home-new-product-container-list">
           {arrayProducts.map((product) => (
             <ProductItem key={product._id} product={product} />

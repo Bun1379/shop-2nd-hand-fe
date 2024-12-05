@@ -16,10 +16,10 @@ class ReviewAPI {
     return axiosClient.get(url);
   }
 
-  // static async UpdateReview(id, data) {
-  //     const url = `/review/${id}`;
-  //     return axiosPrivate.put(url, data);
-  // }
+  static async UpdateReview(data) {
+    const url = `/review`;
+    return axiosPrivate.put(url, data);
+  }
 
   // static async DeleteReview(id) {
   //     const url = `/review/${id}`;

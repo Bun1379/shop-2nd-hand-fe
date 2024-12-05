@@ -21,6 +21,7 @@
     "react-rating": "^2.0.5",
     "react-router-dom": "^6.26.2",
     "react-scripts": "5.0.1",
+    "react-scroll": "^1.9.0",
     "react-select": "^5.8.1",
     "react-toastify": "^10.0.5",
     "rollup": "^4.27.3",

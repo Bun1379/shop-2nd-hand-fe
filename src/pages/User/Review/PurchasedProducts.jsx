@@ -15,14 +15,22 @@ const PurchasedProducts = () => {
 
   const handleSubmitReview = async (review) => {
     if (!review.rating || !review.comment || review.comment.length < 10) {
-      toast.error("Vui lòng cung cấp đầy đủ đánh giá hợp lệ.");
+      toast.error("Vui lòng cung cấp đầy đủ đánh giá, nhận xét và nhận xét ít nhất 10 ký tự");
       return;
     }
-    review.product = selectedProduct._id;
     if (currentTab == "reviewed") {
-      console.log("Update review");
-      fetchaProductsPurchased();
+      review._id = selectedProduct._id;
+      const data = { ...review };
+      const response = await ReviewAPI.UpdateReview(data);
+      if (response.status === 200) {
+        toast.success("Cập nhật đánh giá thành công");
+        setShowReviewModal(false);
+        fetchaProductsPurchased();
+      } else {
+        toast.error("Error: " + response.data);
+      }
     } else {
+      review.product = selectedProduct._id;
       const response = await ReviewAPI.CreateReview(review);
       if (response.status === 200) {
         toast.success("Đánh giá thành công");

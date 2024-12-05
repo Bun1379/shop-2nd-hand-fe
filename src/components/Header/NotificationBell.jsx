@@ -42,6 +42,10 @@ const NotificationBell = () => {
   };
 
   useEffect(() => {
+    fetchNotifications();
+  }, []);
+
+  useEffect(() => {
     setUnreadCount(notifications.filter((n) => !n.isRead).length);
   }, [notifications]);
 
@@ -50,15 +54,15 @@ const NotificationBell = () => {
       <Dropdown.Toggle
         variant="link"
         id="notification-dropdown"
-        className="text-dark position-relative"
-        style={{ textDecoration: "none" }}
+        className="position-relative header-dropdown-toggle mt-2"
+        style={{ textDecoration: "none", color: "rgba(255, 255, 255, 0.55)" }}
       >
         <FaBell size={24} />
         {unreadCount > 0 && (
           <Badge
             bg="danger"
             pill
-            className="position-absolute top-0 start-100 translate-middle"
+            className="position-absolute top-0 start-60 translate-middle"
             style={{ fontSize: "0.75rem" }}
           >
             {unreadCount}
