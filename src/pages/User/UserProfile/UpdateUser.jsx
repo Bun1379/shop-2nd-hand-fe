@@ -80,6 +80,7 @@ const UpdateUser = ({ userInfo }) => {
                 image: avatarUrl || userInfo.image
             };
             localStorage.setItem("user", JSON.stringify(updatedUser));
+            window.location.reload();
         } catch (error) {
             toast.error(error.response.data.EM);
         }
@@ -143,7 +144,7 @@ const UpdateUser = ({ userInfo }) => {
                 <img
                     src={newAvatar || "https://via.placeholder.com/150"}
                     alt="Avatar"
-                    className="img-fluid rounded-circle mb-3"
+                    className="img-fluid rounded-circle mb-3 border border-2 border-primary"
                     style={{ width: "150px", height: "150px", objectFit: "cover" }}
                 />
                 {/* Nút chọn ảnh nằm dưới ảnh */}

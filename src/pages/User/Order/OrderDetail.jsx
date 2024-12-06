@@ -72,13 +72,15 @@ const OrderDetail = () => {
           {order.discountCode.discountPercentage}%
         </p>
       )}
-      <p className="fw-bold">Tổng tiền: {order.totalAmount}</p>
+      <p className="fw-bold">Tổng tiền: {order.totalAmount.toLocaleString("vi-VN")}đ</p>
     </div>
   );
 
   return (
     <>
-      <Container fluid className="py-3 shadow-sm bg-light">
+      <Container fluid className="container py-3 shadow bg-light"
+        style={{ width: "90%" }}
+      >
         <Row className="align-items-center">
           <Col xs="auto">
             <Button
@@ -94,6 +96,7 @@ const OrderDetail = () => {
             </Button>
           </Col>
           <Col className="text-center">
+            <p className="mb-1">Ngày tạo: {new Date(order.createdAt).toLocaleString()}</p>
             <p className="mb-1 fw-bold">Mã đơn hàng: {order._id}</p>
             <p className="text-success fw-bold">Trạng thái: {order.status}</p>
           </Col>
@@ -103,13 +106,15 @@ const OrderDetail = () => {
       {order.products?.length > 0 && (
         <div className="container my-4">
           {/* Header */}
-          <div className="d-flex justify-content-between align-items-center bg-success text-white p-3 rounded">
-            <p className="mb-0 fw-bold">Sản phẩm</p>
-            <div className="d-flex gap-3">
-              <p className="mb-0 fw-bold">Đơn giá</p>
-              <p className="mb-0 fw-bold">Số lượng</p>
-              <p className="mb-0 fw-bold">Thành tiền</p>
-            </div>
+          <div className="bg-success text-white p-3 rounded">
+            <Row className="align-items-center fw-bold">
+              <Col xs={2}>Sản phẩm</Col>
+              <Col xs={4}></Col>
+              <Col xs={2}>Size</Col>
+              <Col xs={1} className="text-center">Đơn giá</Col>
+              <Col xs={1} className="text-center">Số lượng</Col>
+              <Col xs={2} className="text-end">Thành tiền</Col>
+            </Row>
           </div>
 
           {/* Product list */}
@@ -120,7 +125,7 @@ const OrderDetail = () => {
           </div>
 
           {/* Order Details */}
-          <div className="bg-light shadow-sm p-4 mt-4 rounded">
+          <div className="bg-white shadow p-4 mt-4 rounded">
             <div className="d-flex justify-content-between">
               {renderOrderInfo()}
               {renderPaymentInfo()}

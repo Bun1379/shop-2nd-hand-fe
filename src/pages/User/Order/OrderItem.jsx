@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Card, Modal, Button } from "react-bootstrap";
 import OrderProductItem from "./OrderProductItem";
+import PaymentAPI from "../../../api/PaymentAPI";
 
 const OrderItem = ({ order, handleOnClickOrder, handleReceive }) => {
   const [showModal, setShowModal] = useState(false);
@@ -11,6 +12,19 @@ const OrderItem = ({ order, handleOnClickOrder, handleReceive }) => {
   const handleConfirm = async () => {
     handleReceive(order._id);
     handleClose();
+  }
+
+  const handleCheckOut = async () => {
+    const PaymentData = {
+      amount: order.totalAmount,
+      orderId: order._id,
+      returnUrl: "https://ishio-shop.onrender.com/payment/result",
+    };
+    const response = await PaymentAPI.postPayment(PaymentData);
+    if (response.status === 200) {
+      const paymentUrl = response.data.DT;
+      window.open(paymentUrl, '_blank');
+    }
   }
 
   return (
@@ -25,6 +39,9 @@ const OrderItem = ({ order, handleOnClickOrder, handleReceive }) => {
           style={{ cursor: "pointer" }}
           onClick={() => handleOnClickOrder(order._id)}
         >
+          {order.status === "PENDING" && order.paymentMethod == "ONLINE" && order.paymentStatus !== "PAID" && (
+            <p className="text-danger text-center">Đơn hàng chưa thanh toán, vui lòng thanh toán đơn hàng.</p>
+          )}
           {order.products.map((product) => (
             <OrderProductItem
               key={product._id}
@@ -44,6 +61,13 @@ const OrderItem = ({ order, handleOnClickOrder, handleReceive }) => {
               Đã nhận được hàng
             </button>
           )}
+
+          {order.status === "PENDING" && order.paymentMethod == "ONLINE" && order.paymentStatus !== "PAID" && (
+            <button className="btn btn-warning" onClick={handleCheckOut}>
+              Thanh toán đơn hàng
+            </button>
+          )}
+
         </Card.Footer>
       </Card>
 

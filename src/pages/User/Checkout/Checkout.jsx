@@ -9,7 +9,7 @@ import PaymentAPI from "../../../api/PaymentAPI";
 import UserAPI from "../../../api/UserAPI";
 import AddressAPI from "../../../api/AddressAPI";
 import ModalSelectAddress from "./ModalSelectAddress";
-import { Modal, Button, Form } from "react-bootstrap";
+import { Modal, Button, Form, Row, Col } from "react-bootstrap";
 const Checkout = () => {
   const token = localStorage.getItem("token");
   if (!token) {
@@ -92,7 +92,7 @@ const Checkout = () => {
         const response = await PaymentAPI.postPayment(PaymentData);
         if (response.status === 200) {
           const paymentUrl = response.data.DT;
-          window.location.href = paymentUrl;
+          window.open(paymentUrl, '_blank');
         }
       } else {
         navigation("/user-profile", { state: { initialSection: "orders" } });
@@ -155,29 +155,26 @@ const Checkout = () => {
   return (
     <>
       <h1 className="text-center p-2">Thanh toán</h1>
-      <div className="d-flex justify-content-center flex-column">
-        <div
-          className="shadow border w-75 border-success mb-2 border-2 p-2 d-flex align-items-center justify-content-between"
-          style={{ height: "75px", margin: "0 auto" }}
+      <div className="d-flex justify-content-center flex-column ">
+        <div className="bg-success text-white p-3 rounded w-100 align-items-center mb-3" style={{ margin: "auto" }}
         >
-          <div className="d-flex align-items-center">
-            <p className="fw-bold mb-0 ms-3">Sản phẩm</p>{" "}
-          </div>
-
-          <div className="d-flex flex-row gap-3 align-items-center">
-            <p className="mb-0 fw-bold">Đơn giá</p>
-            <p className="mb-0 fw-bold">Số lượng</p>
-            <p className="mb-0 fw-bold">Thành tiền</p>
-          </div>
+          <Row className="align-items-center fw-bold">
+            <Col xs={2}>Sản phẩm</Col>
+            <Col xs={4}></Col>
+            <Col xs={2}>Size</Col>
+            <Col xs={1} className="text-center">Đơn giá</Col>
+            <Col xs={1} className="text-center">Số lượng</Col>
+            <Col xs={2} className="text-end">Thành tiền</Col>
+          </Row>
         </div>
-        <div className="w-75" style={{ margin: "0 auto" }}>
+        <div className="w-100" style={{ margin: "0 auto" }}>
           {items.map((item) => (
             <CheckoutItem key={item.product._id} item={item} />
           ))}
         </div>
 
         <div
-          className="d-flex flex-column shadow border w-75 border-success mb-2 border-2 p-4 gap-3"
+          className="d-flex flex-column shadow border w-100 border-success mb-2 border-2 p-4 gap-3"
           style={{ height: "auto", margin: "0 auto" }}
         >
           <div className="d-flex align-items-center justify-content-around">
