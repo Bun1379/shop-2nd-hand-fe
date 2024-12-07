@@ -18,7 +18,7 @@ const FavouriteItem = ({ product, handleRemoveFavourite }) => {
           <div className="ms-3">
             <p className="fw-bold mb-0">{product.productName}</p>
             <p className="text-muted mb-0">
-              Giá: {product.price.toLocaleString("vi-VN")} VND
+              Giá: {product.price.toLocaleString("vi-VN")} đ
             </p>
           </div>
         </div>

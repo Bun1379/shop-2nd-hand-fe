@@ -63,12 +63,12 @@ const PurchasedProducts = () => {
   }, []);
 
   return (
-    <div className="container mt-4">
+    <div className="container mt-1">
       <h3 className="text-center mb-4">Sản phẩm đã mua</h3>
-      <ul className="nav nav-tabs" id="purchasedTabs" role="tablist">
-        <li className="nav-item" role="presentation">
+      <ul className="nav nav-tabs bg-white" id="purchasedTabs" role="tablist">
+        <li className="nav-item w-50" role="presentation">
           <button
-            className={`nav-link ${currentTab === "unreviewed" ? "active" : ""}`}
+            className={`w-100 nav-link ${currentTab === "unreviewed" ? "active text-white bg-success" : "text-dark"}`}
             id="unreviewed-tab"
             onClick={() => setCurrentTab("unreviewed")}
             type="button"
@@ -76,9 +76,9 @@ const PurchasedProducts = () => {
             Sản phẩm chưa đánh giá
           </button>
         </li>
-        <li className="nav-item" role="presentation">
+        <li className="nav-item w-50" role="presentation">
           <button
-            className={`nav-link ${currentTab === "reviewed" ? "active" : ""}`}
+            className={`w-100 nav-link ${currentTab === "reviewed" ? "active text-white bg-success" : "text-dark"}`}
             id="reviewed-tab"
             onClick={() => setCurrentTab("reviewed")}
             type="button"

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Card, Modal, Button } from "react-bootstrap";
 import OrderProductItem from "./OrderProductItem";
+import PaymentAPI from "../../../api/PaymentAPI";
 
 const OrderItem = ({ order, handleOnClickOrder, handleReceive }) => {
   const [showModal, setShowModal] = useState(false);
@@ -13,18 +14,44 @@ const OrderItem = ({ order, handleOnClickOrder, handleReceive }) => {
     handleClose();
   }
 
+  const handleCheckOut = async () => {
+    const PaymentData = {
+      amount: order.totalAmount,
+      orderId: order._id,
+      returnUrl: "https://ishio-shop.onrender.com/payment/result",
+    };
+    const response = await PaymentAPI.postPayment(PaymentData);
+    if (response.status === 200) {
+      const paymentUrl = response.data.DT;
+      window.open(paymentUrl, '_blank');
+    }
+  }
+
+  const statusLabels = {
+    PENDING: "Chờ xác nhận",
+    CONFIRMED: "Đã xác nhận",
+    CANCELLED: "Đã hủy",
+    SHIPPED: "Đang giao",
+    DELIVERED: "Đã giao",
+  };
+
   return (
     <>
       <Card className="mb-3">
         <Card.Header className="d-flex justify-content-between align-items-center bg-success text-white">
           <span className="fw-bold">Mã đơn hàng: {order._id}</span>
-          <span className="fw-bold">{order.status}</span>
+          <span className="fw-bold">
+            {statusLabels[order.status]}
+          </span>
         </Card.Header>
 
         <Card.Body
           style={{ cursor: "pointer" }}
           onClick={() => handleOnClickOrder(order._id)}
         >
+          {order.status === "PENDING" && order.paymentMethod == "ONLINE" && order.paymentStatus !== "PAID" && (
+            <p className="text-danger text-center">Đơn hàng chưa thanh toán, vui lòng thanh toán đơn hàng.</p>
+          )}
           {order.products.map((product) => (
             <OrderProductItem
               key={product._id}
@@ -36,7 +63,7 @@ const OrderItem = ({ order, handleOnClickOrder, handleReceive }) => {
 
         <Card.Footer className="d-flex justify-content-end align-items-center bg-light">
           <span className="fw-bold me-3">
-            Tổng tiền: {order.totalAmount.toLocaleString("vi-VN")}
+            Tổng tiền: {order.totalAmount.toLocaleString("vi-VN")} đ
           </span>
 
           {order.status === "SHIPPED" && (
@@ -44,6 +71,13 @@ const OrderItem = ({ order, handleOnClickOrder, handleReceive }) => {
               Đã nhận được hàng
             </button>
           )}
+
+          {order.status === "PENDING" && order.paymentMethod == "ONLINE" && order.paymentStatus !== "PAID" && (
+            <button className="btn btn-warning" onClick={handleCheckOut}>
+              Thanh toán đơn hàng
+            </button>
+          )}
+
         </Card.Footer>
       </Card>
 

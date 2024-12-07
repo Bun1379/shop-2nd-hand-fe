@@ -28,6 +28,7 @@ function Header() {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
     localStorage.removeItem("is_admin");
+    localStorage.removeItem("recentlyViewed");
     localStorage
     setIsLoggedIn(false);
     toast.success("Đăng xuất thành công!");

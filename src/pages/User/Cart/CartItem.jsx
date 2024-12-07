@@ -86,11 +86,11 @@ const CartItem = ({
         </div>
         <div className="col">
           <h5 className="card-title">{item.product.productName}</h5>
-          <p className="mb-0 me-3">Giá: {item.product.price} VNĐ</p>
+          <p className="mb-0 me-3">Giá: {item.product.price.toLocaleString()}đ</p>
         </div>
         <div className="col-auto d-flex align-items-center">
           <div className="d-flex align-items-center">
-            <p className="mb-0 fw-bold mx-2">{totalPrice} VNĐ</p>
+            <p className="mb-0 fw-bold mx-2">{totalPrice.toLocaleString()}đ</p>
             <button
               className="btn btn-outline-secondary btn-sm"
               onClick={() => handleQuantityButton(parseInt(quantity) - 1)}

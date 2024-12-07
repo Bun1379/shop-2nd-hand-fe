@@ -16,7 +16,7 @@ const TotalPrice = ({ total, handleCheckOut, totalProduct }) => {
         <Card.Text className="mb-2">
           <strong>Tổng sản phẩm: {totalProduct}</strong>
         </Card.Text>
-        <Card.Text className="fw-bold">Tổng thanh toán: {total} VND</Card.Text>
+        <Card.Text className="fw-bold">Tổng thanh toán: {total.toLocaleString("vi-VN")} đ</Card.Text>
 
         <Button variant="success" onClick={handleCheckOut} className="w-100">
           Thanh toán

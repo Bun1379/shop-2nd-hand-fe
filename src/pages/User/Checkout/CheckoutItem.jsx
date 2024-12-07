@@ -2,7 +2,7 @@ import { Row, Col, Image, Card } from "react-bootstrap";
 
 const CheckoutItem = ({ item }) => {
   return (
-    <Card className="shadow-sm border-0 mb-3">
+    <Card className="shadow border-0 mb-3">
       <Card.Body>
         <Row className="align-items-center">
           <Col xs={2}>
@@ -18,16 +18,16 @@ const CheckoutItem = ({ item }) => {
             {item.product.productName}
           </Col>
           <Col xs={2} className="text-muted">
-            Size: {item.product.size}
+            {item.product.size}
           </Col>
           <Col xs={1} className="text-center">
-            {item.product.price.toLocaleString("vi-VN")}đ
+            {item.product.price.toLocaleString("vi-VN")} đ
           </Col>
           <Col xs={1} className="text-center">
             x{item.quantity}
           </Col>
           <Col xs={2} className="text-end fw-bold">
-            {(item.product.price * item.quantity).toLocaleString("vi-VN")}đ
+            {(item.product.price * item.quantity).toLocaleString("vi-VN")} đ
           </Col>
         </Row>
       </Card.Body>

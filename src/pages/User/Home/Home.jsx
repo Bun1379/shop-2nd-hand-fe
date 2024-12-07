@@ -1,16 +1,21 @@
-import React from "react";
-import "./Home.css";
-import UserLayout from "../../../layouts/UserLayout/UserLayout";
-import ProductItem from "../../../components/ProductItem/ProductItem";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import ProductAPI from "../../../api/ProductAPI";
 import { Carousel } from "react-bootstrap";
 import HomeDiscount from "./Discount/HomeDiscount";
 import BannerAPI from "../../../api/BannerAPI";
+import HomeReview from "./Review/HomeReview";
+import ReactPaginate from "react-paginate";
+import ProductItem from "../../../components/ProductItem/ProductItem";
 
 function Home() {
   const [arrayProducts, setArrayProducts] = useState([]);
   const [banner, setBanner] = useState([]);
+  const [totalPages, setTotalPages] = useState(0);
+  const [page, setPage] = useState(1);
+
+  const handlePageClick = (data) => {
+    setPage(data.selected + 1);
+  };
 
   const fetchDataBanner = async () => {
     try {
@@ -30,40 +35,36 @@ function Home() {
 
   const fetchDataProducts = async () => {
     try {
-      const response = await ProductAPI.GetProducts({ page: 1 });
+      const response = await ProductAPI.GetProducts({ page });
       setArrayProducts(response.data.DT.products);
+      setTotalPages(response.data.DT.totalPages);
     } catch (error) {
       console.error("Chi tiết lỗi:", error.message);
     }
   };
 
+  useEffect(() => {
+    fetchDataProducts();
+  }, [page]);
+
   return (
     <>
-      <div className="home-new-product-container">
-        <Carousel className="z-0">
+      <div className="my-5">
+        {/* Carousel */}
+        <Carousel className="mb-5">
           {banner.map((banner, index) => (
-            <Carousel.Item
-              key={index}
-              onClick={(event) => {
-                window.location.href = banner.url;
-                event.preventDefault();
-              }}
-              style={{
-                width: "100%",
-                height: "600px",
-                overflow: "hidden",
-                cursor: "pointer",
-              }}
-            >
+            <Carousel.Item key={index} onClick={(event) => {
+              window.location.href = banner.url;
+              event.preventDefault();
+            }}>
               <img
                 className="d-block w-100"
                 src={banner.image}
                 alt={`Slide ${index + 1}`}
                 style={{
-                  width: "100%",
-                  height: "100%",
                   objectFit: "cover",
                   objectPosition: "center",
+                  height: "600px",
                 }}
               />
               <Carousel.Caption>
@@ -73,15 +74,60 @@ function Home() {
             </Carousel.Item>
           ))}
         </Carousel>
-        <div className="my-5">
-          <HomeDiscount />
+
+        {/* Home Discount */}
+        <HomeDiscount />
+
+        {/* Title for new products */}
+        <h1 className="w-100 text-center text-uppercase mb-4 mt-5 bg-white border border-2 border-success rounded p-3" id="new-products">
+          Hàng mới về
+        </h1>
+        {/* Product List */}
+        <div className="container-fluid w-100 bg-white border border-2 border-success rounded justify-content-center ">
+          <div className="w-100 mt-4" style={{
+            display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '3rem',
+          }}>
+            {arrayProducts.map((product) => (
+              <div className="product-item text-wrap shadow" key={product._id}
+                style={{
+                  width: '240px',
+                }}
+              >
+                <ProductItem product={product} />
+              </div>
+            ))}
+          </div>
+
+          {/* Pagination */}
+          <div className="d-flex justify-content-center mt-4">
+            <ReactPaginate
+              nextLabel="Sau >"
+              onPageChange={handlePageClick}
+              pageRangeDisplayed={5}
+              pageCount={totalPages}
+              previousLabel="< Trước"
+              marginPagesDisplayed={2}
+              pageClassName="page-item"
+              pageLinkClassName="page-link"
+              previousClassName="page-item"
+              previousLinkClassName="page-link"
+              nextClassName="page-item"
+              nextLinkClassName="page-link"
+              breakLabel="..."
+              breakClassName="page-item"
+              breakLinkClassName="page-link"
+              containerClassName="pagination"
+              activeClassName="active"
+            />
+          </div>
         </div>
-        <h1 className="mt-2" id="new-products">Hàng mới về</h1>
-        <div className="home-new-product-container-list">
-          {arrayProducts.map((product) => (
-            <ProductItem key={product._id} product={product} />
-          ))}
-        </div>
+
+
+        {/* Home Review */}
+        <h1 className=" text-center text-uppercase mb-4 mt-5 bg-white border border-2 border-success rounded p-3" id="reviews">
+          Đánh giá của khách hàng
+        </h1>
+        <HomeReview />
       </div>
     </>
   );

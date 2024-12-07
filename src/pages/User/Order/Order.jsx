@@ -10,7 +10,7 @@ const Order = () => {
   if (!token) {
     window.location.href = "/login";
   }
-  const [status, setStatus] = useState("PENDING");
+  const [status, setStatus] = useState("ALL");
   const [listOrder, setListOrder] = useState([]);
   const [totalOrder, setTotalOrder] = useState([]);
 
