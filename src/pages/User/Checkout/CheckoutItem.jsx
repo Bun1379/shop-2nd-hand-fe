@@ -21,13 +21,13 @@ const CheckoutItem = ({ item }) => {
             {item.product.size}
           </Col>
           <Col xs={1} className="text-center">
-            {item.product.price.toLocaleString("vi-VN")}đ
+            {item.product.price.toLocaleString("vi-VN")} đ
           </Col>
           <Col xs={1} className="text-center">
             x{item.quantity}
           </Col>
           <Col xs={2} className="text-end fw-bold">
-            {(item.product.price * item.quantity).toLocaleString("vi-VN")}đ
+            {(item.product.price * item.quantity).toLocaleString("vi-VN")} đ
           </Col>
         </Row>
       </Card.Body>

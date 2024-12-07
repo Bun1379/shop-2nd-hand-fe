@@ -44,7 +44,7 @@ const Checkout = () => {
       if (response.status === 200) {
         const addresses = response.data.DT;
         if (addresses.length === 0) {
-          toast.error("Vui lòng thêm địa chỉ giao hàng");
+          toast.error("Bạn chưa có địa chỉ. Vui lòng thêm địa chỉ giao hàng");
           navigation("/user-profile", {
             state: { initialSection: "addresses" },
           });

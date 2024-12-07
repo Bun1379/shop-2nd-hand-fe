@@ -28,7 +28,7 @@ const OrderProductItem = ({ product, quantity }) => {
           <p className="mb-0">
             Thành tiền:{" "}
             <span className="fw-bold text-success">
-              {(product.price * quantity).toLocaleString("vi-VN")}₫
+              {(product.price * quantity).toLocaleString("vi-VN")} đ
             </span>
           </p>
         </div>

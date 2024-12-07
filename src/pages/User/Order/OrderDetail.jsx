@@ -72,9 +72,26 @@ const OrderDetail = () => {
           {order.discountCode.discountPercentage}%
         </p>
       )}
-      <p className="fw-bold">Tổng tiền: {order.totalAmount.toLocaleString("vi-VN")}đ</p>
+      <p className="fw-bold">Tổng tiền: {order.totalAmount.toLocaleString("vi-VN")} đ</p>
     </div>
   );
+
+
+  const statusLabels = {
+    PENDING: "Chờ xác nhận",
+    CONFIRMED: "Đã xác nhận",
+    CANCELLED: "Đã hủy",
+    SHIPPED: "Đang giao",
+    DELIVERED: "Đã giao",
+  };
+
+  const statusColors = {
+    PENDING: "text-warning",
+    CONFIRMED: "text-success",
+    CANCELLED: "text-danger",
+    SHIPPED: "text-info",
+    DELIVERED: "text-dark",
+  };
 
   return (
     <>
@@ -98,7 +115,9 @@ const OrderDetail = () => {
           <Col className="text-center">
             <p className="mb-1">Ngày tạo: {new Date(order.createdAt).toLocaleString()}</p>
             <p className="mb-1 fw-bold">Mã đơn hàng: {order._id}</p>
-            <p className="text-success fw-bold">Trạng thái: {order.status}</p>
+            <p className={`mb-1 fw-bold ${statusColors[order.status]}`}>
+              Trạng thái: {statusLabels[order.status]}
+            </p>
           </Col>
           <Col xs="auto"></Col>
         </Row>

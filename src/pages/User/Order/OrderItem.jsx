@@ -27,12 +27,22 @@ const OrderItem = ({ order, handleOnClickOrder, handleReceive }) => {
     }
   }
 
+  const statusLabels = {
+    PENDING: "Chờ xác nhận",
+    CONFIRMED: "Đã xác nhận",
+    CANCELLED: "Đã hủy",
+    SHIPPED: "Đang giao",
+    DELIVERED: "Đã giao",
+  };
+
   return (
     <>
       <Card className="mb-3">
         <Card.Header className="d-flex justify-content-between align-items-center bg-success text-white">
           <span className="fw-bold">Mã đơn hàng: {order._id}</span>
-          <span className="fw-bold">{order.status}</span>
+          <span className="fw-bold">
+            {statusLabels[order.status]}
+          </span>
         </Card.Header>
 
         <Card.Body
@@ -53,7 +63,7 @@ const OrderItem = ({ order, handleOnClickOrder, handleReceive }) => {
 
         <Card.Footer className="d-flex justify-content-end align-items-center bg-light">
           <span className="fw-bold me-3">
-            Tổng tiền: {order.totalAmount.toLocaleString("vi-VN")}
+            Tổng tiền: {order.totalAmount.toLocaleString("vi-VN")} đ
           </span>
 
           {order.status === "SHIPPED" && (

@@ -49,6 +49,43 @@ const NotificationBell = () => {
     setUnreadCount(notifications.filter((n) => !n.isRead).length);
   }, [notifications]);
 
+  const statusLabels = {
+    PENDING: "Chờ xác nhận",
+    CONFIRMED: "Đã xác nhận",
+    CANCELLED: "Đã hủy",
+    SHIPPED: "Đang giao",
+    DELIVERED: "Đã giao",
+  };
+
+  const statusColors = {
+    PENDING: "text-warning",
+    CONFIRMED: "text-success",
+    CANCELLED: "text-danger",
+    SHIPPED: "text-info",
+    DELIVERED: "text-dark",
+  };
+
+  const formatMessage = (message) => {
+    const statusMatch = message.match(/trạng thái thành (\w+)/);
+    if (statusMatch) {
+      const status = statusMatch[1];
+      const label = statusLabels[status] || "Không xác định";
+      const colorClass = statusColors[status] || "text-muted";
+
+      // Tách phần trước và sau trạng thái
+      const [beforeStatus, afterStatus] = message.split(statusMatch[0]);
+
+      return (
+        <>
+          {beforeStatus}
+          <span className={`text-uppercase ${colorClass}`}>{label}</span>
+          {afterStatus}
+        </>
+      );
+    }
+    return message;
+  };
+
   return (
     <Dropdown align="end" onToggle={(isOpen) => isOpen && fetchNotifications()}>
       <Dropdown.Toggle
@@ -85,7 +122,7 @@ const NotificationBell = () => {
                 onClick={() => handleItemClick(notification.order)}
                 className={notification.isRead ? "" : "fw-bold"}
               >
-                {notification.message}
+                {formatMessage(notification.message)}
                 <p className="card-text mt-1">
                   {/* {notification.createdAt} */}
                   {new Date(notification.createdAt).toLocaleString()}
