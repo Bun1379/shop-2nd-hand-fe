@@ -28,6 +28,8 @@ import { SocketProvider } from "./layouts/SocketContext";
 import DashBoard from "./pages/Admin/DashBoard/DashBoard";
 import CancelRequestAdmin from "./pages/Admin/CancelRequest/CancelRequestAdmin";
 import ManageBanner from "./pages/Admin/Banner/ManageBanner";
+import ManageCategory from "./pages/Admin/Category/MangeCategory";
+import ManageColor from "./pages/Admin/Color/ManageColor";
 
 function App() {
   return (
@@ -63,6 +65,8 @@ function App() {
             <Route path="order" element={<ManageOrder />} />
             <Route path="cancel-request" element={<CancelRequestAdmin />} />
             <Route path="banner" element={<ManageBanner />} />
+            <Route path="category" element={<ManageCategory />} />
+            <Route path="color" element={<ManageColor />} />
           </Route>
 
           <Route path="/payment/result" element={<PaymentResult />} />
