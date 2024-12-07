@@ -52,6 +52,7 @@ const UserAccount = ({ initialSection }) => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
     localStorage.removeItem("is_admin");
+    localStorage.removeItem("recentlyViewed");
     setIsLoggedIn(false);
     toast.success("Đăng xuất thành công !");
     navigate("/login");
