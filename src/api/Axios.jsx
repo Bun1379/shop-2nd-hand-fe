@@ -1,5 +1,5 @@
 import axios from "axios";
-const BASE_URL = `http://localhost:3000/api/v1`;
+const BASE_URL = `https://ishio-shop.onrender.com/api/v1`;
 
 // Tạo axios client chung
 const axiosClient = axios.create({
