@@ -28,17 +28,6 @@ const ProductItem = ({ product }) => {
     }
   };
 
-  const handleAddToFavourite = async (e) => {
-    e.preventDefault();
-    try {
-      const rs = await UserAPI.PutUpdateFavorite(product._id);
-      if (rs.status === 200) {
-        toast.success("Đã thêm vào yêu thích");
-      }
-    } catch (error) {
-      toast.error(error.response.data.EM);
-    }
-  };
 
   return (
     <Card className="h-100" onClick={handleClick} style={{ cursor: "pointer" }}>
@@ -59,13 +48,6 @@ const ProductItem = ({ product }) => {
         </div>
         <p className="text-danger mb-0">{product.price.toLocaleString("vi-VN")} đ</p>
         <div className="d-flex justify-content-end gap-2 mt-2">
-          <Button
-            variant="outline-danger"
-            onClick={handleAddToFavourite}
-            aria-label="Add to Favourite"
-          >
-            <FaHeart />
-          </Button>
           <Button
             variant="outline-secondary"
             onClick={handleAddToCart}

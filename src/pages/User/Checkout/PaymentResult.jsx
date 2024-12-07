@@ -1,8 +1,7 @@
-import { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
-import { toast } from "react-toastify";
+import { useLocation, useNavigate } from "react-router-dom";
 
 function PaymentResult() {
+    const navigate = useNavigate();
     const location = useLocation();
     const params = new URLSearchParams(location.search);
     const OrderId = params.get("vnp_TxnRef").split('-ATTEMPT')[0];
@@ -19,7 +18,8 @@ function PaymentResult() {
                 </p>
             )}
             <button
-                onClick={() => window.location.href = "/"}
+                onClick={() => navigate("/user-profile", { state: { initialSection: "orders" } })
+                }
                 style={{
                     padding: "10px 20px",
                     fontSize: "16px",
