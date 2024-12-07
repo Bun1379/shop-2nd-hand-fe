@@ -4,16 +4,20 @@ import { Modal, Button } from "react-bootstrap";
 import { FaCaretDown } from "react-icons/fa";
 import { toast } from "react-toastify";
 import AddressAPI from "../../../api/AddressAPI";
+import DGHC from "../../../assets/DGHC.json";
 
 const AddressModal = ({ show, handleClose, onSave, initialData }) => {
-    const [formData, setFormData] = useState({
-        name: initialData?.name || '',
-        phone: initialData?.phone || '',
-        city: null,
-        district: null,
-        ward: null,
-        address: initialData?.address || '',
-    });
+    const [formData, setFormData] = useState({});
+    useEffect(() => {
+        setFormData({
+            name: initialData?.name || '',
+            phone: initialData?.phone || '',
+            city: initialData?.city || null,
+            district: initialData?.district || null,
+            ward: initialData?.ward || null,
+            address: initialData?.address || '',
+        });
+    }, [initialData]);
 
     const [locations, setLocations] = useState([]);
     const [districts, setDistricts] = useState([]);
@@ -25,15 +29,13 @@ const AddressModal = ({ show, handleClose, onSave, initialData }) => {
     };
 
     useEffect(() => {
-        fetch('https://raw.githubusercontent.com/kenzouno1/DiaGioiHanhChinhVN/master/data.json')
-            .then((response) => response.json())
-            .then((data) => setLocations(data));
+        setLocations(DGHC);
     }, []);
 
     useEffect(() => {
         if (formData.city) {
-            const selectedCity = locations.find(city => city.Name === formData.city);
-            setDistricts(selectedCity?.Districts || []);
+            const selectedCity = locations.find(city => city.name === formData.city);
+            setDistricts(selectedCity?.districts || []);
         } else {
             setDistricts([]);
         }
@@ -41,15 +43,15 @@ const AddressModal = ({ show, handleClose, onSave, initialData }) => {
 
     useEffect(() => {
         if (formData.district) {
-            const selectedDistrict = districts.find(district => district.Name === formData.district);
-            setWards(selectedDistrict?.Wards || []);
+            const selectedDistrict = districts.find(district => district.name === formData.district);
+            setWards(selectedDistrict?.wards || []);
         } else {
             setWards([]);
         }
     }, [formData.district, districts]);
 
     const handleChange = (selectedOption, name) => {
-        setFormData({ ...formData, [name]: selectedOption.value }); // Chỉ lưu value
+        setFormData({ ...formData, [name]: selectedOption?.value || null }); // Chỉ lưu value
     };
 
     const handleSubmit = async (e) => {
@@ -61,10 +63,8 @@ const AddressModal = ({ show, handleClose, onSave, initialData }) => {
         const exists = await AddressAPI.CheckAddress(formData.city, formData.district, formData.ward, formData.address);
         if (exists) {
             onSave(formData);
-            // toast.success("Địa chỉ tồn tại !");
-        }
-        else {
-            toast.error("Địa chỉ không tồn tại !");
+        } else {
+            toast.error("Địa chỉ không tồn tại!");
         }
     };
 
@@ -101,7 +101,7 @@ const AddressModal = ({ show, handleClose, onSave, initialData }) => {
                         <div className="col-4">
                             <label>Thành phố</label>
                             <Select
-                                options={locations.map(city => ({ value: city.Name, label: city.Name }))}
+                                options={locations.map(city => ({ value: city.name, label: city.name }))}
                                 value={formData.city ? { value: formData.city, label: formData.city } : null}
                                 onChange={(option) => handleChange(option, 'city')}
                                 placeholder="Chọn thành phố"
@@ -112,7 +112,7 @@ const AddressModal = ({ show, handleClose, onSave, initialData }) => {
                         <div className="col-4">
                             <label>Quận/Huyện</label>
                             <Select
-                                options={districts.map(district => ({ value: district.Name, label: district.Name }))}
+                                options={districts.map(district => ({ value: district.name, label: district.name }))}
                                 value={formData.district ? { value: formData.district, label: formData.district } : null}
                                 onChange={(option) => handleChange(option, 'district')}
                                 placeholder="Chọn quận/huyện"
@@ -123,7 +123,7 @@ const AddressModal = ({ show, handleClose, onSave, initialData }) => {
                         <div className="col-4">
                             <label>Phường/Xã</label>
                             <Select
-                                options={wards.map(ward => ({ value: ward.Name, label: ward.Name }))}
+                                options={wards.map(ward => ({ value: ward.name, label: ward.name }))}
                                 value={formData.ward ? { value: formData.ward, label: formData.ward } : null}
                                 onChange={(option) => handleChange(option, 'ward')}
                                 placeholder="Chọn phường/xã"
