@@ -7,10 +7,19 @@ import ProductAPI from "../../../api/ProductAPI";
 import { Carousel } from "react-bootstrap";
 import HomeDiscount from "./Discount/HomeDiscount";
 import BannerAPI from "../../../api/BannerAPI";
+import HomeReview from "./Review/HomeReview";
+import ReactPaginate from "react-paginate";
 
 function Home() {
   const [arrayProducts, setArrayProducts] = useState([]);
   const [banner, setBanner] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [totalPages, setTotalPages] = useState(0);
+  const [page, setPage] = useState(1);
+
+  const handlePageClick = (data) => {
+    setPage(data.selected + 1);
+  };
 
   const fetchDataBanner = async () => {
     try {
@@ -30,12 +39,17 @@ function Home() {
 
   const fetchDataProducts = async () => {
     try {
-      const response = await ProductAPI.GetProducts({ page: 1 });
+      const response = await ProductAPI.GetProducts({ page });
       setArrayProducts(response.data.DT.products);
+      setTotalPages(response.data.DT.totalPages);
     } catch (error) {
       console.error("Chi tiết lỗi:", error.message);
     }
   };
+
+  useEffect(() => {
+    fetchDataProducts();
+  }, [page]);
 
   return (
     <>
@@ -76,12 +90,39 @@ function Home() {
         <div className="my-5">
           <HomeDiscount />
         </div>
-        <h1 className="mt-2" id="new-products">Hàng mới về</h1>
+        <h1 className="mt-2" id="new-products">
+          Hàng mới về
+        </h1>
         <div className="home-new-product-container-list">
           {arrayProducts.map((product) => (
             <ProductItem key={product._id} product={product} />
           ))}
         </div>
+
+        <div className="d-flex justify-content-center">
+          <ReactPaginate
+            nextLabel="next >"
+            onPageChange={handlePageClick}
+            pageRangeDisplayed={5}
+            pageCount={totalPages}
+            previousLabel="< previous"
+            renderOnZeroPageCount={null}
+            marginPagesDisplayed={2}
+            pageClassName="page-item"
+            pageLinkClassName="page-link"
+            previousClassName="page-item"
+            previousLinkClassName="page-link"
+            nextClassName="page-item"
+            nextLinkClassName="page-link"
+            breakLabel="..."
+            breakClassName="page-item"
+            breakLinkClassName="page-link"
+            containerClassName="pagination"
+            activeClassName="active"
+          />
+        </div>
+
+        <HomeReview />
       </div>
     </>
   );
