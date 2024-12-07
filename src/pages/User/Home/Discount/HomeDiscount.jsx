@@ -63,7 +63,7 @@ const DiscountSlider = () => {
   }, []);
 
   return (
-    <Container>
+    <div className="w-100">
       <h1 className="text-center">Mã giảm giá</h1>
       <Row className="align-items-center d-flex justify-content-center">
         <Col xs="auto">
@@ -108,7 +108,7 @@ const DiscountSlider = () => {
           </Button>
         </Col>
       </Row>
-    </Container>
+    </div>
   );
 };
 
