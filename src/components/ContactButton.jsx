@@ -11,7 +11,7 @@ function ContactButton() {
         style={{
           width: "60px",
           height: "60px",
-          backgroundColor: "#0084FF",
+          background: "linear-gradient(45deg, rgb(51,118,240) 20%, rgb(128,92,217) 40%, rgb(238,88,128) 100%)",
           color: "#fff",
           border: "none",
           borderRadius: "50%",
@@ -26,7 +26,7 @@ function ContactButton() {
           boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
         }}
       >
-        <BsMessenger />
+        <BsMessenger style={{ fontSize: "30px" }} />
       </button>
     </a>
   );
