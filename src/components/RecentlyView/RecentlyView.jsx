@@ -12,13 +12,15 @@ const RecentlyViewedProducts = () => {
 
   return (
     <div>
-      <h2>Recently Viewed Products</h2>
+      <h4>Sản phẩm vừa xem</h4>
       {recentlyViewedProducts.length === 0 ? (
         <p>No recently viewed products</p>
       ) : (
         <div className="d-flex flex-row overflow-auto">
           {recentlyViewedProducts.map((product) => (
-            <ProductItem key={product._id} product={product} />
+            <div className="m-2 w-100">
+              <ProductItem key={product._id} product={product} />
+            </div>
           ))}
         </div>
       )}

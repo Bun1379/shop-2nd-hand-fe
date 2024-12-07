@@ -64,7 +64,7 @@ const DiscountSlider = () => {
 
   return (
     <div className="w-100">
-      <h1 className="text-center">Mã giảm giá</h1>
+      <h1 className="text-center text-uppercase mb-4 mt-4 bg-white border border-2 border-success rounded p-3">Mã giảm giá</h1>
       <Row className="align-items-center d-flex justify-content-center">
         <Col xs="auto">
           <Button variant="primary" onClick={handlePrev} className="mx-2">

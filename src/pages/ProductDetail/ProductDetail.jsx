@@ -248,7 +248,9 @@ const ProductDetail = () => {
       </Row>
 
       {/* Đánh giá sản phẩm */}
-      <Row className="mt-4">
+      <hr className="border-5 border-primary" />
+
+      <Row className="mt-2">
         <Col>
           {reviews.length === 0 ? (
             <h4>Chưa có đánh giá nào</h4>
@@ -260,9 +262,10 @@ const ProductDetail = () => {
           )}
         </Col>
       </Row>
+      <hr className="border-5 border-primary" />
 
       {/* Sản phẩm đã xem gần đây */}
-      <Row className="mt-5">
+      <Row className="mt-2">
         <Col>
           <RecentlyViewedProducts />
         </Col>

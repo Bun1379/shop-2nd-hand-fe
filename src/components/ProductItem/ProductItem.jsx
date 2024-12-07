@@ -5,6 +5,7 @@ import { toast } from 'react-toastify';
 import CartAPI from '../../api/CartAPI';
 import UserAPI from '../../api/UserAPI';
 import { Card, Button } from 'react-bootstrap';
+import './ProductItem.css';
 
 const ProductItem = ({ product }) => {
   const navigate = useNavigate();
@@ -40,18 +41,20 @@ const ProductItem = ({ product }) => {
   };
 
   return (
-    <Card className="product-card m-2" onClick={handleClick} style={{ cursor: "pointer", width: "240px" }}>
+    <Card className="h-100" onClick={handleClick} style={{ cursor: "pointer" }}>
       <div className="image-container">
-        <Card.Img
-          style={{ height: "320px", objectFit: "cover" }}
-          variant="top"
-          src={product.images[0] || "https://via.placeholder.com/150"}
-          alt={product.productName}
-        />
+        {product.images.map((image, index) => (
+          <img
+            key={index}
+            src={image || "https://via.placeholder.com/150"}
+            className={`card-img-top ${index !== 0 ? 'hover-img' : ''}`}
+            alt={product.productName}
+          />
+        ))}
       </div>
+
       <Card.Body className="d-flex flex-column">
         <div className="d-flex flex-column flex-grow-1">
-          <Card.Title className="text-uppercase">{product.category.name}</Card.Title>
           <Card.Text className="text-wrap mb-1">{product.productName}</Card.Text>
         </div>
         <p className="text-danger mb-0">{product.price.toLocaleString("vi-VN")} đ</p>

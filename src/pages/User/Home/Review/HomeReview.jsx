@@ -39,13 +39,11 @@ const HomeReview = () => {
   }, [page]);
 
   return (
-    <div className="container py-5">
-      <h1 className="text-center">Đánh giá của khách hàng</h1>
-
+    <div className="w-100 py-3 bg-white border border-2 border-success rounded">
       {loading ? (
         <p className="text-center text-muted">Đang tải đánh giá...</p>
       ) : reviews.length > 0 ? (
-        <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+        <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3 p-3">
           {reviews.map((review) => (
             <div
               key={review._id}
@@ -70,7 +68,7 @@ const HomeReview = () => {
                 <img
                   src={review.product.images[0]}
                   alt={review.product.productName}
-                  className="card-img-top"
+                  className="card-img-top mt-2"
                   height="200"
                   style={{ objectFit: "scale-down" }}
                 />
@@ -79,7 +77,11 @@ const HomeReview = () => {
                   <h6 className="card-title fw-bold">
                     {review.product.productName}
                   </h6>
-
+                  <div className="card-text text-muted"
+                    style={{ fontSize: "0.8rem" }}
+                  >
+                    {new Date(review.createdAt).toLocaleString()}
+                  </div>
                   <div className="">
                     {/* Hiển thị sao vàng */}
                     {[...Array(Math.min(5, Number(review.rating)))].map(
@@ -109,7 +111,7 @@ const HomeReview = () => {
       ) : (
         <p className="text-center text-muted">Không có đánh giá nào.</p>
       )}
-      <div className="d-flex justify-content-center">
+      <div className="d-flex justify-content-center mt-4">
         <ReactPaginate
           nextLabel="next >"
           onPageChange={handlePageClick}

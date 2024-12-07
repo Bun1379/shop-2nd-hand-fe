@@ -136,17 +136,23 @@ const Search = () => {
         selectedCondition={selectedCondition}
         selectedCategories={selectedCategories}
       />
-      <div className="text-center w-75">
+      <div className="text-center w-100">
         Kết quả tìm kiếm cho: {searchParams.get("query")}
         <ReactSelect options={options} value={sort} onChange={setSort} />
         <div
           className="d-flex justify-content-center flex-wrap"
-          style={{ margin: "0 auto" }}
         >
           {products.length === 0 && <div>Không tìm thấy sản phẩm</div>}
           {products.length > 0 &&
             products.map((product) => (
-              <ProductItem key={product._id} product={product} />
+              <div className="m-2"
+                style={{
+
+                  width: '240px',
+                }}
+              >
+                <ProductItem key={product._id} product={product} />
+              </div>
             ))}
         </div>
         {page < totalPages && <button onClick={loadMore}>Xem thêm</button>}
