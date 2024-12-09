@@ -77,9 +77,9 @@ const ModalViewOrder = ({ show, setShowView, order }) => {
             <div className="col-md-4">
               <label className="form-label">Tổng tiền: </label>
               <input
-                type="number"
+                type="text"
                 className="form-control"
-                value={totalAmount}
+                value={`${totalAmount?.toLocaleString("vi-VN")} đ`}
                 disabled
               />
             </div>

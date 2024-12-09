@@ -1,11 +1,10 @@
 import { Table } from "react-bootstrap";
 import ReactPaginate from "react-paginate";
 import Select from "react-select";
+import { useState, useEffect } from "react";
 
 const OrderTable = ({
   orders,
-  totalPages,
-  setPage,
   UpdateOrderStatus,
   handleViewOrder,
   UpdateOrderPaymentStatus,
@@ -27,7 +26,7 @@ const OrderTable = ({
   const options = [
     {
       value: "PENDING",
-      label: "Đang xử lý",
+      label: "Chờ xác nhận",
     },
     {
       value: "CONFIRMED",
@@ -47,9 +46,22 @@ const OrderTable = ({
     },
   ];
 
+  // State cho phân trang
+  const [currentPage, setCurrentPage] = useState(0);
+  const itemsPerPage = 10; // Số đơn hàng mỗi trang
+
+  // Tính toán các đơn hàng hiển thị
+  const offset = currentPage * itemsPerPage;
+  const currentOrders = orders.slice(offset, offset + itemsPerPage);
+  const pageCount = Math.ceil(orders.length / itemsPerPage);
+
   const handlePageClick = (data) => {
-    setPage(data.selected + 1);
+    setCurrentPage(data.selected);
   };
+
+  useEffect(() => {
+    setCurrentPage(0);
+  }, [orders]);
 
   return (
     <div>
@@ -67,8 +79,8 @@ const OrderTable = ({
           </tr>
         </thead>
         <tbody>
-          {orders && orders.length > 0 ? (
-            orders.map((order) => (
+          {currentOrders && currentOrders.length > 0 ? (
+            currentOrders.map((order) => (
               <tr key={order._id}>
                 <td>{order._id}</td>
                 <td>{new Date(order.createdAt).toLocaleString()}</td>
@@ -85,7 +97,7 @@ const OrderTable = ({
                   />
                 </td>
 
-                <td>{order.totalAmount.toLocaleString("vi-VN")}</td>
+                <td>{order.totalAmount.toLocaleString("vi-VN")} đ</td>
                 <td>{order.paymentMethod}</td>
                 <td>
                   <Select
@@ -122,7 +134,7 @@ const OrderTable = ({
           nextLabel="next >"
           onPageChange={handlePageClick}
           pageRangeDisplayed={5}
-          pageCount={totalPages}
+          pageCount={pageCount}
           previousLabel="< previous"
           renderOnZeroPageCount={null}
           marginPagesDisplayed={2}
@@ -137,6 +149,7 @@ const OrderTable = ({
           breakLinkClassName="page-link"
           containerClassName="pagination"
           activeClassName="active"
+          forcePage={currentPage}
         />
       </div>
     </div>

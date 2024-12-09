@@ -127,10 +127,10 @@ const OrderDetail = () => {
           {/* Header */}
           <div className="bg-success text-white p-3 rounded">
             <Row className="align-items-center fw-bold">
-              <Col xs={2}>Sản phẩm</Col>
-              <Col xs={4}></Col>
-              <Col xs={2}>Size</Col>
-              <Col xs={1} className="text-center">Đơn giá</Col>
+              <Col xs={1}>Sản phẩm</Col>
+              <Col xs={5}></Col>
+              <Col xs={1}>Size</Col>
+              <Col xs={2} className="text-center">Đơn giá</Col>
               <Col xs={1} className="text-center">Số lượng</Col>
               <Col xs={2} className="text-end">Thành tiền</Col>
             </Row>

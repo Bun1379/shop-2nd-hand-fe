@@ -21,9 +21,9 @@ class OrderAPI {
     return axiosPrivate.get(url);
   }
 
-  static async GetOrderByAdmin(params = {}) {
+  static async GetOrderByAdmin() {
     const url = "/order/admin";
-    return axiosPrivate.get(url, { params });
+    return axiosPrivate.get(url);
   }
 
   static async UpdateOrderStatus(orderId, data) {
