@@ -1,5 +1,6 @@
 import axios from "axios";
-const BASE_URL = `http://localhost:3000/api/v1`;
+import { toast } from "react-toastify";
+const BASE_URL = `https://shop-2nd-hand.onrender.com/api/v1`;
 
 // Tạo axios client chung
 const axiosClient = axios.create({
@@ -14,11 +15,9 @@ const axiosPrivate = axios.create({
 
 axiosPrivate.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem("token"); // Không cần await
+    const token = localStorage.getItem("token");
     if (!token) {
-      return Promise.reject(
-        new Error("Không có token, vui lòng đăng nhập lại.")
-      );
+      toast.error("Vui lòng đăng nhập để thực hiện thao tác này");
     } else {
       config.headers["Authorization"] = `Bearer ${token}`;
       return config;

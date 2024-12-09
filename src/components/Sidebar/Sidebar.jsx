@@ -4,6 +4,8 @@ import { CiBoxList, CiLogout } from "react-icons/ci";
 import { GiClothes } from "react-icons/gi";
 import { Link, useNavigate } from "react-router-dom";
 import { RiCoupon2Fill } from "react-icons/ri";
+import { TbCategoryPlus } from "react-icons/tb";
+import { IoMdColorPalette } from "react-icons/io";
 
 const SideBar = ({ image, collapsed, toggled, handleToggleSidebar }) => {
   const navigate = useNavigate();
@@ -68,6 +70,20 @@ const SideBar = ({ image, collapsed, toggled, handleToggleSidebar }) => {
             >
               {" "}
               Yêu cầu hủy đơn
+            </MenuItem>
+            <MenuItem
+              icon={<TbCategoryPlus />}
+              component={<Link to="/admin/category" />}
+            >
+              {" "}
+              Danh mục
+            </MenuItem>
+            <MenuItem
+              icon={<IoMdColorPalette />}
+              component={<Link to="/admin/color" />}
+            >
+              {" "}
+              Màu sắc
             </MenuItem>
           </SubMenu>
           <MenuItem icon={<CiLogout />} onClick={() => navigate("/login")}>

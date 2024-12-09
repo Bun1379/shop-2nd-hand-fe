@@ -3,7 +3,7 @@ import { axiosClient, axiosPrivate } from "./Axios";
 class BannerAPI {
   static async GetBanners(params = {}) {
     const url = "/banner";
-    return axiosPrivate.get(url, { params });
+    return axiosClient.get(url, { params });
   }
 
   static async AddBanner(data) {
