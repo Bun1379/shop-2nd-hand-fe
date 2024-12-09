@@ -113,11 +113,11 @@ const HomeReview = () => {
       )}
       <div className="d-flex justify-content-center mt-4">
         <ReactPaginate
-          nextLabel="Sau >"
+          nextLabel=">"
           onPageChange={handlePageClick}
           pageRangeDisplayed={5}
           pageCount={totalPages}
-          previousLabel="< Trước"
+          previousLabel="<"
           renderOnZeroPageCount={null}
           marginPagesDisplayed={2}
           pageClassName="page-item"

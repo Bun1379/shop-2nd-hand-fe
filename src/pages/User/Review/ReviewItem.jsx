@@ -2,7 +2,7 @@ import { Rating } from "@smastrom/react-rating";
 
 const ReviewItem = ({ review }) => {
   return (
-    <div className="d-flex flex-row gap-3 border rounded shadow-sm p-3 align-items-center w-75 my-3 bg-light">
+    <div className="d-flex flex-row gap-3 border rounded shadow-sm p-3 align-items-center w-100 my-3 bg-light">
       <img
         src={review.user.image}
         className="rounded-circle border border-2"

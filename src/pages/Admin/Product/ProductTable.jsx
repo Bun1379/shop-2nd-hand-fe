@@ -48,11 +48,11 @@ const ProductTable = ({
       </Table>
       <div className="d-flex justify-content-center">
         <ReactPaginate
-          nextLabel="next >"
+          nextLabel=">"
           onPageChange={handlePageClick}
           pageRangeDisplayed={5}
           pageCount={totalPages}
-          previousLabel="< previous"
+          previousLabel="<"
           renderOnZeroPageCount={null}
           marginPagesDisplayed={2}
           pageClassName="page-item"

@@ -121,8 +121,8 @@ const PurchasedProducts = () => {
           {productsWithoutReview.length > 0 && productsWithoutReview.length > productsPerPage && (
             <div className="d-flex justify-content-center mt-4">
               <ReactPaginate
-                nextLabel="Sau >"
-                previousLabel="< Trước"
+                nextLabel=">"
+                previousLabel="<"
                 breakLabel={"..."}
                 pageCount={Math.ceil(productsWithoutReview.length / productsPerPage)}
                 onPageChange={handlePageClickWithoutReview}
@@ -153,8 +153,8 @@ const PurchasedProducts = () => {
           {productsWithReview.length > 0 && productsWithReview.length > productsPerPage && (
             <div className="d-flex justify-content-center mt-4">
               <ReactPaginate
-                nextLabel="Sau >"
-                previousLabel="< Trước"
+                nextLabel=">"
+                previousLabel="<"
                 breakLabel={"..."}
                 pageCount={Math.ceil(productsWithReview.length / productsPerPage)}
                 onPageChange={handlePageClickWithReview}

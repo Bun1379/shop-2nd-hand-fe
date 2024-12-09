@@ -101,8 +101,8 @@ const Discount = () => {
       {filteredDiscounts.length > 0 && filteredDiscounts.length > discountsPerPage && (
         <div className="d-flex justify-content-center mt-3">
           <ReactPaginate
-            nextLabel="Sau >"
-            previousLabel="< Trước"
+            nextLabel=">"
+            previousLabel="<"
             pageCount={totalPages}
             onPageChange={handlePageClick}
             pageClassName="page-item"

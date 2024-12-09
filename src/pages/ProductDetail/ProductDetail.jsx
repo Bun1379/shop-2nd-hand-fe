@@ -12,6 +12,7 @@ import Review from "../User/Review/Review";
 import RecentlyViewedProducts from "../../components/RecentlyView/RecentlyView";
 import UserAPI from "../../api/UserAPI";
 import { updateQuantityCart } from "../../components/Header/Header";
+import ReactPaginate from "react-paginate";
 
 const ProductDetail = () => {
   const navigate = useNavigate();
@@ -142,6 +143,20 @@ const ProductDetail = () => {
     addToRecentlyViewed(product);
   }, [product]);
 
+  //Phân trang đánh giá
+  const [currentPage, setCurrentPage] = useState(0);
+  const reviewsPerPage = 5; // Số lượng đánh giá mỗi trang
+
+  // Tính toán dữ liệu phân trang
+  const offset = currentPage * reviewsPerPage;
+  const currentReviews = reviews.slice(offset, offset + reviewsPerPage);
+  const pageCount = Math.ceil(reviews.length / reviewsPerPage);
+
+  // Hàm xử lý khi đổi trang
+  const handlePageClick = ({ selected }) => {
+    setCurrentPage(selected);
+  };
+
   return (
     <Card className="product-detail-container border  p-4">
       <Row>
@@ -179,6 +194,17 @@ const ProductDetail = () => {
           <h3 className="text-danger mt-3 product-price">
             {product.price.toLocaleString()} đ
           </h3>
+
+          <p className="mt-3 product-quantity">
+            <span className="fw-bold">Phân loại: </span>{" "}
+            {product.category.map((category) => category.name).join(", ")}
+          </p>
+
+          <p className="mt-3 product-quantity">
+            <span className="fw-bold">Size: </span>{" "}
+            {product.size}
+          </p>
+
           <p className="mt-3 product-quantity">
             <span className="fw-bold">Số lượng hiện có:</span>{" "}
             {product.quantity}
@@ -259,14 +285,35 @@ const ProductDetail = () => {
       {/* Đánh giá sản phẩm */}
       <hr className="border-5 border-primary" />
 
-      <Row className="mt-2">
+      <Row className="mt-3">
         <Col>
           {reviews.length === 0 ? (
             <h4>Chưa có đánh giá nào</h4>
           ) : (
             <>
               <h4>Đánh giá sản phẩm ({reviews.length})</h4>
-              <Review reviews={reviews} />
+              <Review reviews={currentReviews} /> {/* Hiển thị đánh giá hiện tại */}
+              {reviews.length > reviewsPerPage && ( // Hiển thị phân trang nếu có nhiều hơn 5 đánh giá}
+                <ReactPaginate
+                  previousLabel={"<"}
+                  nextLabel={">"}
+                  breakLabel={"..."}
+                  pageCount={pageCount}
+                  marginPagesDisplayed={2}
+                  pageRangeDisplayed={3}
+                  onPageChange={handlePageClick}
+                  containerClassName={"pagination justify-content-center mt-3"}
+                  pageClassName={"page-item"}
+                  pageLinkClassName={"page-link"}
+                  previousClassName={"page-item"}
+                  previousLinkClassName={"page-link"}
+                  nextClassName={"page-item"}
+                  nextLinkClassName={"page-link"}
+                  breakClassName={"page-item"}
+                  breakLinkClassName={"page-link"}
+                  activeClassName={"active"}
+                />
+              )}
             </>
           )}
         </Col>

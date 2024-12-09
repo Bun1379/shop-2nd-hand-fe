@@ -117,8 +117,8 @@ const Order = () => {
         {listOrder.length > 0 && totalPages > 1 && (
           <div className="d-flex justify-content-center mt-4">
             <ReactPaginate
-              nextLabel="Sau >"
-              previousLabel="< Trước"
+              nextLabel=">"
+              previousLabel="<"
               breakLabel="..."
               onPageChange={handlePageClick}
               pageCount={totalPages}
