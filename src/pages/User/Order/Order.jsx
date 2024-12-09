@@ -100,42 +100,44 @@ const Order = () => {
         setStatus={setStatus}
         totalOrder={totalOrder}
       />
-      {listOrder.length === 0 && (
-        <div className="text-center mt-4 text-primary">Không có đơn hàng nào</div>
-      )}
-      {listOrder.length > 0 &&
-        listOrder.map((order, index) => (
-          <OrderItem
-            key={index}
-            order={order}
-            handleOnClickOrder={handleOnClickOrder}
-            handleReceive={handleReceive}
-          />
-        ))}
-      {listOrder.length > 0 && totalPages > 1 && (
-        <div className="d-flex justify-content-center mt-4">
-          <ReactPaginate
-            nextLabel="Sau >"
-            previousLabel="< Trước"
-            breakLabel="..."
-            onPageChange={handlePageClick}
-            pageCount={totalPages}
-            marginPagesDisplayed={2}
-            pageRangeDisplayed={5}
-            pageClassName="page-item"
-            pageLinkClassName="page-link"
-            previousClassName="page-item"
-            previousLinkClassName="page-link"
-            nextClassName="page-item"
-            nextLinkClassName="page-link"
-            breakClassName="page-item"
-            breakLinkClassName="page-link"
-            containerClassName="pagination"
-            activeClassName="active"
-            forcePage={currentPage}
-          />
-        </div>
-      )}
+      <div className="mt-4">
+        {listOrder.length === 0 && (
+          <div className="text-center  text-primary">Không có đơn hàng nào</div>
+        )}
+        {listOrder.length > 0 &&
+          listOrder.map((order, index) => (
+            <OrderItem
+              key={index}
+              order={order}
+              handleOnClickOrder={handleOnClickOrder}
+              handleReceive={handleReceive}
+            />
+          ))}
+        {listOrder.length > 0 && totalPages > 1 && (
+          <div className="d-flex justify-content-center mt-4">
+            <ReactPaginate
+              nextLabel="Sau >"
+              previousLabel="< Trước"
+              breakLabel="..."
+              onPageChange={handlePageClick}
+              pageCount={totalPages}
+              marginPagesDisplayed={2}
+              pageRangeDisplayed={5}
+              pageClassName="page-item"
+              pageLinkClassName="page-link"
+              previousClassName="page-item"
+              previousLinkClassName="page-link"
+              nextClassName="page-item"
+              nextLinkClassName="page-link"
+              breakClassName="page-item"
+              breakLinkClassName="page-link"
+              containerClassName="pagination"
+              activeClassName="active"
+              forcePage={currentPage}
+            />
+          </div>
+        )}
+      </div>
     </div>
   );
 };

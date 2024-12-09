@@ -3,43 +3,79 @@ import OrderAPI from "../../../api/OrderAPI";
 import OrderTable from "./OrderTable";
 import ModalViewOrder from "./ModalViewOrder";
 import { toast } from "react-toastify";
-import { Accordion, Button } from "react-bootstrap";
+import { Accordion, Button, Form } from "react-bootstrap";
 import Select from "react-select";
+import OrderStatusBar from "../../User/Order/OrderStatusBar";
 
 const ManageOrder = () => {
   const [orders, setOrders] = useState([]);
-  const [page, setPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
+  const [filteredOrders, setFilteredOrders] = useState([]);
+  const [status, setStatus] = useState("ALL");
   const [showViewOrder, setShowViewOrder] = useState(false);
   const [order, setOrder] = useState({});
-  const [selectedStatus, setSelectedStatus] = useState(null);
-
-  const optionsStatus = [
-    {
-      value: "PENDING",
-      label: "Đang xử lý",
-    },
-    {
-      value: "CONFIRMED",
-      label: "Đã xác nhận",
-    },
-    {
-      value: "SHIPPED",
-      label: "Đang giao",
-    },
-    {
-      value: "DELIVERED",
-      label: "Đã giao",
-    },
-    {
-      value: "CANCELLED",
-      label: "Đã hủy",
-    },
-  ];
+  const [dateRange, setDateRange] = useState({ startDate: "", endDate: "" });
+  const [priceRange, setPriceRange] = useState({ minPrice: "", maxPrice: "" });
+  const [paymentMethod, setPaymentMethod] = useState("");
+  const [sortPrice, setSortPrice] = useState(""); // Thêm state để lưu lựa chọn sắp xếp giá
 
   const handleViewOrder = (order) => {
     setOrder(order);
     setShowViewOrder(true);
+  };
+
+  const filterOrders = () => {
+    let filtered = orders;
+
+    // Lọc theo trạng thái
+    if (status !== "ALL") {
+      filtered = filtered.filter((order) => order.status === status);
+    }
+
+    // Lọc theo khoảng thời gian
+    if (dateRange.startDate && dateRange.endDate) {
+      const startDate = new Date(dateRange.startDate);
+      const endDate = new Date(dateRange.endDate);
+      filtered = filtered.filter(
+        (order) => new Date(order.createdAt) >= startDate && new Date(order.createdAt) <= endDate
+      );
+    }
+
+    // Lọc theo giá tiền
+    if (priceRange.minPrice || priceRange.maxPrice) {
+      filtered = filtered.filter((order) => {
+        const orderTotal = order.totalAmount;
+        const minPrice = priceRange.minPrice ? parseFloat(priceRange.minPrice) : 0;
+        const maxPrice = priceRange.maxPrice ? parseFloat(priceRange.maxPrice) : Infinity;
+        return orderTotal >= minPrice && orderTotal <= maxPrice;
+      });
+    }
+
+    // Lọc theo phương thức thanh toán
+    if (paymentMethod) {
+      filtered = filtered.filter((order) => order.paymentMethod === paymentMethod);
+    }
+
+    // Sắp xếp theo giá
+    if (sortPrice === "asc") {
+      filtered = filtered.sort((a, b) => a.totalAmount - b.totalAmount); // Sắp xếp từ thấp đến cao
+    } else if (sortPrice === "desc") {
+      filtered = filtered.sort((a, b) => b.totalAmount - a.totalAmount); // Sắp xếp từ cao đến thấp
+    }
+
+    setFilteredOrders(filtered);
+  };
+
+  const handleApplyFilters = () => {
+    filterOrders();
+  };
+
+  const handleClearFilters = () => {
+    setStatus("ALL");
+    setDateRange({ startDate: "", endDate: "" });
+    setPriceRange({ minPrice: "", maxPrice: "" });
+    setPaymentMethod("");
+    setSortPrice(""); // Reset giá trị sắp xếp
+    setFilteredOrders(orders);
   };
 
   const UpdateOrderStatus = async (id, status) => {
@@ -74,82 +110,109 @@ const ManageOrder = () => {
 
   const fetchDataOrders = async () => {
     try {
-      const res = await OrderAPI.GetOrderByAdmin({
-        page,
-        status: selectedStatus?.value,
-      });
+      const res = await OrderAPI.GetOrderByAdmin();
       if (res.status === 200) {
         setOrders(res.data.DT.orders);
-        setTotalPages(res.data.DT.totalPages);
       }
     } catch (error) {
       console.log(error);
     }
   };
 
-  const onClickSearch = () => {
-    // if (selectedStatus && page !== 1) {
-    //   setPage(1);
-    // } else {
-    //   setPage(1);
-    //   fetchDataOrders();
-    // }
-    if (page !== 1) {
-      setPage(1);
-    }
-    fetchDataOrders();
-  };
-
-  const handleResetButton = () => {
-    setSelectedStatus(null);
-  };
-
   useEffect(() => {
     fetchDataOrders();
-  }, [page]);
+  }, []);
+
+  useEffect(() => {
+    filterOrders();
+  }, [orders, status]);
+
   return (
     <div className="p-4">
       <h1>Quản lý đơn hàng</h1>
-      <Accordion className="my-2">
+      <OrderStatusBar
+        status={status}
+        setStatus={setStatus}
+        totalOrder={orders}
+      />
+      <Accordion defaultActiveKey="1" className="mb-4">
         <Accordion.Item eventKey="0">
-          <Accordion.Header>Lọc tìm kiếm</Accordion.Header>
+          <Accordion.Header>Lọc theo</Accordion.Header>
           <Accordion.Body>
-            <div className="d-flex flex-row gap-3 my-2">
-              {/* <Select
-                options={optionsStatus}
-                placeholder="Chọn trạng thái"
-                className="w-50"
-                value={selectedStatus}
-                onChange={setSelectedStatus}
-              /> */}
-              {optionsStatus.map((option) => (
-                <Button
-                  key={option.value}
-                  variant="outline-primary"
-                  onClick={() => setSelectedStatus(option)}
-                  {...(selectedStatus?.value === option.value && {
-                    variant: "primary",
-                  })}
-                >
-                  {option.label}
-                </Button>
-              ))}
-            </div>
-            <div className="d-flex justify-content-end gap-2 mt-2">
-              <button className="btn btn-primary" onClick={onClickSearch}>
-                Tìm kiếm
-              </button>
-              <button className="btn btn-primary" onClick={handleResetButton}>
-                Làm mới
-              </button>
+            {/* Lọc theo khoảng thời gian */}
+            <Form.Group>
+              <Form.Label>Khoảng thời gian</Form.Label>
+              <div className="d-flex">
+                <Form.Control
+                  type="date"
+                  value={dateRange.startDate}
+                  onChange={(e) => setDateRange({ ...dateRange, startDate: e.target.value })}
+                />
+                <span className="mx-2">đến</span>
+                <Form.Control
+                  type="date"
+                  value={dateRange.endDate}
+                  onChange={(e) => setDateRange({ ...dateRange, endDate: e.target.value })}
+                />
+              </div>
+            </Form.Group>
+
+            {/* Lọc theo giá tiền */}
+            <Form.Group>
+              <Form.Label>Khoảng giá</Form.Label>
+              <div className="d-flex">
+                <Form.Control
+                  type="number"
+                  placeholder="Từ"
+                  value={priceRange.minPrice}
+                  onChange={(e) => setPriceRange({ ...priceRange, minPrice: e.target.value })}
+                />
+                <span className="mx-2">đến</span>
+                <Form.Control
+                  type="number"
+                  placeholder="Đến"
+                  value={priceRange.maxPrice}
+                  onChange={(e) => setPriceRange({ ...priceRange, maxPrice: e.target.value })}
+                />
+              </div>
+            </Form.Group>
+
+            {/* Lọc theo cách sắp xếp giá */}
+            <Form.Group>
+              <Form.Label>Sắp xếp theo giá</Form.Label>
+              <Select
+                options={[
+                  { value: "asc", label: "Thấp đến cao" },
+                  { value: "desc", label: "Cao đến thấp" },
+                ]}
+                onChange={(selectedOption) => setSortPrice(selectedOption?.value || "")}
+                value={sortPrice ? { value: sortPrice, label: sortPrice === "asc" ? "Thấp đến cao" : "Cao đến thấp" } : null}
+              />
+            </Form.Group>
+
+            {/* Lọc theo phương thức thanh toán */}
+            <Form.Group>
+              <Form.Label>Phương thức thanh toán</Form.Label>
+              <Select
+                options={[
+                  { value: "COD", label: "COD" },
+                  { value: "ONLINE", label: "Thanh toán trực tuyến" },
+                ]}
+                onChange={(selectedOption) => setPaymentMethod(selectedOption?.value || "")}
+                value={paymentMethod ? { value: paymentMethod, label: paymentMethod === "COD" ? "COD" : "Thanh toán trực tuyến" } : null}
+              />
+            </Form.Group>
+
+            <div className="d-flex justify-content-end mt-3">
+              <Button variant="primary" onClick={handleApplyFilters} className="ms-2">Xác nhận lọc</Button>
+              <Button variant="danger" onClick={handleClearFilters} className="ms-2">Xóa bộ lọc</Button>
             </div>
           </Accordion.Body>
         </Accordion.Item>
       </Accordion>
+
       <OrderTable
-        orders={orders}
-        setPage={setPage}
-        totalPages={totalPages}
+        orders={filteredOrders}
         UpdateOrderStatus={UpdateOrderStatus}
         handleViewOrder={handleViewOrder}
         UpdateOrderPaymentStatus={UpdateOrderPaymentStatus}
