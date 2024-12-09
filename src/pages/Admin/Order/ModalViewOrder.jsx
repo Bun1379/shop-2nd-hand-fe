@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Button, Modal } from "react-bootstrap";
+import { Button, Modal, Row, Col } from "react-bootstrap";
 import CheckoutItem from "../../User/Checkout/CheckoutItem";
 
 const ModalViewOrder = ({ show, setShowView, order }) => {
@@ -58,9 +58,17 @@ const ModalViewOrder = ({ show, setShowView, order }) => {
               />
             </div>
             <div className="col-md-12">
-              <label className="form-label">Sản phẩm: </label>
-              {products &&
-                products.length > 0 &&
+              <div className="bg-success text-white p-3 rounded">
+                <Row className="align-items-center">
+                  <Col xs={2}>Sản phẩm</Col>
+                  <Col xs={4}></Col>
+                  <Col xs={1}>Size</Col>
+                  <Col xs={2} className="text-center">Đơn giá</Col>
+                  <Col xs={1} className="text-center">Số lượng</Col>
+                  <Col xs={2} className="text-end">Thành tiền</Col>
+                </Row>
+              </div>
+              {products && products.length > 0 &&
                 products.map((product) => {
                   return <CheckoutItem item={product} key={product._id} />;
                 })}
