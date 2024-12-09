@@ -39,6 +39,8 @@ const DiscountSlider = () => {
   };
 
   const fetchUserDiscounts = async () => {
+    const token = localStorage.getItem("token");
+    if (!token) return;
     try {
       const response = await UserAPI.GetUserInfo();
       setUserDiscounts(response.data.DT.discounts);
@@ -64,7 +66,9 @@ const DiscountSlider = () => {
 
   return (
     <div className="w-100">
-      <h1 className="text-center text-uppercase mb-4 mt-4 bg-white border border-2 border-success rounded p-3">Mã giảm giá</h1>
+      <h1 className="text-center text-uppercase mb-4 mt-4 bg-white border border-2 border-success rounded p-3">
+        Mã giảm giá
+      </h1>
       <Row className="align-items-center d-flex justify-content-center">
         <Col xs="auto">
           <Button variant="primary" onClick={handlePrev} className="mx-2">
@@ -85,9 +89,9 @@ const DiscountSlider = () => {
                     <Button variant="success">Nhận</Button>
                   )} */}
                   {userDiscounts.length > 0 &&
-                    userDiscounts.find(
-                      (userDiscount) => userDiscount._id === discount._id
-                    ) ? (
+                  userDiscounts.find(
+                    (userDiscount) => userDiscount._id === discount._id
+                  ) ? (
                     <Card.Text className="text-danger">Đã nhận</Card.Text>
                   ) : (
                     <Button

@@ -53,10 +53,13 @@ function Home() {
         {/* Carousel */}
         <Carousel className="mb-5">
           {banner.map((banner, index) => (
-            <Carousel.Item key={index} onClick={(event) => {
-              window.location.href = banner.url;
-              event.preventDefault();
-            }}>
+            <Carousel.Item
+              key={index}
+              onClick={(event) => {
+                window.location.href = banner.url;
+                event.preventDefault();
+              }}
+            >
               <img
                 className="d-block w-100"
                 src={banner.image}
@@ -79,18 +82,29 @@ function Home() {
         <HomeDiscount />
 
         {/* Title for new products */}
-        <h1 className="w-100 text-center text-uppercase mb-4 mt-5 bg-white border border-2 border-success rounded p-3" id="new-products">
+        <h1
+          className="w-100 text-center text-uppercase mb-4 mt-5 bg-white border border-2 border-success rounded p-3"
+          id="new-products"
+        >
           Hàng mới về
         </h1>
         {/* Product List */}
         <div className="container-fluid w-100 bg-white border border-2 border-success rounded justify-content-center ">
-          <div className="w-100 mt-4" style={{
-            display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '3rem',
-          }}>
+          <div
+            className="w-100 mt-4"
+            style={{
+              display: "flex",
+              flexWrap: "wrap",
+              justifyContent: "center",
+              gap: "3rem",
+            }}
+          >
             {arrayProducts.map((product) => (
-              <div className="product-item text-wrap shadow" key={product._id}
+              <div
+                className="product-item text-wrap shadow"
+                key={product._id}
                 style={{
-                  width: '240px',
+                  width: "240px",
                 }}
               >
                 <ProductItem product={product} />
@@ -122,9 +136,11 @@ function Home() {
           </div>
         </div>
 
-
         {/* Home Review */}
-        <h1 className=" text-center text-uppercase mb-4 mt-5 bg-white border border-2 border-success rounded p-3" id="reviews">
+        <h1
+          className=" text-center text-uppercase mb-4 mt-5 bg-white border border-2 border-success rounded p-3"
+          id="reviews"
+        >
           Đánh giá của khách hàng
         </h1>
         <HomeReview />
