@@ -34,7 +34,7 @@ const CancelRequest = () => {
   return (
     <div>
       <h3 className="text-center">Yêu cầu hủy đơn hàng</h3>
-      {cancelRequest.length === 0 && <p>Hiện tại không có yêu cầu nào</p>}
+      {cancelRequest.length === 0 && <p className="text-center mt-4 text-primary">Hiện tại không có yêu cầu nào</p>}
       {cancelRequest &&
         cancelRequest.length > 0 &&
         cancelRequest.map((request) => (
@@ -59,8 +59,9 @@ const CancelRequest = () => {
               </div>
             </div>
           </div>
-        ))}
-    </div>
+        ))
+      }
+    </div >
   );
 };
 
