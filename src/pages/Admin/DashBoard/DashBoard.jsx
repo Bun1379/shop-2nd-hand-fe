@@ -42,8 +42,14 @@ const DashBoard = () => {
 
   const fetchDataRevenue = async () => {
     try {
-      const toDate = new Date();
-      const fromDate = new Date(toDate - 7 * 24 * 60 * 60 * 1000);
+      const setToStartOfDay = (date) => {
+        date.setHours(0, 0, 0, 0);
+        return date;
+      };
+      const toDate = setToStartOfDay(new Date());
+      const fromDate = setToStartOfDay(
+        new Date(toDate - 7 * 24 * 60 * 60 * 1000)
+      );
       const response = await DashBoardAPI.GetRevenueChart(fromDate, toDate);
       setApiData(response.data.DT);
     } catch (error) {
