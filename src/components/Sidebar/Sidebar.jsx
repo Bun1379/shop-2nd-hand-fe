@@ -34,7 +34,7 @@ const SideBar = ({ image, collapsed, toggled, handleToggleSidebar }) => {
             className="pt-3 pb-3"
           >
             {" "}
-            Shop 2nd Hand
+            Ishio Store
           </MenuItem>
           <MenuItem icon={<FaTachometerAlt />} component={<Link to="/admin" />}>
             {" "}
