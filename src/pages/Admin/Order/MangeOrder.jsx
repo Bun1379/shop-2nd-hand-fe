@@ -65,17 +65,15 @@ const ManageOrder = () => {
     setFilteredOrders(filtered);
   };
 
-  const handleApplyFilters = () => {
-    filterOrders();
-  };
 
   const handleClearFilters = () => {
     setDateRange({ startDate: "", endDate: "" });
     setPriceRange({ minPrice: "", maxPrice: "" });
     setPaymentMethod("");
-    setSortPrice(""); // Reset giá trị sắp xếp
-    setFilteredOrders(orders);
+    setSortPrice("");
   };
+
+
 
   const UpdateOrderStatus = async (id, status) => {
     try {
@@ -124,7 +122,7 @@ const ManageOrder = () => {
 
   useEffect(() => {
     filterOrders();
-  }, [orders, status]);
+  }, [orders, status, dateRange, priceRange, paymentMethod, sortPrice]);
 
   return (
     <div className="p-4">
@@ -203,7 +201,6 @@ const ManageOrder = () => {
             </Form.Group>
 
             <div className="d-flex justify-content-end mt-3">
-              <Button variant="primary" onClick={handleApplyFilters} className="ms-2">Xác nhận lọc</Button>
               <Button variant="danger" onClick={handleClearFilters} className="ms-2">Xóa bộ lọc</Button>
             </div>
           </Accordion.Body>
