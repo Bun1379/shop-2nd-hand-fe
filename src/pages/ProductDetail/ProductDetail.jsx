@@ -11,6 +11,7 @@ import ReviewAPI from "../../api/ReviewAPI";
 import Review from "../User/Review/Review";
 import RecentlyViewedProducts from "../../components/RecentlyView/RecentlyView";
 import UserAPI from "../../api/UserAPI";
+import { updateQuantityCart } from "../../components/Header/Header";
 
 const ProductDetail = () => {
   const navigate = useNavigate();
@@ -35,6 +36,7 @@ const ProductDetail = () => {
       });
       if (rs.status === 200) {
         toast.success("Thêm vào giỏ hàng thành công");
+        updateQuantityCart();
       }
     } catch (error) {
       console.log("Error: ", error);

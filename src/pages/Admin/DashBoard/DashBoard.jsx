@@ -1,9 +1,10 @@
-import { Col, Row } from "react-bootstrap";
+import { Button, Col, Form, Row } from "react-bootstrap";
 import DashBoardStats from "./DashBoardStats";
 import OrderStatus from "./OrderStatus";
 import RevenueChart from "./RevenueChart";
 import { useEffect, useState } from "react";
 import DashBoardAPI from "../../../api/DashBoardAPI";
+import { toast } from "react-toastify";
 
 const DashBoard = () => {
   const [apiData, setApiData] = useState({ dates: [], revenues: [] });
@@ -11,10 +12,44 @@ const DashBoard = () => {
     dates: [],
     revenues: [],
   });
+  const [fromDate, setFromDate] = useState("");
+  const [toDate, setToDate] = useState("");
+  const [customApiData, setCustomApiData] = useState({
+    dates: [],
+    revenues: [],
+  });
+
+  const fetchCustomData = async () => {
+    try {
+      if (!fromDate || !toDate) {
+        toast.error("Vui lòng chọn thời gian bắt đầu và kết thúc");
+        return;
+      }
+      if (fromDate > toDate) {
+        toast.error("Thời gian bắt đầu không được lớn hơn thời gian kết thúc");
+        return;
+      }
+      if (fromDate === toDate) {
+        toast.error("Thời gian bắt đầu và kết thúc không được trùng nhau");
+        return;
+      }
+      const response = await DashBoardAPI.GetRevenueChart(fromDate, toDate);
+      setCustomApiData(response.data.DT);
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
   const fetchDataRevenue = async () => {
     try {
-      const toDate = new Date();
-      const fromDate = new Date(toDate - 7 * 24 * 60 * 60 * 1000);
+      const setToStartOfDay = (date) => {
+        date.setHours(0, 0, 0, 0);
+        return date;
+      };
+      const toDate = setToStartOfDay(new Date());
+      const fromDate = setToStartOfDay(
+        new Date(toDate - 7 * 24 * 60 * 60 * 1000)
+      );
       const response = await DashBoardAPI.GetRevenueChart(fromDate, toDate);
       setApiData(response.data.DT);
     } catch (error) {
@@ -53,6 +88,39 @@ const DashBoard = () => {
         </Col>
         <Col xs={12} md={6}>
           <OrderStatus />
+        </Col>
+        <Col xs={12} md={6}>
+          <Form>
+            <Form.Group className="mb-3">
+              <Form.Label>Chọn thời gian bắt đầu</Form.Label>
+              <Form.Control
+                type="date"
+                value={fromDate}
+                onChange={(e) => setFromDate(e.target.value)}
+              />
+            </Form.Group>
+
+            <Form.Group className="mb-3">
+              <Form.Label>Chọn thời gian kết thúc</Form.Label>
+              <Form.Control
+                type="date"
+                value={toDate}
+                onChange={(e) => setToDate(e.target.value)}
+              />
+            </Form.Group>
+
+            <Button
+              variant="primary"
+              onClick={fetchCustomData}
+              className="mt-2"
+            >
+              Xem thống kê
+            </Button>
+
+            {customApiData.dates.length > 0 && (
+              <RevenueChart apiData={customApiData} />
+            )}
+          </Form>
         </Col>
       </Row>
     </div>
