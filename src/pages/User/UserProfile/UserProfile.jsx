@@ -10,6 +10,7 @@ import Discount from "../Discount/Discount";
 import UpdatePassword from "./UpdatePassword";
 import Address from "../Address/Address";
 import CancelRequest from "../CancelRequest/CancelRequest";
+import LogoutModal from "../../../components/LogoutModal/LogoutModal";
 
 const UserAccount = ({ initialSection }) => {
   const token = localStorage.getItem("token");
@@ -21,6 +22,10 @@ const UserAccount = ({ initialSection }) => {
   const [activeSection, setActiveSection] = useState(
     location.state?.initialSection || "profile"
   );
+  const [showModal, setShowModal] = useState(false);
+
+  const handleShow = () => setShowModal(true);
+  const handleClose = () => setShowModal(false);
 
   const renderContent = () => {
     switch (activeSection) {
@@ -42,20 +47,9 @@ const UserAccount = ({ initialSection }) => {
         return <Discount />;
       case "addresses":
         return <Address />;
-      case "logout":
-        handleLogout();
       default:
         return null;
     }
-  };
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
-    localStorage.removeItem("is_admin");
-    localStorage.removeItem("recentlyViewed");
-    setIsLoggedIn(false);
-    toast.success("Đăng xuất thành công !");
-    navigate("/login");
   };
 
   return (
@@ -136,7 +130,7 @@ const UserAccount = ({ initialSection }) => {
             <li
               className={`list-group-item ${activeSection === "logout" ? "active" : ""
                 }`}
-              onClick={() => setActiveSection("logout")}
+              onClick={() => handleShow()}
             >
               Đăng xuất
             </li>
@@ -148,6 +142,7 @@ const UserAccount = ({ initialSection }) => {
           </div>
         </div>
       </div>
+      <LogoutModal show={showModal} handleClose={handleClose} />
     </div>
   );
 };

@@ -70,11 +70,12 @@ const CartItem = ({
       <div className="row align-items-center">
         <div className="col-auto">
           <input
-            className="form-check-input"
+            className={`form-check-input shadow-lg border border-primary border-2 ${isChecked ? "bg-primary" : ""}`}
             type="checkbox"
             checked={isChecked}
             onChange={handleCheckbox}
           />
+
         </div>
         <div className="col-auto">
           <img

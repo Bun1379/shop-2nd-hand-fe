@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { NavLink, useNavigate, useLocation } from "react-router-dom";
 import { FaShoppingCart, FaSearch } from "react-icons/fa";
-import { toast } from "react-toastify";
 import NotificationBell from "./NotificationBell";
 import logo from "../../assets/images/logoedit.png";
 import { Dropdown } from "react-bootstrap";
-import { Link } from 'react-scroll';
+import LogoutModal from "../LogoutModal/LogoutModal";
+
 import "./Header.css";
 function Header() {
   const navigate = useNavigate();
@@ -13,6 +13,7 @@ function Header() {
   const user = JSON.parse(localStorage.getItem("user"));
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [query, setQuery] = useState("");
+  const [showModal, setShowModal] = useState(false);
 
   const handleKeyPress = (e) => {
     if (e.key === "Enter") {
@@ -45,16 +46,8 @@ function Header() {
     setIsLoggedIn(!!token);
   }, []);
 
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
-    localStorage.removeItem("is_admin");
-    localStorage.removeItem("recentlyViewed");
-    localStorage
-    setIsLoggedIn(false);
-    toast.success("Đăng xuất thành công!");
-    navigate("/login");
-  };
+  const handleShow = () => setShowModal(true); // Mở modal
+  const handleClose = () => setShowModal(false); // Đóng modal
 
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-success fixed-top fs-4 w-100">
@@ -172,7 +165,7 @@ function Header() {
                     >
                       Đơn mua
                     </Dropdown.Item>
-                    <Dropdown.Item as="button" onClick={handleLogout}>
+                    <Dropdown.Item as="button" onClick={handleShow}>
                       Đăng xuất
                     </Dropdown.Item>
                   </Dropdown.Menu>
@@ -195,6 +188,7 @@ function Header() {
           </ul>
         </div>
       </div >
+      <LogoutModal show={showModal} handleClose={handleClose} />
     </nav >
   );
 }

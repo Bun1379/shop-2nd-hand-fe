@@ -6,9 +6,15 @@ import { Link, useNavigate } from "react-router-dom";
 import { RiCoupon2Fill } from "react-icons/ri";
 import { TbCategoryPlus } from "react-icons/tb";
 import { IoMdColorPalette } from "react-icons/io";
+import LogoutModal from "../LogoutModal/LogoutModal";
+import { useState } from "react";
 
 const SideBar = ({ image, collapsed, toggled, handleToggleSidebar }) => {
   const navigate = useNavigate();
+  const [showModal, setShowModal] = useState(false);
+
+  const handleShow = () => setShowModal(true); // Mở modal
+  const handleClose = () => setShowModal(false); // Đóng modal
   return (
     <>
       <Sidebar collapsed={collapsed} className="h-100">
@@ -86,12 +92,13 @@ const SideBar = ({ image, collapsed, toggled, handleToggleSidebar }) => {
               Màu sắc
             </MenuItem>
           </SubMenu>
-          <MenuItem icon={<CiLogout />} onClick={() => navigate("/login")}>
+          <MenuItem icon={<CiLogout />} onClick={() => handleShow()}>
             {" "}
             Đăng xuất{" "}
           </MenuItem>
         </Menu>
       </Sidebar>
+      <LogoutModal show={showModal} handleClose={handleClose} />
     </>
   );
 };
