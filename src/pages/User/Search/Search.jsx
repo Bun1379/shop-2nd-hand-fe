@@ -5,6 +5,7 @@ import ProductItem from "../../../components/ProductItem/ProductItem";
 import SearchFilter from "./SearchFilter";
 import ReactSelect from "react-select";
 import ColorAPI from "../../../api/ColorAPI";
+import { Button } from "react-bootstrap";
 
 const Search = () => {
   const [searchParams] = useSearchParams();
@@ -155,7 +156,7 @@ const Search = () => {
               </div>
             ))}
         </div>
-        {page < totalPages && <button onClick={loadMore}>Xem thêm</button>}
+        {page < totalPages && <Button clasName="primary" onClick={loadMore}>Xem thêm</Button>}
       </div>
     </div>
   );

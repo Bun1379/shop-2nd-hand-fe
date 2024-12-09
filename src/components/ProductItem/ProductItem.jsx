@@ -28,6 +28,10 @@ const ProductItem = ({ product }) => {
     }
   };
 
+  const handleAddToCartWithStopPropagation = (event) => {
+    event.stopPropagation();
+    handleAddToCart(event);
+  };
 
   return (
     <Card className="h-100" onClick={handleClick} style={{ cursor: "pointer" }}>
@@ -50,7 +54,7 @@ const ProductItem = ({ product }) => {
         <div className="d-flex justify-content-end gap-2 mt-2">
           <Button
             variant="outline-secondary"
-            onClick={handleAddToCart}
+            onClick={handleAddToCartWithStopPropagation}
             aria-label="Add to Cart"
           >
             <FaShoppingCart />

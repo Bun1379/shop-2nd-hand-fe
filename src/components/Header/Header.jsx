@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink, useNavigate, useLocation } from "react-router-dom";
 import { FaShoppingCart, FaSearch } from "react-icons/fa";
 import { toast } from "react-toastify";
 import NotificationBell from "./NotificationBell";
@@ -9,6 +9,7 @@ import { Link } from 'react-scroll';
 import "./Header.css";
 function Header() {
   const navigate = useNavigate();
+  const location = useLocation();
   const user = JSON.parse(localStorage.getItem("user"));
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [query, setQuery] = useState("");
@@ -18,6 +19,26 @@ function Header() {
       navigate(`/search?query=${query}`);
     }
   };
+
+  const handleNavigation = (to) => {
+    if (location.pathname !== "/") {
+      navigate(`/#${to}`);
+    } else {
+      window.scrollTo({ top: document.getElementById(to)?.offsetTop });
+    }
+  };
+
+  useEffect(() => {
+    if (location.hash) {
+      setTimeout(() => {
+        const element = document.getElementById(location.hash.substring(1));
+        console.log(element);
+        if (element) {
+          window.scrollTo({ top: element.offsetTop, behavior: "smooth" });
+        }
+      }, 500); // Thêm độ trễ nhỏ để đảm bảo cuộn mượt mà
+    }
+  }, [location]);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -58,26 +79,22 @@ function Header() {
         <div className="collapse navbar-collapse" id="navbarNav">
           <ul className="navbar-nav me-auto">
             <li className="nav-item">
-              <Link
+              <a
                 className="nav-link"
-                to="new-products"
-                smooth={true}
-                duration={0}
+                onClick={() => handleNavigation("new-products")}
                 style={{ cursor: "pointer" }}
               >
                 Hàng mới
-              </Link>
+              </a>
             </li>
             <li className="nav-item">
-              <Link
+              <a
                 className="nav-link"
-                to="reviews"
-                smooth={true}
-                duration={0}
+                onClick={() => handleNavigation("reviews")}
                 style={{ cursor: "pointer" }}
               >
                 Đánh giá
-              </Link>
+              </a>
             </li>
             <li className="nav-item">
               <NavLink className="nav-link" to="/search">
