@@ -70,9 +70,15 @@ function Home() {
                   height: "600px",
                 }}
               />
-              <Carousel.Caption>
-                <h3>{banner.title}</h3>
-                <p>{banner.description}</p>
+              <Carousel.Caption className="text-white p-4">
+                <h3 style={{
+                  backgroundColor: "rgba(0, 0, 0, 0.3)",
+                  display: "inline-block",
+                  padding: "5px 10px",
+                  borderRadius: "5px",
+                }}>
+                  {banner.title}
+                </h3>
               </Carousel.Caption>
             </Carousel.Item>
           ))}

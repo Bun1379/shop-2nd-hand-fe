@@ -3,11 +3,15 @@ import CancelRequestAPI from "../../../api/CancelRequestAPI";
 import ModalViewOrder from "../Order/ModalViewOrder";
 import { Button } from "react-bootstrap";
 import { toast } from "react-toastify";
+import ConfirmModal from "../../../components/ConfirmModal/ConfirmModal";
 
 const CancelRequestAdmin = () => {
   const [cancelRequest, setCancelRequest] = useState([]);
   const [showViewOrder, setShowViewOrder] = useState(false);
   const [order, setOrder] = useState({});
+  const [showModalDelete, setShowModalDelete] = useState(false);
+  const [showModalConfirm, setShowModalConfirm] = useState(false);
+
   const fetchDataCancelRequest = async () => {
     try {
       const res = await CancelRequestAPI.GetCancelRequestsAdmin();
@@ -56,7 +60,7 @@ const CancelRequestAdmin = () => {
               <p className="card-title">Lý do hủy: {request.reason}</p>
               <div className="d-flex justify-content-end">
                 <Button
-                  variant="primary"
+                  variant="info"
                   className="me-2"
                   onClick={() => {
                     setOrder(request.order);
@@ -66,20 +70,32 @@ const CancelRequestAdmin = () => {
                   Xem chi tiết đơn hàng
                 </Button>
                 <Button
-                  variant="secondary"
+                  variant="primary"
                   className="me-2"
-                  onClick={() => handleApproveCancelRequest(request._id)}
+                  onClick={() => setShowModalConfirm(true)}
                 >
                   Chấp nhận yêu cầu
                 </Button>
                 <Button
                   variant="danger"
-                  onClick={() => handleDeleteCancelRequest(request._id)}
+                  onClick={() => setShowModalDelete(true)}
                 >
                   Hủy yêu cầu
                 </Button>
               </div>
             </div>
+            <ConfirmModal
+              show={showModalDelete}
+              onClose={() => setShowModalDelete(false)}
+              text="Bạn có muốn hủy yêu cầu này không ?"
+              onConfirm={() => handleDeleteCancelRequest(request._id)}
+            />
+            <ConfirmModal
+              show={showModalConfirm}
+              onClose={() => setShowModalConfirm(false)}
+              text="Bạn có muốn chấp nhận yêu cầu này không ?"
+              onConfirm={() => handleApproveCancelRequest(request._id)}
+            />
           </div>
         ))}
       <ModalViewOrder

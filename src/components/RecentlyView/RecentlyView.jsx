@@ -18,7 +18,9 @@ const RecentlyViewedProducts = () => {
       ) : (
         <div className="d-flex flex-row overflow-auto">
           {recentlyViewedProducts.map((product) => (
-            <div className="m-2 w-100">
+            <div className="m-2"
+              style={{ width: "250px" }}
+            >
               <ProductItem key={product._id} product={product} />
             </div>
           ))}

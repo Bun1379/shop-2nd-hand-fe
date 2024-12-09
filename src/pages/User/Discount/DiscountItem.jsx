@@ -6,18 +6,23 @@ const DiscountItem = ({ discount }) => {
       <div className="card-body">
         <h5 className="card-title">{discount.discountCode}</h5>
         <p className="card-text">
-          Discount percentage: {discount.discountPercentage}%
+          Giảm giá: {discount.discountPercentage}%
         </p>
-        {discount.expiredDate && (
+        {discount.expiredAt && (
           <p className="card-text">
-            Expired date: {new Date(discount.expiredDate).toLocaleDateString()}
+            Ngày hết hạn: {new Date(discount.expiredAt).toLocaleDateString('vi-VN')}
           </p>
         )}
         {isUsed ? (
           <p className="card-text text-danger">Đã sử dụng</p>
-        ) : (
-          <p className="card-text text-success">Chưa sử dụng</p>
-        )}
+        ) :
+          discount.expiredAt && new Date(discount.expiredAt) < new Date() ? (
+            <p className="card-text text-warning">Hết hạng sử dụng</p>
+          ) :
+            (
+              <p className="card-text text-success">Chưa sử dụng</p>
+            )}
+
       </div>
     </div>
   );

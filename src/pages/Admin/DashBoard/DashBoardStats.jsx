@@ -59,7 +59,7 @@ const DashBoardStats = () => {
               <Card.Body>
                 <Card.Title>Tổng doanh thu</Card.Title>
                 <Card.Text>
-                  {stats.totalRevenue.toLocaleString("vi-VN")} VND
+                  {Math.floor(stats.totalRevenue).toLocaleString("vi-VN")} đ
                 </Card.Text>
               </Card.Body>
             </Card>

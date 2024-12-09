@@ -1,17 +1,19 @@
 import React, { useState, useEffect } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink, useNavigate, useLocation } from "react-router-dom";
 import { FaShoppingCart, FaSearch } from "react-icons/fa";
-import { toast } from "react-toastify";
 import NotificationBell from "./NotificationBell";
 import logo from "../../assets/images/logoedit.png";
 import { Dropdown } from "react-bootstrap";
-import { Link } from 'react-scroll';
+import LogoutModal from "../LogoutModal/LogoutModal";
+
 import "./Header.css";
 function Header() {
   const navigate = useNavigate();
+  const location = useLocation();
   const user = JSON.parse(localStorage.getItem("user"));
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [query, setQuery] = useState("");
+  const [showModal, setShowModal] = useState(false);
 
   const handleKeyPress = (e) => {
     if (e.key === "Enter") {
@@ -19,21 +21,33 @@ function Header() {
     }
   };
 
+  const handleNavigation = (to) => {
+    if (location.pathname !== "/") {
+      navigate(`/#${to}`);
+    } else {
+      window.scrollTo({ top: document.getElementById(to)?.offsetTop });
+    }
+  };
+
+  useEffect(() => {
+    if (location.hash) {
+      setTimeout(() => {
+        const element = document.getElementById(location.hash.substring(1));
+        console.log(element);
+        if (element) {
+          window.scrollTo({ top: element.offsetTop, behavior: "smooth" });
+        }
+      }, 500); // Thêm độ trễ nhỏ để đảm bảo cuộn mượt mà
+    }
+  }, [location]);
+
   useEffect(() => {
     const token = localStorage.getItem("token");
     setIsLoggedIn(!!token);
   }, []);
 
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
-    localStorage.removeItem("is_admin");
-    localStorage.removeItem("recentlyViewed");
-    localStorage
-    setIsLoggedIn(false);
-    toast.success("Đăng xuất thành công!");
-    navigate("/login");
-  };
+  const handleShow = () => setShowModal(true); // Mở modal
+  const handleClose = () => setShowModal(false); // Đóng modal
 
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-success fixed-top fs-4 w-100">
@@ -58,26 +72,22 @@ function Header() {
         <div className="collapse navbar-collapse" id="navbarNav">
           <ul className="navbar-nav me-auto">
             <li className="nav-item">
-              <Link
+              <a
                 className="nav-link"
-                to="new-products"
-                smooth={true}
-                duration={0}
+                onClick={() => handleNavigation("new-products")}
                 style={{ cursor: "pointer" }}
               >
                 Hàng mới
-              </Link>
+              </a>
             </li>
             <li className="nav-item">
-              <Link
+              <a
                 className="nav-link"
-                to="reviews"
-                smooth={true}
-                duration={0}
+                onClick={() => handleNavigation("reviews")}
                 style={{ cursor: "pointer" }}
               >
                 Đánh giá
-              </Link>
+              </a>
             </li>
             <li className="nav-item">
               <NavLink className="nav-link" to="/search">
@@ -155,7 +165,7 @@ function Header() {
                     >
                       Đơn mua
                     </Dropdown.Item>
-                    <Dropdown.Item as="button" onClick={handleLogout}>
+                    <Dropdown.Item as="button" onClick={handleShow}>
                       Đăng xuất
                     </Dropdown.Item>
                   </Dropdown.Menu>
@@ -178,6 +188,7 @@ function Header() {
           </ul>
         </div>
       </div >
+      <LogoutModal show={showModal} handleClose={handleClose} />
     </nav >
   );
 }

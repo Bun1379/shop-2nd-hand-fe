@@ -85,7 +85,7 @@ const OrderTable = ({
                   />
                 </td>
 
-                <td>{order.totalAmount}</td>
+                <td>{order.totalAmount.toLocaleString("vi-VN")}</td>
                 <td>{order.paymentMethod}</td>
                 <td>
                   <Select

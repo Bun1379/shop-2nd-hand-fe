@@ -307,6 +307,7 @@ const ModalUpdateProduct = ({ showUpdate, setShowUpdate, product }) => {
                 type="number"
                 className="form-control"
                 value={price}
+                min="0"
                 onChange={(event) => setPrice(event.target.value)}
               />
             </div>
@@ -365,6 +366,7 @@ const ModalUpdateProduct = ({ showUpdate, setShowUpdate, product }) => {
               <label className="form-label">Số lượng:</label>
               <input
                 type="number"
+                min="0"
                 className="form-control"
                 value={quantity}
                 onChange={(event) => setQuantity(event.target.value)}

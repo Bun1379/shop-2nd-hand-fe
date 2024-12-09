@@ -36,6 +36,11 @@ const ModalUpdateBanner = ({
 
   const handleUpdateBanner = async () => {
     setLoading(true);
+    if (position < 0) {
+      toast.error("Vị trí không được nhỏ hơn 0");
+      setLoading(false);
+      return;
+    }
     try {
       const formData = new FormData();
       formData.append("title", name);
@@ -100,6 +105,7 @@ const ModalUpdateBanner = ({
               type="number"
               placeholder="Nhập vị trí"
               value={position}
+              min="0"
               onChange={(e) => setPosition(e.target.value)}
             />
           </Form.Group>
