@@ -3,10 +3,11 @@ import { NavLink, useNavigate, useLocation } from "react-router-dom";
 import { FaShoppingCart, FaSearch } from "react-icons/fa";
 import NotificationBell from "./NotificationBell";
 import logo from "../../assets/images/logoedit.png";
-import { Dropdown } from "react-bootstrap";
+import { Badge, Dropdown } from "react-bootstrap";
 import LogoutModal from "../LogoutModal/LogoutModal";
 
 import "./Header.css";
+import CartAPI from "../../api/CartAPI";
 function Header() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -14,6 +15,20 @@ function Header() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [query, setQuery] = useState("");
   const [showModal, setShowModal] = useState(false);
+  const [productInCart, setProductInCart] = useState(10);
+
+  const fetchDataCart = async () => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      window.location.href = "/login";
+    }
+    try {
+      const response = await CartAPI.GetCart();
+      setProductInCart(response.data.DT.items.length);
+    } catch (error) {
+      console.error("Error: ", error);
+    }
+  };
 
   const handleKeyPress = (e) => {
     if (e.key === "Enter") {
@@ -30,6 +45,13 @@ function Header() {
   };
 
   useEffect(() => {
+    window.addEventListener("cartUpdated", fetchDataCart);
+    return () => {
+      window.removeEventListener("userUpdated", fetchDataCart);
+    };
+  }, []);
+
+  useEffect(() => {
     if (location.hash) {
       setTimeout(() => {
         const element = document.getElementById(location.hash.substring(1));
@@ -44,6 +66,9 @@ function Header() {
   useEffect(() => {
     const token = localStorage.getItem("token");
     setIsLoggedIn(!!token);
+    if (token) {
+      fetchDataCart();
+    }
   }, []);
 
   const handleShow = () => setShowModal(true); // Mở modal
@@ -51,23 +76,34 @@ function Header() {
 
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-success fixed-top fs-4 w-100">
-      <div className="d-flex justify-content-between align-items-center w-100"
+      <div
+        className="d-flex justify-content-between align-items-center w-100"
         style={{ marginLeft: "130px", marginRight: "123px" }}
       >
-        <NavLink className="navbar-brand d-flex align-items-center" to="/"
-          onClick={() => window.location.pathname === "/" ? window.location.reload() : null}
+        <NavLink
+          className="navbar-brand d-flex align-items-center"
+          to="/"
+          onClick={() =>
+            window.location.pathname === "/" ? window.location.reload() : null
+          }
         >
-          <img src={logo} alt="Logo" style={{ width: "50px", height: "50px" }} />
-          <span className="ms-2 "
+          <img
+            src={logo}
+            alt="Logo"
+            style={{ width: "50px", height: "50px" }}
+          />
+          <span
+            className="ms-2 "
             style={{
               fontFamily: "'KouzanBrush', cursive",
               fontSize: "25px",
               fontWeight: "normal",
               textDecoration: "none",
-              color: "white"
+              color: "white",
             }}
           >
-            Ishio Store</span>
+            Ishio Store
+          </span>
         </NavLink>
         <div className="collapse navbar-collapse" id="navbarNav">
           <ul className="navbar-nav me-auto">
@@ -131,6 +167,16 @@ function Header() {
                 <li className="nav-item">
                   <NavLink className="nav-link" to="/cart">
                     <FaShoppingCart />
+                    {productInCart > 0 && (
+                      <Badge
+                        bg="danger"
+                        pill
+                        className="position-absolute start-60 translate-middle"
+                        style={{ fontSize: "0.75rem" }}
+                      >
+                        {productInCart}
+                      </Badge>
+                    )}
                   </NavLink>
                 </li>
                 <Dropdown align="end">
@@ -152,15 +198,17 @@ function Header() {
                   </Dropdown.Toggle>
 
                   <Dropdown.Menu aria-labelledby="userDropdown">
-                    <Dropdown.Item as={NavLink} to="/user-profile"
-                      style={{ backgroundColor: 'transparent', color: 'black' }}
+                    <Dropdown.Item
+                      as={NavLink}
+                      to="/user-profile"
+                      style={{ backgroundColor: "transparent", color: "black" }}
                     >
                       Tài khoản của tôi
                     </Dropdown.Item>
                     <Dropdown.Item
                       as={NavLink}
                       to="/user-profile"
-                      style={{ backgroundColor: 'transparent', color: 'black' }}
+                      style={{ backgroundColor: "transparent", color: "black" }}
                       state={{ initialSection: "orders" }}
                     >
                       Đơn mua
@@ -187,10 +235,14 @@ function Header() {
             )}
           </ul>
         </div>
-      </div >
+      </div>
       <LogoutModal show={showModal} handleClose={handleClose} />
-    </nav >
+    </nav>
   );
 }
 
 export default Header;
+
+export const updateQuantityCart = () => {
+  window.dispatchEvent(new Event("cartUpdated"));
+};

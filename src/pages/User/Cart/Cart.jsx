@@ -5,6 +5,7 @@ import TotalPrice from "./TotalPrice";
 import { useNavigate } from "react-router-dom";
 import CartAPI from "../../../api/CartAPI";
 import { toast } from "react-toastify";
+import { updateQuantityCart } from "../../../components/Header/Header";
 
 const Cart = () => {
   const token = localStorage.getItem("token");
@@ -38,6 +39,7 @@ const Cart = () => {
       toast.success("Xóa sản phẩm khỏi giỏ hàng thành công");
       const newCart = cart.filter((item) => item.product._id !== productId);
       setCart(newCart);
+      updateQuantityCart();
     } catch (error) {
       console.log(error);
     }
