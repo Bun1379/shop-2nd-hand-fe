@@ -63,6 +63,7 @@ const OrderItem = ({ order, handleOnClickOrder, handleReceive }) => {
               key={product._id}
               product={product.product}
               quantity={product.quantity}
+              priceAtCreate={product.priceAtCreate}
             />
           ))}
         </Card.Body>

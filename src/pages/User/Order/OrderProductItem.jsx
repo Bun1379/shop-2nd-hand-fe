@@ -1,7 +1,7 @@
 import React from "react";
 import { Card, Image } from "react-bootstrap";
 
-const OrderProductItem = ({ product, quantity }) => {
+const OrderProductItem = ({ product, quantity, priceAtCreate }) => {
   return (
     <Card className="mb-3 p-3">
       <div className="d-flex align-items-center justify-content-between">
@@ -28,7 +28,10 @@ const OrderProductItem = ({ product, quantity }) => {
           <p className="mb-0">
             Thành tiền:{" "}
             <span className="fw-bold text-success">
-              {(product.price * quantity).toLocaleString("vi-VN")} đ
+              {priceAtCreate ?
+                <span>{(priceAtCreate * quantity).toLocaleString("vi-VN")} đ</span> :
+                <span>{(product.price * quantity).toLocaleString("vi-VN")} đ</span>
+              }
             </span>
           </p>
         </div>
