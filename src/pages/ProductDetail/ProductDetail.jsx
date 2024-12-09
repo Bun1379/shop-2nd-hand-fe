@@ -23,6 +23,11 @@ const ProductDetail = () => {
   const [outOfStock, setOutOfStock] = useState(false);
 
   const handleAddToCart = async () => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      window.location.href = "/login";
+      return;
+    }
     try {
       let rs = await CartAPI.UpdateQuantity({
         productId: product._id,
@@ -32,7 +37,7 @@ const ProductDetail = () => {
         toast.success("Thêm vào giỏ hàng thành công");
       }
     } catch (error) {
-      toast.error(error.response.data.EM);
+      console.log("Error: ", error);
     }
   };
 
@@ -104,6 +109,8 @@ const ProductDetail = () => {
   };
 
   const fetchFavourite = async () => {
+    const token = localStorage.getItem("token");
+    if (!token) return;
     try {
       const existingUserData = await UserAPI.GetUserInfo();
       const favoriteProducts = existingUserData.data.DT.favourites;
