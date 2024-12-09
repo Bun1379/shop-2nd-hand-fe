@@ -275,6 +275,7 @@ const ModalAddProduct = ({ showAdd, setShowAdd }) => {
             <div className="col-md-3">
               <label className="form-label">Giá cả: </label>
               <input
+                min="0"
                 type="number"
                 className="form-control"
                 value={price}
@@ -333,6 +334,7 @@ const ModalAddProduct = ({ showAdd, setShowAdd }) => {
             <div className="col-md-4">
               <label className="form-label">Số lượng:</label>
               <input
+                min="0"
                 type="number"
                 className="form-control"
                 value={quantity}

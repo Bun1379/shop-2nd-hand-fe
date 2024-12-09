@@ -6,7 +6,6 @@ const UserTable = ({
   setPage,
   totalPages,
   handleUpdateUser,
-  handleBlockUser,
 }) => {
   const handlePageClick = (data) => {
     setPage(data.selected + 1);
@@ -42,12 +41,6 @@ const UserTable = ({
                       onClick={() => handleUpdateUser(user)}
                     >
                       Edit
-                    </button>
-                    <button
-                      className="btn btn-danger"
-                      onClick={() => handleBlockUser(user._id, user.is_active)}
-                    >
-                      {user.is_active ? "Block" : "Active"}
                     </button>
                   </td>
                 </tr>

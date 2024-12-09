@@ -4,12 +4,15 @@ import BannerAPI from "../../../api/BannerAPI";
 import BannerTable from "./BannerTable";
 import ModalUpdateBanner from "./ModalUpdateBanner";
 import { toast } from "react-toastify";
+import ConfirmModal from "../../../components/ConfirmModal/ConfirmModal";
 
 const ManageBanner = () => {
   const [showAddBanner, setShowAddBanner] = useState(false);
   const [bannerUpdate, setBannerUpdate] = useState({});
   const [showUpdateBanner, setShowUpdateBanner] = useState(false);
   const [banners, setBanners] = useState([]);
+  const [showModalDelete, setShowModalDelete] = useState(false);
+  const [idDelete, setIdDelete] = useState("");
 
   const handleUpdateBanner = (banner) => {
     setBannerUpdate(banner);
@@ -44,6 +47,11 @@ const ManageBanner = () => {
     fetchDataBanner();
   }, []);
 
+
+  const handleShowModalDelete = (id) => {
+    setIdDelete(id);
+    setShowModalDelete(true);
+  }
   return (
     <div className="p-4">
       <h1>Quản lý Banner</h1>
@@ -57,7 +65,7 @@ const ManageBanner = () => {
       <BannerTable
         banners={banners}
         handleUpdateBanner={handleUpdateBanner}
-        handleDeleteBanner={handleDeleteBanner}
+        handleDeleteBanner={handleShowModalDelete}
       />
       <ModalAddBanner
         showAdd={showAddBanner}
@@ -69,6 +77,15 @@ const ManageBanner = () => {
         setShowUpdate={setShowUpdateBanner}
         dataUpdate={bannerUpdate}
         fetchDataBanner={fetchDataBanner}
+      />
+      <ConfirmModal
+        show={showModalDelete}
+        onClose={() => {
+          setShowModalDelete(false);
+          setIdDelete("");
+        }}
+        text="Bạn có chắc chắn muốn xóa banner này?"
+        onConfirm={() => handleDeleteBanner(idDelete)}
       />
     </div>
   );

@@ -33,7 +33,7 @@ const ProductTable = ({
                 <td>{product._id}</td>
                 <td>{product.productName}</td>
                 <td>{product.quantity}</td>
-                <td>{product.price}</td>
+                <td>{product.price.toLocaleString("vi-VN")}đ</td>
                 <td className="d-flex gap-3">
                   <button
                     className="btn btn-primary"

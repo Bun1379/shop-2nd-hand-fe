@@ -28,20 +28,6 @@ const User = () => {
     }
   };
 
-  const handleBlockUser = async (id, is_active) => {
-    try {
-      const data = {
-        is_active: !is_active,
-      };
-      const res = await UserAPI.PutUpdateUserAdmin(id, data);
-      if (res.status === 200) {
-        fetchDataUser();
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   useEffect(() => {
     fetchDataUser();
   }, [page, showUpdate]);
@@ -54,7 +40,6 @@ const User = () => {
         setPage={setPage}
         totalPages={totalPages}
         handleUpdateUser={handleUpdateUser}
-        handleBlockUser={handleBlockUser}
       />
       <ModalUpdateUser
         showUpdate={showUpdate}
