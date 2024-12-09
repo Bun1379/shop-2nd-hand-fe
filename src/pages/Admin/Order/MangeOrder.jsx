@@ -10,7 +10,7 @@ import OrderStatusBar from "../../User/Order/OrderStatusBar";
 const ManageOrder = () => {
   const [orders, setOrders] = useState([]);
   const [filteredOrders, setFilteredOrders] = useState([]);
-  const [status, setStatus] = useState("ALL");
+  const [status, setStatus] = useState("PENDING");
   const [showViewOrder, setShowViewOrder] = useState(false);
   const [order, setOrder] = useState({});
   const [dateRange, setDateRange] = useState({ startDate: "", endDate: "" });
