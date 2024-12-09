@@ -70,7 +70,6 @@ const ManageOrder = () => {
   };
 
   const handleClearFilters = () => {
-    setStatus("ALL");
     setDateRange({ startDate: "", endDate: "" });
     setPriceRange({ minPrice: "", maxPrice: "" });
     setPaymentMethod("");
