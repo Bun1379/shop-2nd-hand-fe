@@ -24,6 +24,29 @@ const ProductDetail = () => {
   const [favouriteText, setFavouriteText] = useState("Yêu thích");
   const [outOfStock, setOutOfStock] = useState(false);
 
+  const optionConditions = [
+    {
+      value: "NEW",
+      label: "Mới",
+    },
+    {
+      value: "LIKENEW",
+      label: "Như mới",
+    },
+    {
+      value: "VERYGOOD",
+      label: "Rất tốt",
+    },
+    {
+      value: "GOOD",
+      label: "Tốt",
+    },
+    {
+      value: "FAIR",
+      label: "Khá ổn",
+    },
+  ];
+
   const handleAddToCart = async () => {
     const token = localStorage.getItem("token");
     if (!token) {
@@ -198,6 +221,12 @@ const ProductDetail = () => {
           <p className="mt-3 product-quantity">
             <span className="fw-bold">Phân loại: </span>{" "}
             {product.category.map((category) => category.name).join(", ")}
+          </p>
+
+          <p className="mt-3 product-quantity">
+            <span className="fw-bold">Tình trạng: </span>{" "}
+            {optionConditions.find((option) => option.value === product.condition)
+              ?.label || product.condition}
           </p>
 
           <p className="mt-3 product-quantity">

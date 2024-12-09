@@ -38,12 +38,20 @@ const ModalUpdateProduct = ({ showUpdate, setShowUpdate, product }) => {
       label: "Mới",
     },
     {
-      value: "99%",
-      label: "99%",
+      value: "LIKENEW",
+      label: "Như mới",
     },
     {
-      value: "98%",
-      label: "98%",
+      value: "VERYGOOD",
+      label: "Rất tốt",
+    },
+    {
+      value: "GOOD",
+      label: "Tốt",
+    },
+    {
+      value: "FAIR",
+      label: "Khá ổn",
     },
   ];
   const [name, setName] = useState("");
