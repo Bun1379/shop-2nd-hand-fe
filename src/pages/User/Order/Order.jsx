@@ -74,6 +74,7 @@ const Order = () => {
 
   useEffect(() => {
     if (totalOrder.length > 0) {
+      fetchDataOrder();
       filterOrder();
       calculateTotalPages();
       setCurrentPage(0);

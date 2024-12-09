@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Card, Modal, Button } from "react-bootstrap";
 import OrderProductItem from "./OrderProductItem";
 import PaymentAPI from "../../../api/PaymentAPI";
+import { toast } from "react-toastify";
 
 const OrderItem = ({ order, handleOnClickOrder, handleReceive }) => {
   const [showModal, setShowModal] = useState(false);
@@ -20,12 +21,17 @@ const OrderItem = ({ order, handleOnClickOrder, handleReceive }) => {
       orderId: order._id,
       returnUrl: "https://ishio-shop.onrender.com/payment/result",
     };
-    const response = await PaymentAPI.postPayment(PaymentData);
-    if (response.status === 200) {
-      const paymentUrl = response.data.DT;
-      window.open(paymentUrl, '_blank');
+    try {
+      const response = await PaymentAPI.postPayment(PaymentData);
+      if (response.status === 200) {
+        const paymentUrl = response.data.DT;
+        window.open(paymentUrl, '_blank');
+      }
+    } catch (error) {
+      console.log(error)
+      toast.error(error.response.data.message)
     }
-  }
+  };
 
   const statusLabels = {
     PENDING: "Chờ xác nhận",
