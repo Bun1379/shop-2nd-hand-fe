@@ -9,7 +9,7 @@ import ReactPaginate from "react-paginate"; // Import ReactPaginate
 const Notification = () => {
   const [notifications, setNotifications] = useState([]);
   const [currentPage, setCurrentPage] = useState(0); // Lưu trang hiện tại
-  const [notificationsPerPage] = useState(10); // Số lượng thông báo mỗi trang
+  const [notificationsPerPage] = useState(5); // Số lượng thông báo mỗi trang
 
   const navigate = useNavigate();
   const socket = useSocket();
@@ -81,8 +81,8 @@ const Notification = () => {
       {notifications.length > notificationsPerPage && (
         <div className="d-flex justify-content-center mt-4">
           <ReactPaginate
-            nextLabel="Sau >"
-            previousLabel="< Trước"
+            nextLabel=">"
+            previousLabel="<"
             breakLabel={"..."}
             onPageChange={handlePageClick}
             pageCount={Math.ceil(notifications.length / notificationsPerPage)} // Tổng số trang dựa trên số lượng thông báo

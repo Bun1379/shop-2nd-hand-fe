@@ -38,7 +38,7 @@ const ManageColor = () => {
     <div className="p-4">
       <h1>Quản lý màu</h1>
       <hr />
-      <button className="btn btn-primary" onClick={handleAddColor}>
+      <button className="btn btn-primary mb-2" onClick={handleAddColor}>
         Thêm màu
       </button>
 
@@ -60,7 +60,7 @@ const ManageColor = () => {
                   className="btn btn-warning"
                   onClick={() => handleEdit(color)}
                 >
-                  Edit
+                  Sửa
                 </button>
               </td>
             </tr>

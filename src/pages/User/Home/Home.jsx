@@ -121,11 +121,11 @@ function Home() {
           {/* Pagination */}
           <div className="d-flex justify-content-center mt-4">
             <ReactPaginate
-              nextLabel="Sau >"
+              nextLabel=">"
               onPageChange={handlePageClick}
               pageRangeDisplayed={5}
               pageCount={totalPages}
-              previousLabel="< Trước"
+              previousLabel="<"
               marginPagesDisplayed={2}
               pageClassName="page-item"
               pageLinkClassName="page-link"

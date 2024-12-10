@@ -18,7 +18,7 @@ function PaymentResult() {
                 </p>
             )}
             <button
-                onClick={() => navigate("/user-profile", { state: { initialSection: "orders" } })
+                onClick={() => navigate("/user-profile", { state: { initialSection: "orders" } }, { replace: true })
                 }
                 style={{
                     padding: "10px 20px",
@@ -31,7 +31,7 @@ function PaymentResult() {
                     borderRadius: "5px"
                 }}
             >
-                Quay lại trang chủ
+                Quay về trang quản lý đơn hàng
             </button>
         </div>
     );

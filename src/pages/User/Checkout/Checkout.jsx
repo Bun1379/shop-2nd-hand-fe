@@ -17,6 +17,7 @@ const Checkout = () => {
   }
   const location = useLocation();
   const items = location.state;
+  console.log(items);
   const navigation = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedAddress, setSelectedAddress] = useState(null);
@@ -70,6 +71,7 @@ const Checkout = () => {
       products: items.map((item) => ({
         productId: item.product._id,
         quantity: item.quantity,
+        priceAtCreate: item.price,
       })),
       totalAmount: afterDiscount,
       address: `${selectedAddress.address}, ${selectedAddress.district}, ${selectedAddress.ward}, ${selectedAddress.city}`,
@@ -93,12 +95,14 @@ const Checkout = () => {
         if (response.status === 200) {
           const paymentUrl = response.data.DT;
           window.open(paymentUrl, '_blank');
+          navigation("/", { replace: true });
         }
       } else {
-        navigation("/user-profile", { state: { initialSection: "orders" } });
+        navigation("/user-profile", { state: { initialSection: "orders" } }, { replace: true });
       }
     } catch (error) {
       toast.error(error.response?.data?.EM);
+      toast.error(error.message);
     }
   };
 
@@ -125,10 +129,12 @@ const Checkout = () => {
     try {
       const response = await UserAPI.GetUserInfo();
       if (response.status === 200) {
+        console.log(response.data.DT.discounts);
         setListDiscount(
           response.data.DT.discounts
             .filter(
-              (discount) => !discount?.usersUsed?.includes(response.data.DT._id)
+              (discount) => !discount?.usersUsed?.includes(response.data.DT._id) &&
+                (new Date(discount.expiredAt) > new Date() || discount.expiredAt == null)
             )
             .map((discount) => ({
               value: discount._id,

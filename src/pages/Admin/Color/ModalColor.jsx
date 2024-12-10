@@ -52,10 +52,10 @@ const ModalColor = ({ show, setShow, fetchDataColor, selectedColor }) => {
       <Modal.Body>
         <Form>
           <Form.Group>
-            <Form.Label>Color Name</Form.Label>
+            <Form.Label>Tên màu</Form.Label>
             <Form.Control
               type="text"
-              placeholder="Enter color name"
+              placeholder="Nhập tên màu"
               value={colorName}
               onChange={(e) => setColorName(e.target.value)}
             />
@@ -64,10 +64,10 @@ const ModalColor = ({ show, setShow, fetchDataColor, selectedColor }) => {
       </Modal.Body>
       <Modal.Footer>
         <Button variant="secondary" onClick={handleClose}>
-          Close
+          Đóng
         </Button>
         <Button variant="primary" onClick={handleSave}>
-          Save
+          Lưu
         </Button>
       </Modal.Footer>
     </Modal>

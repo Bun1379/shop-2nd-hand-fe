@@ -86,10 +86,11 @@ const DashBoard = () => {
           <h5>Biểu đồ doanh thu theo tháng</h5>
           <RevenueChart apiData={apiDataByMonth} />
         </Col>
-        <Col xs={12} md={6}>
+        <Col xs={12} md={6} className="mt-5">
           <OrderStatus />
         </Col>
-        <Col xs={12} md={6}>
+        <Col xs={12} md={6} className="mt-5">
+          <h5>Biểu đồ doanh thu theo khoảng thời gian</h5>
           <Form>
             <Form.Group className="mb-3">
               <Form.Label>Chọn thời gian bắt đầu</Form.Label>

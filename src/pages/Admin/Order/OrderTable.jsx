@@ -83,7 +83,12 @@ const OrderTable = ({
             currentOrders.map((order) => (
               <tr key={order._id}>
                 <td>{order._id}</td>
-                <td>{new Date(order.createdAt).toLocaleString()}</td>
+                <td>
+                  {`${new Date(order.createdAt).toLocaleDateString("vi-VN")} ${new Date(order.createdAt).toLocaleTimeString("vi-VN", {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })}`}
+                </td>
                 <td>{order.name}</td>
                 <td>
                   <Select
@@ -131,11 +136,11 @@ const OrderTable = ({
       </Table>
       <div className="d-flex justify-content-center">
         <ReactPaginate
-          nextLabel="next >"
+          nextLabel=">"
           onPageChange={handlePageClick}
           pageRangeDisplayed={5}
           pageCount={pageCount}
-          previousLabel="< previous"
+          previousLabel="<"
           renderOnZeroPageCount={null}
           marginPagesDisplayed={2}
           pageClassName="page-item"

@@ -28,7 +28,7 @@ const DiscountTable = ({ discounts, setPage, totalPages }) => {
                   <td>{discount.discountPercentage}</td>
                   <td>
                     {discount.expiredAt
-                      ? new Date(discount.expiredAt).toLocaleString()
+                      ? new Date(discount.expiredAt).toLocaleDateString("vi-VN")
                       : "Không"}
                   </td>
                   <td>{discount.usageLimit ? discount.usageLimit : "Không"}</td>
@@ -39,11 +39,11 @@ const DiscountTable = ({ discounts, setPage, totalPages }) => {
         </Table>
         <div className="d-flex justify-content-center">
           <ReactPaginate
-            nextLabel="next >"
+            nextLabel=">"
             onPageChange={handlePageClick}
             pageRangeDisplayed={5}
             pageCount={totalPages}
-            previousLabel="< previous"
+            previousLabel="<"
             renderOnZeroPageCount={null}
             marginPagesDisplayed={2}
             pageClassName="page-item"

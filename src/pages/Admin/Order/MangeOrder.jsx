@@ -10,7 +10,7 @@ import OrderStatusBar from "../../User/Order/OrderStatusBar";
 const ManageOrder = () => {
   const [orders, setOrders] = useState([]);
   const [filteredOrders, setFilteredOrders] = useState([]);
-  const [status, setStatus] = useState("ALL");
+  const [status, setStatus] = useState("PENDING");
   const [showViewOrder, setShowViewOrder] = useState(false);
   const [order, setOrder] = useState({});
   const [dateRange, setDateRange] = useState({ startDate: "", endDate: "" });
@@ -65,17 +65,16 @@ const ManageOrder = () => {
     setFilteredOrders(filtered);
   };
 
-  const handleApplyFilters = () => {
-    filterOrders();
-  };
 
   const handleClearFilters = () => {
-    setStatus("ALL");
     setDateRange({ startDate: "", endDate: "" });
     setPriceRange({ minPrice: "", maxPrice: "" });
     setPaymentMethod("");
-    setSortPrice(""); // Reset giá trị sắp xếp
-    setFilteredOrders(orders);
+    setSortPrice("");
+  };
+
+  const handleConfirm = () => {
+    filterOrders();
   };
 
   const UpdateOrderStatus = async (id, status) => {
@@ -204,7 +203,7 @@ const ManageOrder = () => {
             </Form.Group>
 
             <div className="d-flex justify-content-end mt-3">
-              <Button variant="primary" onClick={handleApplyFilters} className="ms-2">Xác nhận lọc</Button>
+              <Button variant="primary" onClick={handleConfirm} className="ms-2">Xác nhận</Button>
               <Button variant="danger" onClick={handleClearFilters} className="ms-2">Xóa bộ lọc</Button>
             </div>
           </Accordion.Body>
