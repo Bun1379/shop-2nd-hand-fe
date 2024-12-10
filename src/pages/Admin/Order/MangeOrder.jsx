@@ -73,7 +73,9 @@ const ManageOrder = () => {
     setSortPrice("");
   };
 
-
+  const handleConfirm = () => {
+    filterOrders();
+  };
 
   const UpdateOrderStatus = async (id, status) => {
     try {
@@ -122,7 +124,7 @@ const ManageOrder = () => {
 
   useEffect(() => {
     filterOrders();
-  }, [orders, status, dateRange, priceRange, paymentMethod, sortPrice]);
+  }, [orders, status]);
 
   return (
     <div className="p-4">
@@ -201,6 +203,7 @@ const ManageOrder = () => {
             </Form.Group>
 
             <div className="d-flex justify-content-end mt-3">
+              <Button variant="primary" onClick={handleConfirm} className="ms-2">Xác nhận</Button>
               <Button variant="danger" onClick={handleClearFilters} className="ms-2">Xóa bộ lọc</Button>
             </div>
           </Accordion.Body>
