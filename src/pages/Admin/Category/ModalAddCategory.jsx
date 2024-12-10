@@ -78,7 +78,7 @@ const ModalAddCategory = ({
           Đóng
         </Button>
         <Button variant="primary" onClick={handleSave}>
-          Lưu thay đổi
+          Thêm
         </Button>
       </Modal.Footer>
     </Modal>

@@ -400,7 +400,7 @@ const ModalUpdateProduct = ({ showUpdate, setShowUpdate, product }) => {
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose}>
-            Close
+            Đóng
           </Button>
           <Button
             variant="primary"

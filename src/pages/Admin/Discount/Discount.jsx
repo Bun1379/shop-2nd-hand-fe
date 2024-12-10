@@ -30,7 +30,7 @@ const Discount = () => {
     <div className="p-4">
       <h1>Quản lý mã giảm giá</h1>
       <button
-        className="btn btn-primary"
+        className="btn btn-primary mb-2"
         onClick={() => setShowAddDiscount(true)}
       >
         Thêm mã giảm giá
@@ -40,7 +40,7 @@ const Discount = () => {
         page={page}
         setPage={setPage}
         totalPages={totalPages}
-        // handleClickUpdate={handleClickUpdate}
+      // handleClickUpdate={handleClickUpdate}
       />
       <ModalAddDiscount show={showAddDiscount} setShow={setShowAddDiscount} />
     </div>

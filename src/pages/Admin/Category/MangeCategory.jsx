@@ -36,7 +36,7 @@ const ManageCategory = () => {
       <div className="p-4">
         <h1>Quản lý danh mục</h1>
         <hr />
-        <button className="btn btn-primary" onClick={handleAddCategory}>
+        <button className="btn btn-primary mb-2" onClick={handleAddCategory}>
           Thêm danh mục
         </button>
         <Table striped bordered hover>
@@ -57,7 +57,7 @@ const ManageCategory = () => {
                     className="btn btn-warning"
                     onClick={() => handleEdit(category)}
                   >
-                    Edit
+                    Sửa
                   </button>
                 </td>
               </tr>

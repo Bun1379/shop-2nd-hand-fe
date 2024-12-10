@@ -14,7 +14,7 @@ const RecentlyViewedProducts = () => {
     <div>
       <h4>Sản phẩm vừa xem</h4>
       {recentlyViewedProducts.length === 0 ? (
-        <p>No recently viewed products</p>
+        <p>Bạn chưa xem sản phẩm nào</p>
       ) : (
         <div className="d-flex flex-row overflow-auto">
           {recentlyViewedProducts.map((product) => (

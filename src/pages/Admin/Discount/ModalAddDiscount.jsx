@@ -49,7 +49,7 @@ const ModalAddDiscount = ({ show, setShow }) => {
       </Modal.Header>
       <Modal.Body>
         <div className="form-group">
-          <label htmlFor="code">Code</label>
+          <label htmlFor="code">Mã giảm giá</label>
           <input
             type="text"
             className="form-control"
@@ -59,7 +59,7 @@ const ModalAddDiscount = ({ show, setShow }) => {
           />
         </div>
         <div className="form-group">
-          <label htmlFor="discount">Discount(%)</label>
+          <label htmlFor="discount">Giảm giá(%)</label>
           <input
             type="number"
             className="form-control"
@@ -69,7 +69,7 @@ const ModalAddDiscount = ({ show, setShow }) => {
           />
         </div>
         <div className="form-group">
-          <label htmlFor="expiredAt">Expired At</label>
+          <label htmlFor="expiredAt">Ngày hết hạn</label>
           <input
             type="date"
             className="form-control"
@@ -79,7 +79,7 @@ const ModalAddDiscount = ({ show, setShow }) => {
           />
         </div>
         <div className="form-group">
-          <label htmlFor="usageLimit">Usage Limit</label>
+          <label htmlFor="usageLimit">Số lượng sử dụng (optional)</label>
           <input
             type="number"
             className="form-control"
@@ -91,10 +91,10 @@ const ModalAddDiscount = ({ show, setShow }) => {
       </Modal.Body>
       <Modal.Footer>
         <button className="btn btn-secondary" onClick={handleClose}>
-          Close
+          Đóng
         </button>
         <button className="btn btn-primary" onClick={handleAddDiscount}>
-          Add
+          Thêm
         </button>
       </Modal.Footer>
     </Modal>

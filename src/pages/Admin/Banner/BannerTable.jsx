@@ -28,13 +28,13 @@ const BannerTable = ({ banners, handleUpdateBanner, handleDeleteBanner }) => {
             <td>{banner.position}</td>
             <td>{banner.status ? "Đang hoạt động" : "Đã tắt"}</td>
             <td>
-              <Button onClick={() => handleUpdateBanner(banner)}>Edit</Button>
+              <Button onClick={() => handleUpdateBanner(banner)}>Sửa</Button>
               <Button
                 className="ms-2"
                 variant="danger"
                 onClick={() => handleDeleteBanner(banner._id)}
               >
-                Delete
+                Xóa
               </Button>
             </td>
           </tr>

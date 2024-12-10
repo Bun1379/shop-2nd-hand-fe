@@ -83,7 +83,12 @@ const OrderTable = ({
             currentOrders.map((order) => (
               <tr key={order._id}>
                 <td>{order._id}</td>
-                <td>{new Date(order.createdAt).toLocaleString("vi-VN")}</td>
+                <td>
+                  {`${new Date(order.createdAt).toLocaleDateString("vi-VN")} ${new Date(order.createdAt).toLocaleTimeString("vi-VN", {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })}`}
+                </td>
                 <td>{order.name}</td>
                 <td>
                   <Select

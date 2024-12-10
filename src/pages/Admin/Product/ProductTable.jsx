@@ -39,7 +39,7 @@ const ProductTable = ({
                     className="btn btn-primary"
                     onClick={() => handleClickUpdate(product)}
                   >
-                    Edit
+                    Sửa
                   </button>
                 </td>
               </tr>

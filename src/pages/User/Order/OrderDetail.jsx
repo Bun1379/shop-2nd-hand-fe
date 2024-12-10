@@ -113,7 +113,7 @@ const OrderDetail = () => {
             </Button>
           </Col>
           <Col className="text-center">
-            <p className="mb-1">Ngày tạo: {new Date(order.createdAt).toLocaleString()}</p>
+            <p className="mb-1">Ngày tạo: {new Date(order.createdAt).toLocaleString("vi-VN")}</p>
             <p className="mb-1 fw-bold">Mã đơn hàng: {order._id}</p>
             <p className={`mb-1 fw-bold ${statusColors[order.status]}`}>
               Trạng thái: {statusLabels[order.status]}
