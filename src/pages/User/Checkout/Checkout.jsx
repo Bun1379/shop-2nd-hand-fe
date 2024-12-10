@@ -95,10 +95,10 @@ const Checkout = () => {
         if (response.status === 200) {
           const paymentUrl = response.data.DT;
           window.open(paymentUrl, '_blank');
-          navigation("/");
+          navigation("/", { replace: true });
         }
       } else {
-        navigation("/user-profile", { state: { initialSection: "orders" } });
+        navigation("/user-profile", { state: { initialSection: "orders" } }, { replace: true });
       }
     } catch (error) {
       toast.error(error.response?.data?.EM);
