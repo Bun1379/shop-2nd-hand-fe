@@ -20,6 +20,10 @@ const ModalColor = ({ show, setShow, fetchDataColor, selectedColor }) => {
   };
 
   const handleSave = async () => {
+    if (!colorName) {
+      toast.error("Vui lòng nhập tên màu");
+      return;
+    }
     try {
       let response;
       if (selectedColor) {
