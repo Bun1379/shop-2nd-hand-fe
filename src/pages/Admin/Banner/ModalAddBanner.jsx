@@ -36,6 +36,16 @@ const ModalAddBanner = ({ showAdd, setShowAdd, fetchDataBanner }) => {
       setLoading(false);
       return;
     }
+    if (!title || !link) {
+      toast.error("Vui lòng nhập đầy đủ thông tin");
+      setLoading(false);
+      return;
+    }
+    if (!image) {
+      toast.error("Vui lòng chọn hình ảnh");
+      setLoading(false);
+      return;
+    }
     try {
       const formData = new FormData();
       formData.append("title", title);

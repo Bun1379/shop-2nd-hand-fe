@@ -25,6 +25,10 @@ const ModalAddCategory = ({
   };
 
   const handleSave = async () => {
+    if (!categoryName) {
+      toast.error("Vui lòng nhập tên danh mục");
+      return;
+    }
     try {
       let response;
       if (selectedCategory) {
@@ -78,7 +82,7 @@ const ModalAddCategory = ({
           Đóng
         </Button>
         <Button variant="primary" onClick={handleSave}>
-          Thêm
+          Lưu
         </Button>
       </Modal.Footer>
     </Modal>

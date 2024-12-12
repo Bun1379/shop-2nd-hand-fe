@@ -41,6 +41,16 @@ const ModalUpdateBanner = ({
       setLoading(false);
       return;
     }
+    if (!name || !link) {
+      toast.error("Vui lòng nhập đầy đủ thông tin");
+      setLoading(false);
+      return;
+    }
+    if (!image) {
+      toast.error("Vui lòng chọn hình ảnh");
+      setLoading(false);
+      return;
+    }
     try {
       const formData = new FormData();
       formData.append("title", name);
