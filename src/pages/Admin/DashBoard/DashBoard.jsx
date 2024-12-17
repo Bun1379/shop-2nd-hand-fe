@@ -33,7 +33,11 @@ const DashBoard = () => {
         toast.error("Thời gian bắt đầu và kết thúc không được trùng nhau");
         return;
       }
-      const response = await DashBoardAPI.GetRevenueChart(fromDate, toDate);
+      let tmp = toDate;
+      if (toDate === new Date().toISOString().split("T")[0]) {
+        tmp = new Date();
+      }
+      const response = await DashBoardAPI.GetRevenueChart(fromDate, tmp);
       setCustomApiData(response.data.DT);
     } catch (error) {
       console.error("Error:", error);
@@ -46,7 +50,7 @@ const DashBoard = () => {
         date.setHours(0, 0, 0, 0);
         return date;
       };
-      const toDate = setToStartOfDay(new Date());
+      const toDate = new Date();
       const fromDate = setToStartOfDay(
         new Date(toDate - 7 * 24 * 60 * 60 * 1000)
       );
