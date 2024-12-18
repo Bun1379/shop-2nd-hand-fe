@@ -82,6 +82,7 @@ const ModalAddBanner = ({ showAdd, setShowAdd, fetchDataBanner }) => {
             <input
               type="text"
               className="form-control"
+              placeholder="Tiêu đề"
               id="title"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
@@ -92,6 +93,7 @@ const ModalAddBanner = ({ showAdd, setShowAdd, fetchDataBanner }) => {
             <input
               type="text"
               className="form-control"
+              placeholder="Link"
               id="link"
               value={link}
               onChange={(e) => setLink(e.target.value)}

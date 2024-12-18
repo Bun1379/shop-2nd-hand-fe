@@ -53,6 +53,7 @@ const ModalAddDiscount = ({ show, setShow }) => {
           <input
             type="text"
             className="form-control"
+            placeholder="Nhập mã giảm giá"
             id="code"
             value={code}
             onChange={(e) => setCode(e.target.value)}
@@ -83,6 +84,7 @@ const ModalAddDiscount = ({ show, setShow }) => {
           <input
             type="number"
             className="form-control"
+            placeholder="Nhập số lượng sử dụng"
             id="usageLimit"
             value={usageLimit}
             onChange={(e) => setUsageLimit(e.target.value)}
