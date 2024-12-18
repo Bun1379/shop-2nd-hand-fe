@@ -227,6 +227,10 @@ const ModalAddProduct = ({ showAdd, setShowAdd }) => {
   };
 
   useEffect(() => {
+    setSelectedColor(color[0]);
+  }, [color]);
+
+  useEffect(() => {
     fetchCategory();
     fetchColor();
   }, []);
@@ -244,6 +248,7 @@ const ModalAddProduct = ({ showAdd, setShowAdd }) => {
               <input
                 type="text"
                 className="form-control"
+                placeholder="Nhập tên sản phẩm"
                 value={name}
                 onChange={(event) => setName(event.target.value)}
               />
@@ -252,6 +257,7 @@ const ModalAddProduct = ({ showAdd, setShowAdd }) => {
               <label className="form-label">Mô tả</label>
               <textarea
                 className="form-control"
+                placeholder="Nhập mô tả"
                 value={description}
                 onChange={(event) => setDescription(event.target.value)}
               />

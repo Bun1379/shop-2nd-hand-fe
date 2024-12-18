@@ -10,6 +10,7 @@ import UserAPI from "../../../api/UserAPI";
 import AddressAPI from "../../../api/AddressAPI";
 import ModalSelectAddress from "./ModalSelectAddress";
 import { Modal, Button, Form, Row, Col } from "react-bootstrap";
+import { updateQuantityCart } from "../../../components/Header/Header";
 const Checkout = () => {
   const token = localStorage.getItem("token");
   if (!token) {
@@ -84,6 +85,7 @@ const Checkout = () => {
       const rs = await OrderAPI.CreateOrder(data);
       if (rs.status === 200) {
         toast.success("Đăt hàng thành công");
+        updateQuantityCart();
       }
       if (selectedPaymentMethod.value === "ONLINE") {
         const PaymentData = {
@@ -94,11 +96,15 @@ const Checkout = () => {
         const response = await PaymentAPI.postPayment(PaymentData);
         if (response.status === 200) {
           const paymentUrl = response.data.DT;
-          window.open(paymentUrl, '_blank');
+          window.open(paymentUrl, "_blank");
           navigation("/", { replace: true });
         }
       } else {
-        navigation("/user-profile", { state: { initialSection: "orders" } }, { replace: true });
+        navigation(
+          "/user-profile",
+          { state: { initialSection: "orders" } },
+          { replace: true }
+        );
       }
     } catch (error) {
       toast.error(error.response?.data?.EM);
@@ -133,8 +139,10 @@ const Checkout = () => {
         setListDiscount(
           response.data.DT.discounts
             .filter(
-              (discount) => !discount?.usersUsed?.includes(response.data.DT._id) &&
-                (new Date(discount.expiredAt) > new Date() || discount.expiredAt == null)
+              (discount) =>
+                !discount?.usersUsed?.includes(response.data.DT._id) &&
+                (new Date(discount.expiredAt) > new Date() ||
+                  discount.expiredAt == null)
             )
             .map((discount) => ({
               value: discount._id,
@@ -162,15 +170,23 @@ const Checkout = () => {
     <>
       <h1 className="text-center p-2">Thanh toán</h1>
       <div className="d-flex justify-content-center flex-column ">
-        <div className="bg-success text-white p-3 rounded w-100 align-items-center mb-3" style={{ margin: "auto" }}
+        <div
+          className="bg-success text-white p-3 rounded w-100 align-items-center mb-3"
+          style={{ margin: "auto" }}
         >
           <Row className="align-items-center fw-bold">
             <Col xs={2}>Sản phẩm</Col>
             <Col xs={4}></Col>
             <Col xs={2}>Size</Col>
-            <Col xs={1} className="text-center">Đơn giá</Col>
-            <Col xs={1} className="text-center">Số lượng</Col>
-            <Col xs={2} className="text-end">Thành tiền</Col>
+            <Col xs={1} className="text-center">
+              Đơn giá
+            </Col>
+            <Col xs={1} className="text-center">
+              Số lượng
+            </Col>
+            <Col xs={2} className="text-end">
+              Thành tiền
+            </Col>
           </Row>
         </div>
         <div className="w-100" style={{ margin: "0 auto" }}>
@@ -224,7 +240,9 @@ const Checkout = () => {
               <button className="btn btn-primary" onClick={handleCouponClick}>
                 Áp dụng
               </button>
-              <p className="fw-bold mb-0 ms-3">Tổng tiền: {afterDiscount}</p>
+              <p className="fw-bold mb-0 ms-3">
+                Tổng tiền: {afterDiscount.toLocaleString("vi-VN")} đ
+              </p>
             </div>
           </div>
           <button
