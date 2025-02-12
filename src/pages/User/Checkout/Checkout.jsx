@@ -7,6 +7,7 @@ import { toast } from "react-toastify";
 import DiscountAPI from "../../../api/DiscountAPI";
 import PaymentAPI from "../../../api/PaymentAPI";
 import UserAPI from "../../../api/UserAPI";
+import BranchAPI from "../../../api/BranchAPI";
 import AddressAPI from "../../../api/AddressAPI";
 import ModalSelectAddress from "./ModalSelectAddress";
 import { Modal, Button, Form, Row, Col } from "react-bootstrap";
@@ -39,6 +40,27 @@ const Checkout = () => {
   });
   const [discountCode, setDiscountCode] = useState("");
   const [listDiscount, setListDiscount] = useState([]);
+  //Pick Branch
+  //begin
+  const [branchList, setBranchList] = useState([]);
+  const [selectedBranch, setSelectedBranch] = useState(null);
+
+  const fetchDataBranch = async () => {
+    try {
+      const response = await BranchAPI.getAllBranches();
+      if (response.status === 200) {
+        setBranchList(
+          response.data.DT.map((branch) => ({
+            value: branch._id,
+            label: branch.address,
+          }))
+        );
+      }
+    } catch (error) {
+      toast.error("Lỗi: " + error.response.data.EM);
+    }
+  };
+  //end
 
   const loadAddressList = async () => {
     try {
@@ -68,6 +90,10 @@ const Checkout = () => {
   };
 
   const handleCheckout = async () => {
+    if (selectedBranch === null) {
+      toast.error("Vui lòng chọn chi nhánh giao hàng");
+      return;
+    }
     const data = {
       products: items.map((item) => ({
         productId: item.product._id,
@@ -80,6 +106,7 @@ const Checkout = () => {
       name: selectedAddress.name,
       paymentMethod: selectedPaymentMethod.value,
       discountCode: discountCode,
+      branchId: selectedBranch?.value,
     };
     try {
       const rs = await OrderAPI.CreateOrder(data);
@@ -108,7 +135,6 @@ const Checkout = () => {
       }
     } catch (error) {
       toast.error(error.response?.data?.EM);
-      toast.error(error.message);
     }
   };
 
@@ -164,6 +190,7 @@ const Checkout = () => {
     });
     setTotal(total);
     setAfterDiscount(total);
+    fetchDataBranch();
   }, []);
 
   return (
@@ -227,7 +254,7 @@ const Checkout = () => {
               />
             </div>
 
-            <div className="d-flex flex-column justify-content-between gap-4">
+            <div className="d-flex flex-column justify-content-between gap-2">
               <span className="fw-bold mb-0 ms-3">Phương thức thanh toán:</span>
               <Select
                 options={options}
@@ -236,7 +263,18 @@ const Checkout = () => {
               />
 
               <span className="fw-bold mb-0 ms-3">Mã khuyến mãi: </span>
-              <Select options={listDiscount} onChange={setCoupon} />
+              <Select
+                options={listDiscount}
+                onChange={setCoupon}
+                placeholder="Chọn mã khuyến mãi"
+              />
+              <span className="fw-bold mb-0 ms-3">Chi nhánh giao hàng: </span>
+              <Select
+                options={branchList}
+                onChange={setSelectedBranch}
+                value={selectedBranch}
+                placeholder="Chọn chi nhánh giao hàng"
+              />
               <button className="btn btn-primary" onClick={handleCouponClick}>
                 Áp dụng
               </button>
