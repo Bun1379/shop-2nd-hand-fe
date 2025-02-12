@@ -30,6 +30,7 @@ import CancelRequestAdmin from "./pages/Admin/CancelRequest/CancelRequestAdmin";
 import ManageBanner from "./pages/Admin/Banner/ManageBanner";
 import ManageCategory from "./pages/Admin/Category/MangeCategory";
 import ManageColor from "./pages/Admin/Color/ManageColor";
+import ManageBranch from "./pages/Admin/Branch/ManageBranch";
 
 function App() {
   return (
@@ -67,6 +68,7 @@ function App() {
             <Route path="banner" element={<ManageBanner />} />
             <Route path="category" element={<ManageCategory />} />
             <Route path="color" element={<ManageColor />} />
+            <Route path="branch" element={<ManageBranch />} />
           </Route>
 
           <Route path="/payment/result" element={<PaymentResult />} />

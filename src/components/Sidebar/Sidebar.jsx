@@ -91,6 +91,13 @@ const SideBar = ({ image, collapsed, toggled, handleToggleSidebar }) => {
               {" "}
               Màu sắc
             </MenuItem>
+            <MenuItem
+              icon={<IoMdColorPalette />}
+              component={<Link to="/admin/branch" />}
+            >
+              {" "}
+              Chi nhánh
+            </MenuItem>
           </SubMenu>
           <MenuItem icon={<CiLogout />} onClick={() => handleShow()}>
             {" "}
