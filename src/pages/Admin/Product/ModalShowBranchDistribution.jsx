@@ -24,7 +24,7 @@ const ModalShowBranchDistribution = ({ show, setShow, selectedProduct }) => {
   };
   useEffect(() => {
     if (selectedProduct._id) fetchDataAtEachBranch();
-  }, [selectedProduct]);
+  }, [show]);
   return (
     <Modal show={show} onHide={handleClose} size="lg">
       <Modal.Header closeButton>
