@@ -7,6 +7,8 @@ const ProductTable = ({
   setPage,
   totalPages,
   handleClickUpdate,
+  handleDistribution,
+  handleShowBranchStockOfProduct,
 }) => {
   const handlePageClick = (data) => {
     setPage(data.selected + 1);
@@ -40,6 +42,18 @@ const ProductTable = ({
                     onClick={() => handleClickUpdate(product)}
                   >
                     Sửa
+                  </button>
+                  <button
+                    className="btn btn-primary"
+                    onClick={() => handleDistribution(product)}
+                  >
+                    Phân phối
+                  </button>
+                  <button
+                    className="btn btn-primary"
+                    onClick={() => handleShowBranchStockOfProduct(product)}
+                  >
+                    Xem kho
                   </button>
                 </td>
               </tr>

@@ -5,6 +5,8 @@ import ProductTable from "./ProductTable";
 import { Accordion } from "react-bootstrap";
 import ModalUpdateProduct from "./ModalUpdateProduct";
 import Select from "react-select";
+import ModalAddBranchStock from "./ModalAddBranchStock";
+import ModalShowBranchDistribution from "./ModalShowBranchDistribution";
 
 const Product = () => {
   const [showAddProduct, setShowAddProduct] = useState(false);
@@ -16,6 +18,20 @@ const Product = () => {
   const [selectedOptionStock, setSelectedOptionStock] = useState(null);
   const [selectedOptionPrice, setSelectedOptionPrice] = useState(null);
   const [search, setSearch] = useState("");
+
+  //BranchStock
+  //begin
+  const [showDistribution, setShowDistribution] = useState(false);
+  const handleDistribution = (product) => {
+    setProduct(product);
+    setShowDistribution(true);
+  };
+  const [showBranchStock, setShowBranchStock] = useState(false);
+  const handleShowBranchStockOfProduct = (product) => {
+    setProduct(product);
+    setShowBranchStock(true);
+  };
+  //end
 
   const optionsStock = [
     { value: 0, label: "Hết hàng" },
@@ -125,6 +141,8 @@ const Product = () => {
         setPage={setPage}
         totalPages={totalPages}
         handleClickUpdate={handleClickUpdate}
+        handleDistribution={handleDistribution}
+        handleShowBranchStockOfProduct={handleShowBranchStockOfProduct}
       />
       <ModalAddProduct
         showAdd={showAddProduct}
@@ -134,6 +152,16 @@ const Product = () => {
         showUpdate={showUpdateProduct}
         setShowUpdate={setShowUpdateProduct}
         product={product}
+      />
+      <ModalAddBranchStock
+        selectedProduct={product}
+        show={showDistribution}
+        setShow={setShowDistribution}
+      />
+      <ModalShowBranchDistribution
+        show={showBranchStock}
+        setShow={setShowBranchStock}
+        selectedProduct={product}
       />
     </div>
   );
