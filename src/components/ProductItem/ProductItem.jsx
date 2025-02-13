@@ -54,6 +54,14 @@ const ProductItem = ({ product }) => {
             {product.productName}
           </Card.Text>
         </div>
+        {product.original_price > 0 && (
+          <p className="text-muted mb-0 ">
+            <del>
+              {product.original_price.toLocaleString("vi-VN")} đ
+            </del>
+          </p>
+        )
+        }
         <p className="text-danger mb-0">
           {product.price.toLocaleString("vi-VN")} đ
         </p>

@@ -67,6 +67,7 @@ const ModalAddProduct = ({ showAdd, setShowAdd }) => {
   });
   const [category, setCategory] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState([]);
+  const [original_price, setOriginal_Price] = useState(0);
   const [price, setPrice] = useState(0);
   const [quantity, setQuantity] = useState(0);
   const [image, setImage] = useState([]);
@@ -88,6 +89,7 @@ const ModalAddProduct = ({ showAdd, setShowAdd }) => {
       label: "S",
     });
     setSelectedCategory([]);
+    setOriginal_Price(0);
     setPrice(0);
     setQuantity(0);
     setListPreviewImage([]);
@@ -187,7 +189,11 @@ const ModalAddProduct = ({ showAdd, setShowAdd }) => {
       setIsLoad(false);
       return;
     }
-
+    if (original_price < 0) {
+      toast.error("Giá gốc phải lớn hơn hoặc bằng 0");
+      setIsLoad(false);
+      return;
+    }
     if (quantity < 0) {
       toast.error("Số lượng phải lớn hơn 0");
       setIsLoad(false);
@@ -197,6 +203,7 @@ const ModalAddProduct = ({ showAdd, setShowAdd }) => {
       productName: name,
       description,
       size: size.value,
+      original_price,
       price,
       quantity,
       category: selectedCategory.map((item) => item._id),
@@ -271,7 +278,7 @@ const ModalAddProduct = ({ showAdd, setShowAdd }) => {
                 onChange={(selected) => setSize(selected)}
               />
             </div>
-            <div className="col-md-3">
+            <div className="col-md-6">
               <label className="form-label">Danh mục: </label>
               <select
                 className="form-select"
@@ -286,7 +293,19 @@ const ModalAddProduct = ({ showAdd, setShowAdd }) => {
                 ))}
               </select>
             </div>
-            <div className="col-md-3">
+
+            <div className="col-md-6">
+              <label className="form-label">Giá gốc: </label>
+              <input
+                type="number"
+                className="form-control"
+                value={original_price}
+                min="0"
+                onChange={(event) => setOriginal_Price(event.target.value)}
+              />
+            </div>
+
+            <div className="col-md-6">
               <label className="form-label">Giá cả: </label>
               <input
                 min="0"
@@ -296,6 +315,7 @@ const ModalAddProduct = ({ showAdd, setShowAdd }) => {
                 onChange={(event) => setPrice(event.target.value)}
               />
             </div>
+
             <div className="col-md-12">
               <label className="form-label">Danh mục được chọn: </label>
               <ul>

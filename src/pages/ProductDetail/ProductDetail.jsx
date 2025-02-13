@@ -214,7 +214,18 @@ const ProductDetail = () => {
         {/* Phần chi tiết sản phẩm */}
         <Col md={6}>
           <h1 className="product-title">{product.productName}</h1>
-          <h3 className="text-danger mt-3 product-price">
+
+
+          {product.original_price > 0 && (
+            <h4 className="text-muted product-price mt-2">
+              <del>
+                {product.original_price.toLocaleString("vi-VN")} đ
+              </del>
+            </h4>
+          )
+          }
+
+          <h3 className="text-danger mt-2 product-price">
             {product.price.toLocaleString()} đ
           </h3>
 

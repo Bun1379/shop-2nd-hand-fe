@@ -62,6 +62,7 @@ const ModalUpdateProduct = ({ showUpdate, setShowUpdate, product }) => {
   });
   const [category, setCategory] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState([]);
+  const [original_price, setOriginal_Price] = useState(0);
   const [price, setPrice] = useState(0);
   const [quantity, setQuantity] = useState(0);
   //   const [image, setImage] = useState([]);
@@ -84,6 +85,7 @@ const ModalUpdateProduct = ({ showUpdate, setShowUpdate, product }) => {
       label: "S",
     });
     setSelectedCategory([]);
+    setOriginal_Price(0);
     setPrice(0);
     setQuantity(0);
     setListPreviewImage([]);
@@ -172,7 +174,11 @@ const ModalUpdateProduct = ({ showUpdate, setShowUpdate, product }) => {
       setIsLoad(false);
       return;
     }
-
+    if (original_price < 0) {
+      toast.error("Giá gốc phải lớn hơn hoặc bằng 0");
+      setIsLoad(false);
+      return;
+    }
     if (quantity < 0) {
       toast.error("Số lượng phải lớn hơn 0");
       setIsLoad(false);
@@ -183,6 +189,7 @@ const ModalUpdateProduct = ({ showUpdate, setShowUpdate, product }) => {
       description,
       size: size.value,
       category: selectedCategory.map((item) => item._id),
+      original_price,
       price,
       quantity,
       condition: condition.value,
@@ -207,11 +214,11 @@ const ModalUpdateProduct = ({ showUpdate, setShowUpdate, product }) => {
     try {
       const response = await ProductAPI.UpdateProduct(product._id, data);
       if (response.status === 200) {
-        toast.success("Update product successfully");
+        toast.success("Cập nhật sản phẩm thành công");
         setActionsImage([]);
         setShow(false);
       } else {
-        toast.error("Update product failed");
+        toast.error("Cập nhật sản phẩm thất bại");
       }
     } catch (error) {
       toast.error(error.response.data.EM);
@@ -249,6 +256,7 @@ const ModalUpdateProduct = ({ showUpdate, setShowUpdate, product }) => {
         value: product?.size,
         label: product?.size,
       });
+      setOriginal_Price(product?.original_price);
       setPrice(product?.price);
       setQuantity(product?.quantity);
       setSelectedCategory(product?.category);
@@ -268,7 +276,7 @@ const ModalUpdateProduct = ({ showUpdate, setShowUpdate, product }) => {
     <>
       <Modal show={show} onHide={handleClose} size="xl">
         <Modal.Header closeButton>
-          <Modal.Title>Tạo mới sản phẩm</Modal.Title>
+          <Modal.Title>Cập nhật sản phẩm</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <form className="row g-3">
@@ -298,7 +306,8 @@ const ModalUpdateProduct = ({ showUpdate, setShowUpdate, product }) => {
                 onChange={(selected) => setSize(selected)}
               />
             </div>
-            <div className="col-md-3">
+
+            <div className="col-md-6">
               <label className="form-label">Danh mục: </label>
               <select className="form-select" onChange={handleChangeCate}>
                 <option value="0">Chọn danh mục</option>
@@ -309,7 +318,20 @@ const ModalUpdateProduct = ({ showUpdate, setShowUpdate, product }) => {
                 ))}
               </select>
             </div>
-            <div className="col-md-3">
+
+
+            <div className="col-md-6">
+              <label className="form-label">Giá gốc: </label>
+              <input
+                type="number"
+                className="form-control"
+                value={original_price}
+                min="0"
+                onChange={(event) => setOriginal_Price(event.target.value)}
+              />
+            </div>
+
+            <div className="col-md-6">
               <label className="form-label">Giá cả: </label>
               <input
                 type="number"
@@ -319,6 +341,7 @@ const ModalUpdateProduct = ({ showUpdate, setShowUpdate, product }) => {
                 onChange={(event) => setPrice(event.target.value)}
               />
             </div>
+
             <div className="col-md-12">
               <label className="form-label">Danh mục được chọn: </label>
               <ul>

@@ -23,7 +23,8 @@ const ProductTable = ({
             <th>Mã sản phẩm</th>
             <th>Tên sản phẩm</th>
             <th>Số lượng</th>
-            <th>Giá</th>
+            <th>Giá gốc</th>
+            <th>Giá bán</th>
             <th>Action</th>
           </tr>
         </thead>
@@ -35,7 +36,8 @@ const ProductTable = ({
                 <td>{product._id}</td>
                 <td>{product.productName}</td>
                 <td>{product.quantity}</td>
-                <td>{product.price.toLocaleString("vi-VN")}đ</td>
+                <td>{product.original_price.toLocaleString("vi-VN")} đ</td>
+                <td>{product.price.toLocaleString("vi-VN")} đ</td>
                 <td className="d-flex gap-3">
                   <button
                     className="btn btn-primary"
