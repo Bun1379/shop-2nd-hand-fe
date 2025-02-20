@@ -12,6 +12,7 @@ import AddressAPI from "../../../api/AddressAPI";
 import ModalSelectAddress from "./ModalSelectAddress";
 import { Modal, Button, Form, Row, Col } from "react-bootstrap";
 import { updateQuantityCart } from "../../../components/Header/Header";
+import ShippingAPI from "../../../api/ShippingAPI";
 const Checkout = () => {
   const token = localStorage.getItem("token");
   if (!token) {
@@ -19,7 +20,6 @@ const Checkout = () => {
   }
   const location = useLocation();
   const items = location.state;
-  console.log(items);
   const navigation = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedAddress, setSelectedAddress] = useState(null);
@@ -44,6 +44,7 @@ const Checkout = () => {
   //begin
   const [branchList, setBranchList] = useState([]);
   const [selectedBranch, setSelectedBranch] = useState(null);
+  const [shippingFee, setShippingFee] = useState(0);
 
   const fetchDataBranch = async () => {
     try {
@@ -81,7 +82,6 @@ const Checkout = () => {
         );
         if (defaultAddress) {
           setSelectedAddress(defaultAddress);
-          console.log(selectedAddress);
         }
       }
     } catch (error) {
@@ -107,6 +107,7 @@ const Checkout = () => {
       paymentMethod: selectedPaymentMethod.value,
       discountCode: discountCode,
       branchId: selectedBranch?.value,
+      shippingFee: shippingFee,
     };
     try {
       const rs = await OrderAPI.CreateOrder(data);
@@ -161,7 +162,6 @@ const Checkout = () => {
     try {
       const response = await UserAPI.GetUserInfo();
       if (response.status === 200) {
-        console.log(response.data.DT.discounts);
         setListDiscount(
           response.data.DT.discounts
             .filter(
@@ -180,7 +180,34 @@ const Checkout = () => {
       toast.error(error.response.data.EM);
     }
   };
-
+  //shippingFee
+  //begin
+  const calculateShippingFee = async () => {
+    if (selectedBranch === null || selectedAddress === null) return;
+    const addressArr = selectedBranch.label.split(",");
+    try {
+      const response = await ShippingAPI.getShippingMethods({
+        province: selectedAddress.city,
+        district: selectedAddress.district,
+        pick_province: addressArr[addressArr.length - 1].trim(),
+        pick_district: addressArr[addressArr.length - 2].trim(),
+        weight: 1000,
+        value: afterDiscount,
+      });
+      if (response.status === 200) {
+        setShippingFee(response.data.DT.fee.fee);
+      } else {
+        console.log(response);
+      }
+    } catch (error) {
+      toast.error("Lỗi: " + error.message);
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    calculateShippingFee();
+  }, [selectedBranch, selectedAddress, afterDiscount]);
+  //end
   useEffect(() => {
     loadAddressList();
     fetchListDiscount();
@@ -280,6 +307,13 @@ const Checkout = () => {
               </button>
               <p className="fw-bold mb-0 ms-3">
                 Tổng tiền: {afterDiscount.toLocaleString("vi-VN")} đ
+              </p>
+              <p className="fw-bold mb-0 ms-3">
+                Phí vận chuyển: {shippingFee.toLocaleString("vi-VN")} đ
+              </p>
+              <p className="fw-bold mb-0 ms-3">
+                Tổng cộng:{" "}
+                {(afterDiscount + shippingFee).toLocaleString("vi-VN")} đ
               </p>
             </div>
           </div>
