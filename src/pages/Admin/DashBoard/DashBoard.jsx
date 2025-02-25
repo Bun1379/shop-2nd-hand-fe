@@ -5,6 +5,7 @@ import RevenueChart from "./RevenueChart";
 import { useEffect, useState } from "react";
 import DashBoardAPI from "../../../api/DashBoardAPI";
 import { toast } from "react-toastify";
+import CustomBarChart from "./CustomBarChart";
 
 const DashBoard = () => {
   const [apiData, setApiData] = useState({ dates: [], revenues: [] });
@@ -18,6 +19,35 @@ const DashBoard = () => {
     dates: [],
     revenues: [],
   });
+  // Cate seller
+  const [categorySellerData, setCategorySellerData] = useState({});
+  const [cateFromDate, setCateFromDate] = useState("");
+  const [cateToDate, setCateToDate] = useState("");
+  const fetchCategorySellerData = async () => {
+    try {
+      if (!cateFromDate || !cateToDate) {
+        toast.error("Vui lòng chọn thời gian bắt đầu và kết thúc");
+        return;
+      }
+      if (cateFromDate > cateToDate) {
+        toast.error("Thời gian bắt đầu không được lớn hơn thời gian kết thúc");
+        return;
+      }
+      if (cateFromDate === cateToDate) {
+        toast.error("Thời gian bắt đầu và kết thúc không được trùng nhau");
+        return;
+      }
+      let tmp = cateToDate;
+      if (cateToDate === new Date().toISOString().split("T")[0]) {
+        tmp = new Date();
+      }
+      const response = await DashBoardAPI.GetCateSellerChart(cateFromDate, tmp);
+      setCategorySellerData(response.data.DT);
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+  //
 
   const fetchCustomData = async () => {
     try {
@@ -128,6 +158,40 @@ const DashBoard = () => {
           </Form>
         </Col>
       </Row>
+      <div className="w-50 mt-5">
+        <h5>Biểu đồ sản phẩm bán được theo cate</h5>
+        <Form>
+          <Form.Group className="mb-3">
+            <Form.Label>Chọn thời gian bắt đầu</Form.Label>
+            <Form.Control
+              type="date"
+              value={cateFromDate}
+              onChange={(e) => setCateFromDate(e.target.value)}
+            />
+          </Form.Group>
+
+          <Form.Group className="mb-3">
+            <Form.Label>Chọn thời gian kết thúc</Form.Label>
+            <Form.Control
+              type="date"
+              value={cateToDate}
+              onChange={(e) => setCateToDate(e.target.value)}
+            />
+          </Form.Group>
+
+          <Button
+            variant="primary"
+            onClick={fetchCategorySellerData}
+            className="mt-2"
+          >
+            Xem thống kê
+          </Button>
+
+          {categorySellerData && Object.keys(categorySellerData).length > 0 && (
+            <CustomBarChart data={categorySellerData} />
+          )}
+        </Form>
+      </div>
     </div>
   );
 };
