@@ -16,7 +16,7 @@ class BranchStockAPI {
     );
   }
   static async getBranchStockWithProduct(productId) {
-    return axiosPrivate.get("/branch-stock/product/" + productId);
+    return axiosClient.get("/branch-stock/product/" + productId);
   }
 }
 

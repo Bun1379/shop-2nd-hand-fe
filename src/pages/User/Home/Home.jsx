@@ -6,7 +6,7 @@ import BannerAPI from "../../../api/BannerAPI";
 import HomeReview from "./Review/HomeReview";
 import ReactPaginate from "react-paginate";
 import ProductItem from "../../../components/ProductItem/ProductItem";
-
+import BranchStock from "../../../api/BranchStockAPI";
 function Home() {
   const [arrayProducts, setArrayProducts] = useState([]);
   const [banner, setBanner] = useState([]);
