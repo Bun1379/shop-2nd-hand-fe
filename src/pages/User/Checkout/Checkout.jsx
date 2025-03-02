@@ -45,6 +45,9 @@ const Checkout = () => {
   const [branchList, setBranchList] = useState([]);
   const [selectedBranch, setSelectedBranch] = useState(null);
   const [shippingFee, setShippingFee] = useState(0);
+  const [listDiscountShipping, setListDiscountShipping] = useState([]);
+  const [selectedDiscountShipping, setSelectedDiscountShipping] =
+    useState(null);
 
   const fetchDataBranch = async () => {
     try {
@@ -139,6 +142,31 @@ const Checkout = () => {
     }
   };
 
+  const handleShippingCouponClick = async () => {
+    if (!selectedDiscountShipping) {
+      toast.error("Vui lòng chọn mã giảm giá");
+      return;
+    }
+    if (!shippingFee) {
+      toast.error("Vui lòng chọn chi nhánh vận chuyển");
+      return;
+    }
+    try {
+      const response = await DiscountAPI.getDiscountPercentages(
+        selectedDiscountShipping.value
+      );
+      if (response.status === 200) {
+        setShippingFee(
+          shippingFee -
+            (shippingFee * response.data.DT.discountPercentage) / 100
+        );
+        toast.success("Áp dụng mã giảm giá thành công");
+      }
+    } catch (error) {
+      toast.error(error.response.data.EM);
+    }
+  };
+
   const handleCouponClick = async () => {
     if (!coupon.value) {
       toast.error("Vui lòng chọn mã giảm giá");
@@ -167,6 +195,20 @@ const Checkout = () => {
             .filter(
               (discount) =>
                 !discount?.usersUsed?.includes(response.data.DT._id) &&
+                (new Date(discount.expiredAt) > new Date() ||
+                  discount.expiredAt == null)
+            )
+            .map((discount) => ({
+              value: discount._id,
+              label: discount.discountCode,
+            }))
+        );
+        setListDiscountShipping(
+          response.data.DT.discounts
+            .filter(
+              (discount) =>
+                !discount?.usersUsed?.includes(response.data.DT._id) &&
+                discount.type === "SHIPPING" &&
                 (new Date(discount.expiredAt) > new Date() ||
                   discount.expiredAt == null)
             )
@@ -250,11 +292,11 @@ const Checkout = () => {
         </div>
 
         <div
-          className="d-flex flex-column shadow border w-100 border-success mb-2 border-2 p-4 gap-3"
+          className="d-flex flex-column shadow border w-100 card p-3"
           style={{ height: "auto", margin: "0 auto" }}
         >
-          <div className="d-flex align-items-center justify-content-around">
-            <div className="d-flex flex-column justify-content-between gap-4">
+          <div className="d-flex gap-3">
+            <div className="flex-grow-1 flex-shrink-1 d-flex flex-column gap-2">
               <Button className="btn w-25" onClick={() => setIsModalOpen(true)}>
                 Chọn Địa Chỉ
               </Button>
@@ -279,22 +321,6 @@ const Checkout = () => {
                 selectedAddress={selectedAddress}
                 setSelectedAddress={setSelectedAddress}
               />
-            </div>
-
-            <div className="d-flex flex-column justify-content-between gap-2">
-              <span className="fw-bold mb-0 ms-3">Phương thức thanh toán:</span>
-              <Select
-                options={options}
-                defaultValue={selectedPaymentMethod}
-                onChange={setSelectedPaymentMethod}
-              />
-
-              <span className="fw-bold mb-0 ms-3">Mã khuyến mãi: </span>
-              <Select
-                options={listDiscount}
-                onChange={setCoupon}
-                placeholder="Chọn mã khuyến mãi"
-              />
               <span className="fw-bold mb-0 ms-3">Chi nhánh giao hàng: </span>
               <Select
                 options={branchList}
@@ -302,9 +328,45 @@ const Checkout = () => {
                 value={selectedBranch}
                 placeholder="Chọn chi nhánh giao hàng"
               />
-              <button className="btn btn-primary" onClick={handleCouponClick}>
-                Áp dụng
-              </button>
+            </div>
+
+            <div className="flex-grow-1">
+              <span className="fw-bold mb-0 ms-3">Phương thức thanh toán:</span>
+              <Select
+                options={options}
+                defaultValue={selectedPaymentMethod}
+                onChange={setSelectedPaymentMethod}
+              />
+              <div className="d-flex flex-column gap-2">
+                <span className="fw-bold mb-0 ms-3">
+                  Mã khuyến mãi sản phẩm:{" "}
+                </span>
+                <Select
+                  options={listDiscount}
+                  onChange={setCoupon}
+                  placeholder="Chọn mã khuyến mãi"
+                />
+                <button className="btn btn-primary" onClick={handleCouponClick}>
+                  Áp dụng
+                </button>
+              </div>
+              <div className="d-flex flex-column gap-2">
+                <span className="fw-bold mb-0 ms-3">
+                  Mã khuyến mãi giao hàng:{" "}
+                </span>
+                <Select
+                  options={listDiscountShipping}
+                  onChange={setSelectedDiscountShipping}
+                  placeholder="Chọn mã khuyến mãi"
+                />
+                <button
+                  className="btn btn-primary"
+                  onClick={handleShippingCouponClick}
+                >
+                  Áp dụng
+                </button>
+              </div>
+
               <p className="fw-bold mb-0 ms-3">
                 Tổng tiền: {afterDiscount.toLocaleString("vi-VN")} đ
               </p>

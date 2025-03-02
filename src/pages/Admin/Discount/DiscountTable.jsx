@@ -17,6 +17,7 @@ const DiscountTable = ({ discounts, setPage, totalPages }) => {
               <th>Ngày hết hạn</th>
               <th>GIới hạn sử dụng</th>
               <th>Đã sử dụng</th>
+              <th>Loại mã giảm giá</th>
             </tr>
           </thead>
           <tbody>
@@ -33,6 +34,11 @@ const DiscountTable = ({ discounts, setPage, totalPages }) => {
                   </td>
                   <td>{discount.usageLimit ? discount.usageLimit : "Không"}</td>
                   <td>{discount.usersUsed.length}</td>
+                  <td>
+                    {discount.type === "SHIPPING"
+                      ? "Giảm giá vận chuyển"
+                      : "Giảm giá sản phẩm"}
+                  </td>
                 </tr>
               ))}
           </tbody>
