@@ -48,6 +48,8 @@ const Checkout = () => {
   const [listDiscountShipping, setListDiscountShipping] = useState([]);
   const [selectedDiscountShipping, setSelectedDiscountShipping] =
     useState(null);
+  const [discountShipping, setDiscountShipping] = useState("");
+  const [shippingFeePercent, setShippingFeePercent] = useState(0);
 
   const fetchDataBranch = async () => {
     try {
@@ -108,7 +110,10 @@ const Checkout = () => {
       phone: selectedAddress.phone,
       name: selectedAddress.name,
       paymentMethod: selectedPaymentMethod.value,
-      discountCode: discountCode,
+      discountCode: [
+        ...(discountCode ? [discountCode] : []),
+        ...(discountShipping ? [discountShipping] : []),
+      ],
       branchId: selectedBranch?.value,
       shippingFee: shippingFee,
     };
@@ -160,6 +165,8 @@ const Checkout = () => {
           shippingFee -
             (shippingFee * response.data.DT.discountPercentage) / 100
         );
+        setShippingFeePercent(response.data.DT.discountPercentage);
+        setDiscountShipping(response.data.DT._id);
         toast.success("Áp dụng mã giảm giá thành công");
       }
     } catch (error) {
@@ -195,6 +202,7 @@ const Checkout = () => {
             .filter(
               (discount) =>
                 !discount?.usersUsed?.includes(response.data.DT._id) &&
+                discount.type !== "SHIPPING" &&
                 (new Date(discount.expiredAt) > new Date() ||
                   discount.expiredAt == null)
             )
@@ -237,7 +245,8 @@ const Checkout = () => {
         value: afterDiscount,
       });
       if (response.status === 200) {
-        setShippingFee(response.data.DT.fee.fee);
+        const fee = response.data.DT.fee.fee;
+        setShippingFee(fee - (fee * shippingFeePercent) / 100);
       } else {
         console.log(response);
       }
