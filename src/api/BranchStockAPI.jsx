@@ -9,6 +9,16 @@ class BranchStockAPI {
       "/branch-stock/branch/" + branchId + "/product/" + productId
     );
   }
+
+  static async getBranchStocksWithBranchAndManyProduct({ branchId, productIds = [] }) {
+    return axiosClient.get("/branch-stock/product", {
+      params: {
+        branchId: branchId,
+        productIds: productIds, // Chuyển mảng thành chuỗi
+      },
+    });
+  }
+
   static async updateBranchStock(branchId, productId, data) {
     return axiosPrivate.put(
       "/branch-stock/branch/" + branchId + "/product/" + productId,

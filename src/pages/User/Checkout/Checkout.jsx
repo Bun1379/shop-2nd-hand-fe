@@ -9,7 +9,9 @@ import PaymentAPI from "../../../api/PaymentAPI";
 import UserAPI from "../../../api/UserAPI";
 import BranchAPI from "../../../api/BranchAPI";
 import AddressAPI from "../../../api/AddressAPI";
+import BranchStockAPI from "../../../api/BranchStockAPI";
 import ModalSelectAddress from "./ModalSelectAddress";
+import ModalConfirmOrder from "./ModalConfirmOrder";
 import { Modal, Button, Form, Row, Col } from "react-bootstrap";
 import { updateQuantityCart } from "../../../components/Header/Header";
 import ShippingAPI from "../../../api/ShippingAPI";
@@ -50,7 +52,8 @@ const Checkout = () => {
     useState(null);
   const [discountShipping, setDiscountShipping] = useState("");
   const [shippingFeePercent, setShippingFeePercent] = useState(0);
-
+  const [productOutOfStock, setProductOutOfStock] = useState([]);
+  const [isModalConfirmOpen, setIsModalConfirmOpen] = useState(false);
   const fetchDataBranch = async () => {
     try {
       const response = await BranchAPI.getAllBranches();
@@ -94,11 +97,7 @@ const Checkout = () => {
     }
   };
 
-  const handleCheckout = async () => {
-    if (selectedBranch === null) {
-      toast.error("Vui lòng chọn chi nhánh giao hàng");
-      return;
-    }
+  const handleOrder = async () => {
     const data = {
       products: items.map((item) => ({
         productId: item.product._id,
@@ -117,34 +116,35 @@ const Checkout = () => {
       branchId: selectedBranch?.value,
       shippingFee: shippingFee,
     };
-    try {
-      const rs = await OrderAPI.CreateOrder(data);
-      if (rs.status === 200) {
-        toast.success("Đăt hàng thành công");
-        updateQuantityCart();
-      }
-      if (selectedPaymentMethod.value === "ONLINE") {
-        const PaymentData = {
-          amount: afterDiscount,
-          orderId: rs.data.DT._id,
-          returnUrl: "https://ishio-shop.onrender.com/payment/result",
-        };
-        const response = await PaymentAPI.postPayment(PaymentData);
-        if (response.status === 200) {
-          const paymentUrl = response.data.DT;
-          window.open(paymentUrl, "_blank");
-          navigation("/", { replace: true });
-        }
-      } else {
-        navigation(
-          "/user-profile",
-          { state: { initialSection: "orders" } },
-          { replace: true }
-        );
-      }
-    } catch (error) {
-      toast.error(error.response?.data?.EM);
-    }
+    toast.success("Đăt hàng thành công");
+    // try {
+    //   const rs = await OrderAPI.CreateOrder(data);
+    //   if (rs.status === 200) {
+    //     toast.success("Đăt hàng thành công");
+    //     updateQuantityCart();
+    //   }
+    //   if (selectedPaymentMethod.value === "ONLINE") {
+    //     const PaymentData = {
+    //       amount: afterDiscount,
+    //       orderId: rs.data.DT._id,
+    //       returnUrl: "https://ishio-shop.onrender.com/payment/result",
+    //     };
+    //     const response = await PaymentAPI.postPayment(PaymentData);
+    //     if (response.status === 200) {
+    //       const paymentUrl = response.data.DT;
+    //       window.open(paymentUrl, "_blank");
+    //       navigation("/", { replace: true });
+    //     }
+    //   } else {
+    //     navigation(
+    //       "/user-profile",
+    //       { state: { initialSection: "orders" } },
+    //       { replace: true }
+    //     );
+    //   }
+    // } catch (error) {
+    //   toast.error(error.response?.data?.EM);
+    // }
   };
 
   const handleShippingCouponClick = async () => {
@@ -163,7 +163,7 @@ const Checkout = () => {
       if (response.status === 200) {
         setShippingFee(
           shippingFee -
-            (shippingFee * response.data.DT.discountPercentage) / 100
+          (shippingFee * response.data.DT.discountPercentage) / 100
         );
         setShippingFeePercent(response.data.DT.discountPercentage);
         setDiscountShipping(response.data.DT._id);
@@ -259,6 +259,42 @@ const Checkout = () => {
     calculateShippingFee();
   }, [selectedBranch, selectedAddress, afterDiscount]);
   //end
+
+  //Check out of stock
+  //begin
+  const checkOutOfStock = async () => {
+    try {
+      const response = await BranchStockAPI.getBranchStocksWithBranchAndManyProduct({
+        branchId: selectedBranch.value,
+        productIds: items.map((item) => item.product._id).join(","),
+      });
+      if (response.status === 200) {
+        const productOutOfStock1 = items.filter((item) =>
+          response.data.DT.some((stock) => stock == item.product._id)
+        );
+        setProductOutOfStock(productOutOfStock1);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleCheckout = async () => {
+    if (selectedBranch === null) {
+      toast.error("Vui lòng chọn chi nhánh giao hàng");
+      return;
+    }
+    await checkOutOfStock();
+    setProductOutOfStock((prev) => {
+      if (prev.length > 0) {
+        setIsModalConfirmOpen(true);
+      } else {
+        handleOrder();
+      }
+      return prev;
+    });
+  };
+
   useEffect(() => {
     loadAddressList();
     fetchListDiscount();
@@ -394,6 +430,12 @@ const Checkout = () => {
           >
             Thanh toán
           </button>
+          <ModalConfirmOrder
+            isOpen={isModalConfirmOpen}
+            onRequestClose={() => setIsModalConfirmOpen(false)}
+            productOutOfStock={productOutOfStock}
+            handleOrder={handleOrder}
+          />
         </div>
       </div>
     </>
