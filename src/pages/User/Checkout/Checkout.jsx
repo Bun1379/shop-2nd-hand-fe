@@ -116,35 +116,34 @@ const Checkout = () => {
       branchId: selectedBranch?.value,
       shippingFee: shippingFee,
     };
-    toast.success("Đăt hàng thành công");
-    // try {
-    //   const rs = await OrderAPI.CreateOrder(data);
-    //   if (rs.status === 200) {
-    //     toast.success("Đăt hàng thành công");
-    //     updateQuantityCart();
-    //   }
-    //   if (selectedPaymentMethod.value === "ONLINE") {
-    //     const PaymentData = {
-    //       amount: afterDiscount,
-    //       orderId: rs.data.DT._id,
-    //       returnUrl: "https://ishio-shop.onrender.com/payment/result",
-    //     };
-    //     const response = await PaymentAPI.postPayment(PaymentData);
-    //     if (response.status === 200) {
-    //       const paymentUrl = response.data.DT;
-    //       window.open(paymentUrl, "_blank");
-    //       navigation("/", { replace: true });
-    //     }
-    //   } else {
-    //     navigation(
-    //       "/user-profile",
-    //       { state: { initialSection: "orders" } },
-    //       { replace: true }
-    //     );
-    //   }
-    // } catch (error) {
-    //   toast.error(error.response?.data?.EM);
-    // }
+    try {
+      const rs = await OrderAPI.CreateOrder(data);
+      if (rs.status === 200) {
+        toast.success("Đăt hàng thành công");
+        updateQuantityCart();
+      }
+      if (selectedPaymentMethod.value === "ONLINE") {
+        const PaymentData = {
+          amount: afterDiscount,
+          orderId: rs.data.DT._id,
+          returnUrl: "https://ishio-shop.onrender.com/payment/result",
+        };
+        const response = await PaymentAPI.postPayment(PaymentData);
+        if (response.status === 200) {
+          const paymentUrl = response.data.DT;
+          window.open(paymentUrl, "_blank");
+          navigation("/", { replace: true });
+        }
+      } else {
+        navigation(
+          "/user-profile",
+          { state: { initialSection: "orders" } },
+          { replace: true }
+        );
+      }
+    } catch (error) {
+      toast.error(error.response?.data?.EM);
+    }
   };
 
   const handleShippingCouponClick = async () => {
@@ -318,8 +317,8 @@ const Checkout = () => {
           <Row className="align-items-center fw-bold">
             <Col xs={2}>Sản phẩm</Col>
             <Col xs={4}></Col>
-            <Col xs={2}>Size</Col>
-            <Col xs={1} className="text-center">
+            <Col xs={1}>Size</Col>
+            <Col xs={2} className="text-center">
               Đơn giá
             </Col>
             <Col xs={1} className="text-center">

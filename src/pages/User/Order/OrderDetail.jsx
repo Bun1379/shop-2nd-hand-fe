@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { MdArrowBack, MdArrowBackIos } from "react-icons/md";
+import { MdArrowBack } from "react-icons/md";
 import { toast } from "react-toastify";
 import CheckoutItem from "../Checkout/CheckoutItem";
 import OrderAPI from "../../../api/OrderAPI";
-import { Container, Row, Col, Button } from "react-bootstrap";
+import { Container, Row, Col, Button, Card } from "react-bootstrap";
 import ModalCancelRequest from "./ModalCancelRequest";
 import CancelRequestAPI from "../../../api/CancelRequestAPI";
 
@@ -14,18 +14,6 @@ const OrderDetail = () => {
   const [order, setOrder] = useState({});
   const [showModal, setShowModal] = useState(false);
 
-  const handleSubmitCancelOrder = async (data) => {
-    try {
-      const { reason } = data;
-      await CancelRequestAPI.CreateCancelRequest({ orderId, reason });
-      toast.success("Gửi yêu cầu hủy đơn hàng thành công");
-      setShowModal(false);
-    } catch (error) {
-      toast.error(error.response.data.message);
-      console.error("Error:", error);
-    }
-  };
-
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) return (window.location.href = "/login");
@@ -34,6 +22,7 @@ const OrderDetail = () => {
       try {
         const response = await OrderAPI.GetOrderById(orderId);
         setOrder(response.data.DT);
+        console.log(response.data.DT);
       } catch (error) {
         console.error("Error:", error);
       }
@@ -52,30 +41,16 @@ const OrderDetail = () => {
     }
   };
 
-  const renderOrderInfo = () => (
-    <div className="d-flex flex-column gap-4">
-      <p className="fw-bold">Người nhận: {order.name || ""}</p>
-      <p className="fw-bold">Địa chỉ nhận hàng: {order.address || ""}</p>
-      <p className="fw-bold">Số điện thoại: {order.phone || ""}</p>
-    </div>
-  );
-
-  const renderPaymentInfo = () => (
-    <div className="d-flex flex-column gap-4">
-      <p className="fw-bold">
-        Phương thức thanh toán:{" "}
-        {order.paymentMethod === "COD" ? "Tiền mặt" : "Chuyển khoản"}
-      </p>
-      {order.discountCode && (
-        <p className="fw-bold">
-          Mã khuyến mãi: {order.discountCode.discountCode} -{" "}
-          {order.discountCode.discountPercentage}%
-        </p>
-      )}
-      <p className="fw-bold">Tổng tiền: {order.totalAmount.toLocaleString("vi-VN")} đ</p>
-    </div>
-  );
-
+  const handleSubmitCancelOrder = async (data) => {
+    try {
+      await CancelRequestAPI.CreateCancelRequest({ orderId, reason: data.reason });
+      toast.success("Gửi yêu cầu hủy đơn hàng thành công");
+      setShowModal(false);
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Có lỗi xảy ra");
+      console.error("Error:", error);
+    }
+  };
 
   const statusLabels = {
     PENDING: "Chờ xác nhận",
@@ -94,91 +69,94 @@ const OrderDetail = () => {
   };
 
   return (
-    <>
-      <Container fluid className="container py-3 shadow bg-light"
-        style={{ width: "90%" }}
-      >
+    <Container className="py-4">
+      {/* Header */}
+      <Card className="shadow-sm p-3">
         <Row className="align-items-center">
           <Col xs="auto">
-            <Button
-              variant="link"
-              className="text-primary d-flex align-items-center gap-2 p-0"
-              onClick={() =>
-                navigate("/user-profile", {
-                  state: { initialSection: "orders" },
-                })
-              }
-            >
+            <Button variant="link" className="text-primary d-flex align-items-center gap-2 p-0" onClick={() => navigate("/user-profile", { state: { initialSection: "orders" } })}>
               <MdArrowBack /> Trở lại
             </Button>
           </Col>
           <Col className="text-center">
-            <p className="mb-1">Ngày tạo: {new Date(order.createdAt).toLocaleString("vi-VN")}</p>
+            <p className="mb-1">Ngày tạo: {order.createdAt ? new Date(order.createdAt).toLocaleString("vi-VN") : ""}</p>
             <p className="mb-1 fw-bold">Mã đơn hàng: {order._id}</p>
+            <p className="mb-1">Được giao từ: {order.branch?.address}</p>
             <p className={`mb-1 fw-bold ${statusColors[order.status]}`}>
               Trạng thái: {statusLabels[order.status]}
             </p>
           </Col>
-          <Col xs="auto"></Col>
         </Row>
-      </Container>
-      {order.products?.length > 0 && (
-        <div className="container my-4">
-          {/* Header */}
-          <div className="bg-success text-white p-3 rounded">
-            <Row className="align-items-center fw-bold">
-              <Col xs={1}>Sản phẩm</Col>
-              <Col xs={5}></Col>
-              <Col xs={1}>Size</Col>
-              <Col xs={2} className="text-center">Đơn giá</Col>
-              <Col xs={1} className="text-center">Số lượng</Col>
-              <Col xs={2} className="text-end">Thành tiền</Col>
-            </Row>
-          </div>
+      </Card>
 
-          {/* Product list */}
-          <div className="mt-3">
-            {order.products.map((item) => (
-              <CheckoutItem key={item.product._id} item={item} />
-            ))}
-          </div>
 
-          {/* Order Details */}
-          <div className="bg-white shadow p-4 mt-4 rounded">
-            <div className="d-flex justify-content-between">
-              {renderOrderInfo()}
-              {renderPaymentInfo()}
-            </div>
-          </div>
+      {/* Sản phẩm trong đơn hàng */}
+      <div>
+        {/* Header */}
+        <div className="bg-success text-white p-3 rounded mt-4 mb-3">
+          <Row className="align-items-center fw-bold">
+            <Col xs={1}>Sản phẩm</Col>
+            <Col xs={5}></Col>
+            <Col xs={1}>Size</Col>
+            <Col xs={2} className="text-center">Đơn giá</Col>
+            <Col xs={1} className="text-center">Số lượng</Col>
+            <Col xs={2} className="text-end">Thành tiền</Col>
+          </Row>
         </div>
-      )}
-      {/* Cancel Button */}
-      {order.status === "PENDING" && (
-        <div className="d-flex justify-content-center mt-4">
-          <button
-            className="btn btn-danger px-5 py-2"
-            onClick={handleCancelOrder}
-          >
-            Hủy đơn hàng
-          </button>
-        </div>
-      )}
-      {order.status === "CONFIRMED" && (
-        <div className="d-flex justify-content-center mt-4">
-          <button
-            className="btn btn-danger px-5 py-2"
-            onClick={() => setShowModal(true)}
-          >
-            Gửi yêu cầu hủy đơn hàng
-          </button>
-        </div>
-      )}
-      <ModalCancelRequest
-        show={showModal}
-        setShow={setShowModal}
-        handleSubmitCancelOrder={handleSubmitCancelOrder}
-      />
-    </>
+
+        {order.products?.map((item) => (
+          <CheckoutItem key={item.product._id} item={item} />
+        ))}
+
+        {order.pendingProducts?.map((item) => (
+          <CheckoutItem key={item.product._id} item={item} />
+        ))}
+      </div>
+
+
+      {/* Thông tin đơn hàng */}
+      <Row className="mt-4">
+        <Col md={6}>
+          <Card className="shadow-sm p-3">
+            <h5 className="fw-bold">Thông tin người nhận</h5>
+            <hr />
+            <p className="mb-2"><strong>Người nhận:</strong> {order.name || ""}</p>
+            <p className="mb-2"><strong>Địa chỉ:</strong> {order.address || ""}</p>
+            <p className="mb-2"><strong>Số điện thoại:</strong> {order.phone || ""}</p>
+          </Card>
+        </Col>
+        <Col md={6}>
+          <Card className="shadow-sm p-3">
+            <h5 className="fw-bold">Thông tin thanh toán</h5>
+            <hr />
+            <p className="mb-2"><strong>Phương thức thanh toán:</strong> {order.paymentMethod === "COD" ? "Tiền mặt" : "Chuyển khoản"}</p>
+            {order.discountCode && order.discountCode.discountCode && (
+              <p className="mb-2"><strong>Mã khuyến mãi:</strong> {order.discountCode.discountCode} - {order.discountCode.discountPercentage}%</p>
+            )}
+            <p className="mb-2"><strong>Tổng tiền hàng:</strong> {order.totalAmount?.toLocaleString("vi-VN")} đ</p>
+            <p className="mb-2">
+              <strong>Phí vận chuyển:</strong> {order.shippingFee > 0 ? `${order.shippingFee.toLocaleString("vi-VN")} đ` : "Miễn phí"}
+            </p>
+            <p className="fw-bold text-danger fs-5">
+              Tổng tiền: {((order.totalAmount ?? 0) + (order.shippingFee ?? 0)).toLocaleString("vi-VN")} đ
+            </p>
+          </Card>
+        </Col>
+      </Row>
+
+      {/* Nút Hủy đơn */}
+      <div className="text-center mt-4">
+        {order.status === "PENDING" && (
+          <Button variant="danger" size="lg" onClick={handleCancelOrder}>Hủy đơn hàng</Button>
+        )}
+        {order.status === "CONFIRMED" && (
+          <Button variant="warning" size="lg" onClick={() => setShowModal(true)}>Gửi yêu cầu hủy</Button>
+        )}
+      </div>
+
+      {/* Modal hủy đơn */}
+      <ModalCancelRequest show={showModal} setShow={setShowModal} handleSubmitCancelOrder={handleSubmitCancelOrder} />
+    </Container>
   );
 };
 
