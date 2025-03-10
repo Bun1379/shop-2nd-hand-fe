@@ -13,10 +13,10 @@ const ProductTable = ({
   const handlePageClick = (data) => {
     setPage(data.selected + 1);
   };
+  const user = localStorage.getItem("user");
   return (
     <div>
       {" "}
-      Product Table
       <Table striped bordered hover>
         <thead>
           <tr>
@@ -32,25 +32,29 @@ const ProductTable = ({
           {products &&
             products.length > 0 &&
             products.map((product) => (
-              <tr key={product._id}>
+              <tr
+                key={product.product._id}
+                className={`${product.quantity === 0
+                  ? "table-danger"
+                  : product.quantity < 10
+                    ? "table-warning"
+                    : ""
+                  }`}
+              >
                 <td>{product._id}</td>
-                <td>{product.productName}</td>
+                <td>{product.product.productName}</td>
                 <td>{product.quantity}</td>
-                <td>{product.original_price.toLocaleString("vi-VN")} đ</td>
-                <td>{product.price.toLocaleString("vi-VN")} đ</td>
+                <td>{product.product.original_price.toLocaleString("vi-VN")} đ</td>
+                <td>{product.product.price.toLocaleString("vi-VN")} đ</td>
                 <td className="d-flex gap-3">
-                  <button
-                    className="btn btn-primary"
-                    onClick={() => handleClickUpdate(product)}
-                  >
-                    Sửa
-                  </button>
-                  <button
-                    className="btn btn-primary"
-                    onClick={() => handleDistribution(product)}
-                  >
-                    Phân phối
-                  </button>
+                  {user.isAdmin === "true" && (
+                    <button
+                      className="btn btn-primary"
+                      onClick={() => handleClickUpdate(product)}
+                    >
+                      Sửa
+                    </button>
+                  )}
                   <button
                     className="btn btn-primary"
                     onClick={() => handleShowBranchStockOfProduct(product)}

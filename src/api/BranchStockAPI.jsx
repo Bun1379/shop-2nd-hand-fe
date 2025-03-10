@@ -4,6 +4,7 @@ class BranchStockAPI {
   static async getBranchStocksWithBranch(branchId) {
     return axiosPrivate.get("/branch-stock/branch/" + branchId);
   }
+
   static async getBranchStocksWithBranchAndProduct(branchId, productId) {
     return axiosPrivate.get(
       "/branch-stock/branch/" + branchId + "/product/" + productId

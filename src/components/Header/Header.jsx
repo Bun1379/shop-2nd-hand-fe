@@ -133,7 +133,7 @@ function Header() {
             {localStorage.getItem("is_admin") === "true" && (
               <li className="nav-item">
                 <NavLink className="nav-link" to="/admin">
-                  ADMIN
+                  MANAGER
                 </NavLink>
               </li>
             )}

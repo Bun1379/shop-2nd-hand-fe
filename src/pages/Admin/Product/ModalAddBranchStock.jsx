@@ -12,7 +12,6 @@ const ModalAddBranchStock = ({ show, setShow, selectedProduct }) => {
   const fetchDataBranch = async () => {
     try {
       const res = await BranchAPI.getAllBranches();
-      console.log(res);
       if (res.status === 200) {
         setListBranch(
           res.data.DT.map((branch) => ({

@@ -56,7 +56,7 @@ const ModalViewOrder = ({ show, setShowView, order }) => {
 
           <div className="col-md-6">
             <label className="form-label fw-bold">Chi nhánh đặt hàng</label>
-            <textarea type="text" className="form-control" value={branch.address} disabled />
+            <textarea type="text" className="form-control" value={branch?.address} disabled />
           </div>
           {/* Danh sách sản phẩm */}
           <div className="col-md-12">

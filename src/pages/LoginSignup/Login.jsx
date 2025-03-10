@@ -25,17 +25,19 @@ const Login = () => {
         } else {
           localStorage.setItem("token", response.data.DT.token);
           setUserInLocalStorage(response.data.DT.user);
-          localStorage.setItem("is_admin", response.data.DT.user.is_admin);
+          if (response.data.DT.user.is_admin === true || response.data.DT.user.branch.length > 0) {
+            localStorage.setItem("is_admin", true);
+          }
           toast.success("Đăng nhập thành công!");
           if (response.data.DT.user.is_verified === true) {
-            navigate(response.data.DT.user.is_admin ? "/admin" : "/");
+            navigate((response.data.DT.user.is_admin || response.data.DT.user.branch.length > 0) ? "/admin" : "/");
           } else {
             navigate("/verify", { state: { email } });
           }
         }
       }
     } catch (error) {
-      toast.error("Đăng nhập thất bại: " + error.response.data.EM);
+      toast.error("Đăng nhập thất bại: " + error?.response?.data.EM);
     }
   };
   return (
