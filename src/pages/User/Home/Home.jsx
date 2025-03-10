@@ -1,17 +1,19 @@
 import React, { useState, useEffect } from "react";
 import ProductAPI from "../../../api/ProductAPI";
-import { Carousel } from "react-bootstrap";
+import { Button, Carousel } from "react-bootstrap";
 import HomeDiscount from "./Discount/HomeDiscount";
 import BannerAPI from "../../../api/BannerAPI";
 import HomeReview from "./Review/HomeReview";
 import ReactPaginate from "react-paginate";
 import ProductItem from "../../../components/ProductItem/ProductItem";
 import BranchStock from "../../../api/BranchStockAPI";
+import { useNavigate } from "react-router-dom";
 function Home() {
   const [arrayProducts, setArrayProducts] = useState([]);
   const [banner, setBanner] = useState([]);
   const [totalPages, setTotalPages] = useState(0);
   const [page, setPage] = useState(1);
+  const navigate = useNavigate();
 
   const handlePageClick = (data) => {
     setPage(data.selected + 1);
@@ -55,9 +57,8 @@ function Home() {
           {banner.map((banner, index) => (
             <Carousel.Item
               key={index}
-              onClick={(event) => {
-                window.location.href = banner.url;
-                event.preventDefault();
+              onClick={() => {
+                navigate(banner.url);
               }}
             >
               <img
@@ -71,12 +72,14 @@ function Home() {
                 }}
               />
               <Carousel.Caption className="text-white p-4">
-                <h3 style={{
-                  backgroundColor: "rgba(0, 0, 0, 0.3)",
-                  display: "inline-block",
-                  padding: "5px 10px",
-                  borderRadius: "5px",
-                }}>
+                <h3
+                  style={{
+                    backgroundColor: "rgba(0, 0, 0, 0.3)",
+                    display: "inline-block",
+                    padding: "5px 10px",
+                    borderRadius: "5px",
+                  }}
+                >
                   {banner.title}
                 </h3>
               </Carousel.Caption>
@@ -85,7 +88,12 @@ function Home() {
         </Carousel>
 
         {/* Home Discount */}
-        <HomeDiscount />
+        {/* <HomeDiscount /> */}
+        {/* <Button variant="success">
+          <Link to="/discounts" className="text-white text-decoration-none">
+            Săn mã giảm giá
+          </Link>
+        </Button> */}
 
         {/* Title for new products */}
         <h1
