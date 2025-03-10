@@ -31,6 +31,7 @@ import ManageBanner from "./pages/Admin/Banner/ManageBanner";
 import ManageCategory from "./pages/Admin/Category/MangeCategory";
 import ManageColor from "./pages/Admin/Color/ManageColor";
 import ManageBranch from "./pages/Admin/Branch/ManageBranch";
+import DiscountPage from "./pages/User/DiscountPage/DiscountPage";
 
 function App() {
   return (
@@ -45,6 +46,7 @@ function App() {
             <Route path="order" element={<Order />} />
             <Route path="order/:orderId" element={<OrderDetail />} />
             <Route path="search" element={<Search />} />
+            <Route path="discount" element={<DiscountPage />} />
             <Route
               path="user-profile"
               element={<UserProfile initialSection="profile" />}

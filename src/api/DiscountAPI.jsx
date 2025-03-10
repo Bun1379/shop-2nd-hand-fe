@@ -16,9 +16,9 @@ class DiscountAPI {
     return axiosPrivate.post(url, data);
   }
 
-  static async getAllValidDiscount(data) {
+  static async getAllValidDiscount(params = {}) {
     const url = "/discount/all";
-    return axiosClient.get(url, data);
+    return axiosClient.get(url, { params });
   }
 }
 
