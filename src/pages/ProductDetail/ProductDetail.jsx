@@ -13,7 +13,6 @@ import RecentlyViewedProducts from "../../components/RecentlyView/RecentlyView";
 import UserAPI from "../../api/UserAPI";
 import { updateQuantityCart } from "../../components/Header/Header";
 import ReactPaginate from "react-paginate";
-import BranchStock from "../../api/BranchStockAPI";
 
 const ProductDetail = () => {
   const navigate = useNavigate();
@@ -24,7 +23,6 @@ const ProductDetail = () => {
   const [reviews, setReviews] = useState([]);
   const [favouriteText, setFavouriteText] = useState("Yêu thích");
   const [outOfStock, setOutOfStock] = useState(false);
-  const [branchStock, setBranchStock] = useState([]);
 
   const optionConditions = [
     {
@@ -152,22 +150,11 @@ const ProductDetail = () => {
     }
   };
 
-  const fetchBranchStock = async () => {
-    const response = await BranchStock.getBranchStockWithProduct(product._id);
-    if (response.status === 200) {
-      console.log(response.data.DT);
-      setBranchStock(response.data.DT);
-    } else {
-      toast.error(response.data.EM);
-    }
-  };
-
   useEffect(() => {
     fetchReviews();
     setMainImage(product.images[0]);
     fetchFavourite();
     setQuantity(1);
-    fetchBranchStock();
   }, [product]);
 
   useEffect(() => {
@@ -253,91 +240,91 @@ const ProductDetail = () => {
             {product.size}
           </p>
 
-          <p className="mt-3 product-quantity">
-            <span className="fw-bold">Sản phẩm hiện có:</span>{" "}
-            <div className="border p-2 rounded bg-light mt-3" style={{ maxHeight: "150px", overflowY: "auto" }}>
-              {/* Tiêu đề */}
-              <div className="d-flex justify-content-between fw-bold border-bottom pb-1">
-                <span>Chi nhánh</span>
-                <span>Số lượng</span>
+          {product.stock && product.stock.length > 0 ? (
+            <>
+              <p className="mt-3 product-quantity">
+                <span className="fw-bold">Sản phẩm hiện có:</span>{" "}
+                <div className="border p-2 rounded bg-light mt-3" style={{ maxHeight: "150px", overflowY: "auto" }}>
+                  {/* Tiêu đề */}
+                  <div className="d-flex justify-content-between fw-bold border-bottom pb-1">
+                    <span>Chi nhánh</span>
+                    <span>Số lượng</span>
+                  </div>
+                  {/* Danh sách chi nhánh */}
+                  <ul className="list-unstyled mb-0">
+                    {product.stock?.map((item, index) => (
+                      <li key={index} className="d-flex justify-content-between border-bottom py-1">
+                        <span>{item.branch.address}</span>
+                        {item.quantity > 0 ?
+                          <span className="fw-bold">{item.quantity}</span> :
+                          <span className="text-danger">Hết hàng</span>
+                        }
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </p>
+
+              <div className="product-actions mt-4">
+                <Row className="align-items-center justify-content-start">
+                  {/* Số lượng */}
+                  <Col xs="auto">
+                    <Button
+                      variant="outline-secondary"
+                      onClick={handleDecrease}
+                      className="action-btn"
+                      disabled={quantity <= 1}
+                    >
+                      <FaMinus />
+                    </Button>
+                  </Col>
+                  <Col xs="auto">
+                    <Form.Control
+                      type="number"
+                      id="quantity"
+                      value={quantity}
+                      onChange={handleQuantityChange}
+                      min="1"
+                      className="quantity-input text-center"
+                      style={{ width: "80px", maxWidth: "80px" }} // Ensure the input size is fixed
+                    />
+                  </Col>
+                  <Col xs="auto">
+                    <Button
+                      variant="outline-secondary"
+                      onClick={handleIncrease}
+                      className="action-btn"
+                      disabled={quantity >= product.quantity}
+                    >
+                      <FaPlus />
+                    </Button>
+                  </Col>
+                </Row>
+
+                {/* Thêm vào yêu thích */}
+                <div className="mt-3">
+                  <Button
+                    variant="danger"
+                    className="d-flex align-items-center gap-2"
+                    onClick={() => handleFavourite(product._id)}
+                  >
+                    {favouriteText}
+                    <FaHeart color="white" />
+                  </Button>
+                </div>
+                <div className="mt-3 d-flex gap-1">
+                  <Button variant="success" onClick={handleAddToCart}>
+                    Thêm vào giỏ hàng
+                  </Button>
+                  <Button variant="warning" onClick={handleBuyNow}>
+                    Mua ngay
+                  </Button>
+                </div>
               </div>
-              {/* Danh sách chi nhánh */}
-              <ul className="list-unstyled mb-0">
-                {branchStock.map((item, index) => (
-                  <li key={index} className="d-flex justify-content-between border-bottom py-1">
-                    <span>{item.branch.address}</span>
-                    {item.quantity > 0 ?
-                      <span className="fw-bold">{item.quantity}</span> :
-                      <span className="text-danger">Hết hàng</span>
-                    }
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </p>
-
-
-          {/* Lựa chọn số lượng và thêm vào giỏ hàng */}
-          <div className="product-actions mt-4">
-            <Row className="align-items-center justify-content-start">
-              {/* Số lượng */}
-              <Col xs="auto">
-                <Button
-                  variant="outline-secondary"
-                  onClick={handleDecrease}
-                  className="action-btn"
-                  disabled={quantity <= 1}
-                >
-                  <FaMinus />
-                </Button>
-              </Col>
-              <Col xs="auto">
-                <Form.Control
-                  type="number"
-                  id="quantity"
-                  value={quantity}
-                  onChange={handleQuantityChange}
-                  min="1"
-                  className="quantity-input text-center"
-                  style={{ width: "80px", maxWidth: "80px" }} // Ensure the input size is fixed
-                />
-              </Col>
-              <Col xs="auto">
-                <Button
-                  variant="outline-secondary"
-                  onClick={handleIncrease}
-                  className="action-btn"
-                  disabled={quantity >= product.quantity}
-                >
-                  <FaPlus />
-                </Button>
-              </Col>
-            </Row>
-
-            {/* Thêm vào yêu thích */}
-            <div className="mt-3">
-              <Button
-                variant="danger"
-                className="d-flex align-items-center gap-2"
-                onClick={() => handleFavourite(product._id)}
-              >
-                {favouriteText}
-                <FaHeart color="white" />
-              </Button>
-            </div>
-            {outOfStock ? (
-              <p className="text-danger mt-3">Sản phẩm đã hết hàng</p>
-            ) : (
-              <div className="mt-3 d-flex gap-1">
-                <Button variant="success" onClick={handleAddToCart}>
-                  Thêm vào giỏ hàng
-                </Button>
-                <Button variant="warning" onClick={handleBuyNow}>
-                  Mua ngay
-                </Button>
-              </div>
-            )}
-          </div>
+            </>
+          ) : (
+            <p className="text-danger mt-3">Sản phẩm đã hết hàng</p>
+          )}
         </Col>
       </Row>
 

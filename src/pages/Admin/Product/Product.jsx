@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import ModalAddProduct from "./ModalAddProduct";
 import ProductAPI from "../../../api/ProductAPI";
 import BranchAPI from "../../../api/BranchAPI";
-import BranchStockAPI from "../../../api/BranchStockAPI";
 import ProductTable from "./ProductTable";
 import { Accordion } from "react-bootstrap";
 import ModalUpdateProduct from "./ModalUpdateProduct";
@@ -20,12 +19,12 @@ const Product = () => {
   const [selectedOptionStock, setSelectedOptionStock] = useState(null);
   const [selectedSortPrice, setSelectedSortPrice] = useState(null);
   const [search, setSearch] = useState("");
-
   const [selectedBranch, setSelectedBranch] = useState(null); // Lưu chi nhánh được chọn
   const [branches, setBranches] = useState([]); // Lưu danh sách chi nhánh;
   const user = JSON.parse(localStorage.getItem("user"));
 
   //BranchStock
+  //begin
   const [showDistribution, setShowDistribution] = useState(false);
   const handleDistribution = (product) => {
     setProduct(product);
@@ -33,9 +32,10 @@ const Product = () => {
   };
   const [showBranchStock, setShowBranchStock] = useState(false);
   const handleShowBranchStockOfProduct = (product) => {
-    setProduct(product.product);
+    setProduct(product);
     setShowBranchStock(true);
   };
+  //end
 
   const optionsStock = [
     { value: 0, label: "Hết hàng" },
@@ -43,7 +43,7 @@ const Product = () => {
     { value: 2, label: "Còn hàng" },
   ];
 
-  const optionsSortPrice = [
+  const optionsPrice = [
     { value: 1, label: "Giá thấp → cao" },
     { value: 2, label: "Giá cao → thấp" },
   ];
@@ -54,8 +54,8 @@ const Product = () => {
       BranchAPI.getAllBranches().then((res) => {
         if (res.status === 200) {
           const allBranches = res.data.DT.map(branch => ({ value: branch._id, label: branch.name }));
-          setBranches(allBranches);
-          setSelectedBranch(allBranches[0]);
+          setBranches([{ value: 0, label: "Kho chính" }, ...allBranches]);
+          setSelectedBranch({ value: 0, label: "Kho chính" });
         }
       });
     } else if (Array.isArray(user.branch) && user.branch.length > 0) {
@@ -67,52 +67,20 @@ const Product = () => {
 
   const fetchDataProduct = async () => {
     try {
-      if (!selectedBranch) return; // Đảm bảo có chi nhánh được chọn
-      const res = await BranchStockAPI.getBranchStocksWithBranch(selectedBranch.value);
+      const res = await ProductAPI.GetProducts({
+        page,
+        search,
+        sortOrder: selectedSortPrice?.value,
+        selectedOptionStock: selectedOptionStock?.value,
+      });
       if (res.status === 200) {
-        let filteredProducts = res.data.DT;
-
-        // Lọc theo tên sản phẩm
-        if (search) {
-          filteredProducts = filteredProducts.filter(product =>
-            product.product.productName.toLowerCase().includes(search.toLowerCase())
-          );
-        }
-
-        // Lọc theo tình trạng hàng
-        if (selectedOptionStock) {
-          filteredProducts = filteredProducts.filter(product => {
-            if (selectedOptionStock.value === 0) return product.quantity === 0;
-            if (selectedOptionStock.value === 1) return product.quantity > 0 && product.quantity < 10;
-            if (selectedOptionStock.value === 2) return product.quantity >= 10;
-            return true;
-          });
-        }
-
-        // Sắp xếp theo giá
-        if (selectedSortPrice) {
-          filteredProducts.sort((a, b) => {
-            if (selectedSortPrice.value === 1) return a.product.price - b.product.price;
-            if (selectedSortPrice.value === 2) return b.product.price - a.product.price;
-            return 0;
-          });
-        }
-
-        // Phân trang
-        const itemsPerPage = 10;
-        setTotalPages(Math.ceil(filteredProducts.length / itemsPerPage));
-        setProducts(filteredProducts.slice((page - 1) * itemsPerPage, page * itemsPerPage));
+        setProducts(res.data.DT.products);
+        setTotalPages(res.data.DT.totalPages);
       }
     } catch (err) {
-      console.log(err);
+      console.log(err.response.data.EM);
     }
   };
-
-  // Gọi lại API khi các giá trị thay đổi
-  useEffect(() => {
-    fetchDataProduct();
-  }, [selectedBranch, search, selectedOptionStock, selectedSortPrice, page]);
-
 
   const handleClickUpdate = async (product) => {
     try {
@@ -134,6 +102,10 @@ const Product = () => {
     fetchDataProduct();
   };
 
+  useEffect(() => {
+    fetchDataProduct();
+  }, [page, showAddProduct, showUpdateProduct, showDistribution, showBranchStock]);
+
   return (
     <div className="p-4">
       <h1>Quản lý sản phẩm</h1>
@@ -145,10 +117,18 @@ const Product = () => {
           Thêm sản phẩm
         </button>
       )}
+      <Select
+        options={branches}
+        className="w-100 mt-2"
+        value={selectedBranch}
+        onChange={setSelectedBranch}
+      />
+
       <Accordion className="my-2">
         <Accordion.Item eventKey="0">
           <Accordion.Header>Lọc tìm kiếm</Accordion.Header>
           <Accordion.Body>
+            {/* Nhập số lượng, giá */}
             <div className="d-flex flex-row gap-3 my-2">
               <input
                 type="text"
@@ -165,18 +145,13 @@ const Product = () => {
                 onChange={setSelectedOptionStock}
               />
               <Select
-                options={optionsSortPrice}
-                placeholder="Sắp xếp theo giá"
+                options={optionsPrice}
+                placeholder="Chọn mức giá"
                 className="w-50"
                 value={selectedSortPrice}
                 onChange={setSelectedSortPrice}
               />
-              <Select
-                options={branches}
-                className="w-50"
-                value={selectedBranch}
-                onChange={setSelectedBranch}
-              />
+
             </div>
             <div className="d-flex justify-content-end gap-2 mt-2">
               <button className="btn btn-primary" onClick={onClickSearch}>
@@ -197,6 +172,7 @@ const Product = () => {
         handleClickUpdate={handleClickUpdate}
         handleDistribution={handleDistribution}
         handleShowBranchStockOfProduct={handleShowBranchStockOfProduct}
+        selectedBranch={selectedBranch}
       />
       <ModalAddProduct
         showAdd={showAddProduct}

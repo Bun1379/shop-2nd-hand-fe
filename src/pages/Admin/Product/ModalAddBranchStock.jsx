@@ -16,7 +16,7 @@ const ModalAddBranchStock = ({ show, setShow, selectedProduct }) => {
         setListBranch(
           res.data.DT.map((branch) => ({
             value: branch._id,
-            label: branch.address,
+            label: branch.name,
           }))
         );
       }
