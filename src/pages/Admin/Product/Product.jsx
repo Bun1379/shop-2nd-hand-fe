@@ -33,7 +33,7 @@ const Product = () => {
   };
   const [showBranchStock, setShowBranchStock] = useState(false);
   const handleShowBranchStockOfProduct = (product) => {
-    setProduct(product.product);
+    setProduct(product);
     setShowBranchStock(true);
   };
 
@@ -54,8 +54,8 @@ const Product = () => {
       BranchAPI.getAllBranches().then((res) => {
         if (res.status === 200) {
           const allBranches = res.data.DT.map(branch => ({ value: branch._id, label: branch.name }));
-          setBranches(allBranches);
-          setSelectedBranch(allBranches[0]);
+          setBranches([{ value: 0, label: 'Kho chính' }, ...allBranches]);
+          setSelectedBranch({ value: 0, label: "Kho chính" });
         }
       });
     } else if (Array.isArray(user.branch) && user.branch.length > 0) {
@@ -67,44 +67,18 @@ const Product = () => {
 
   const fetchDataProduct = async () => {
     try {
-      if (!selectedBranch) return; // Đảm bảo có chi nhánh được chọn
-      const res = await BranchStockAPI.getBranchStocksWithBranch(selectedBranch.value);
+      const res = await ProductAPI.GetProducts({
+        page,
+        search,
+        selectedOptionPrice: selectedSortPrice?.value,
+        selectedOptionStock: selectedOptionStock?.value,
+      });
       if (res.status === 200) {
-        let filteredProducts = res.data.DT;
-
-        // Lọc theo tên sản phẩm
-        if (search) {
-          filteredProducts = filteredProducts.filter(product =>
-            product.product.productName.toLowerCase().includes(search.toLowerCase())
-          );
-        }
-
-        // Lọc theo tình trạng hàng
-        if (selectedOptionStock) {
-          filteredProducts = filteredProducts.filter(product => {
-            if (selectedOptionStock.value === 0) return product.quantity === 0;
-            if (selectedOptionStock.value === 1) return product.quantity > 0 && product.quantity < 10;
-            if (selectedOptionStock.value === 2) return product.quantity >= 10;
-            return true;
-          });
-        }
-
-        // Sắp xếp theo giá
-        if (selectedSortPrice) {
-          filteredProducts.sort((a, b) => {
-            if (selectedSortPrice.value === 1) return a.product.price - b.product.price;
-            if (selectedSortPrice.value === 2) return b.product.price - a.product.price;
-            return 0;
-          });
-        }
-
-        // Phân trang
-        const itemsPerPage = 10;
-        setTotalPages(Math.ceil(filteredProducts.length / itemsPerPage));
-        setProducts(filteredProducts.slice((page - 1) * itemsPerPage, page * itemsPerPage));
+        setProducts(res.data.DT.products);
+        setTotalPages(res.data.DT.totalPages);
       }
     } catch (err) {
-      console.log(err);
+      console.log(err.response.data.EM);
     }
   };
 
@@ -145,6 +119,12 @@ const Product = () => {
           Thêm sản phẩm
         </button>
       )}
+      <Select
+        options={branches}
+        className="w-100 mt-2"
+        value={selectedBranch}
+        onChange={setSelectedBranch}
+      />
       <Accordion className="my-2">
         <Accordion.Item eventKey="0">
           <Accordion.Header>Lọc tìm kiếm</Accordion.Header>
@@ -171,12 +151,7 @@ const Product = () => {
                 value={selectedSortPrice}
                 onChange={setSelectedSortPrice}
               />
-              <Select
-                options={branches}
-                className="w-50"
-                value={selectedBranch}
-                onChange={setSelectedBranch}
-              />
+
             </div>
             <div className="d-flex justify-content-end gap-2 mt-2">
               <button className="btn btn-primary" onClick={onClickSearch}>

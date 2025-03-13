@@ -13,7 +13,7 @@ const ProductTable = ({
   const handlePageClick = (data) => {
     setPage(data.selected + 1);
   };
-  const user = localStorage.getItem("user");
+  const user = JSON.parse(localStorage.getItem("user"));
   return (
     <div>
       {" "}
@@ -33,7 +33,7 @@ const ProductTable = ({
             products.length > 0 &&
             products.map((product) => (
               <tr
-                key={product.product._id}
+                key={product._id}
                 className={`${product.quantity === 0
                   ? "table-danger"
                   : product.quantity < 10
@@ -42,18 +42,26 @@ const ProductTable = ({
                   }`}
               >
                 <td>{product._id}</td>
-                <td>{product.product.productName}</td>
+                <td>{product.productName}</td>
                 <td>{product.quantity}</td>
-                <td>{product.product.original_price.toLocaleString("vi-VN")} đ</td>
-                <td>{product.product.price.toLocaleString("vi-VN")} đ</td>
+                <td>{product.original_price.toLocaleString("vi-VN")} đ</td>
+                <td>{product.price.toLocaleString("vi-VN")} đ</td>
                 <td className="d-flex gap-3">
-                  {user.isAdmin === "true" && (
-                    <button
-                      className="btn btn-primary"
-                      onClick={() => handleClickUpdate(product)}
-                    >
-                      Sửa
-                    </button>
+                  {user.is_admin && (
+                    <>
+                      <button
+                        className="btn btn-primary"
+                        onClick={() => handleClickUpdate(product)}
+                      >
+                        Sửa
+                      </button>
+                      <button
+                        className="btn btn-primary"
+                        onClick={() => handleDistribution(product)}
+                      >
+                        Phân phối
+                      </button>
+                    </>
                   )}
                   <button
                     className="btn btn-primary"
