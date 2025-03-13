@@ -9,12 +9,11 @@ const ProductTable = ({
   handleClickUpdate,
   handleDistribution,
   handleShowBranchStockOfProduct,
-  selectedBranch,
 }) => {
   const handlePageClick = (data) => {
     setPage(data.selected + 1);
   };
-  const user = JSON.parse(localStorage.getItem("user"));
+  const user = localStorage.getItem("user");
   return (
     <div>
       {" "}
@@ -26,55 +25,35 @@ const ProductTable = ({
             <th>Số lượng</th>
             <th>Giá gốc</th>
             <th>Giá bán</th>
-            <th>Hành động</th>
+            <th>Action</th>
           </tr>
         </thead>
         <tbody>
           {products &&
             products.length > 0 &&
             products.map((product) => (
-
               <tr
-                key={product._id}
-                className={`${(selectedBranch.value !== 0
-                  ? product.stock.find((stock) => stock.branch._id === selectedBranch.value)?.quantity
-                  : product.quantity) === 0
+                key={product.product._id}
+                className={`${product.quantity === 0
                   ? "table-danger"
-                  : (selectedBranch.value !== 0
-                    ? product.stock.find((stock) => stock.branch._id === selectedBranch.value)?.quantity
-                    : product.quantity) < 10
+                  : product.quantity < 10
                     ? "table-warning"
                     : ""
                   }`}
               >
-
                 <td>{product._id}</td>
-                <td>{product.productName}</td>
-                <td>
-                  {selectedBranch.value !== 0
-                    ? product.stock.find(
-                      (stock) => stock.branch._id === selectedBranch.value
-                    )?.quantity || 0
-                    : product.quantity}
-                </td>
-                <td>{product.original_price.toLocaleString("vi-VN")} đ</td>
-                <td>{product.price.toLocaleString("vi-VN")} đ</td>
+                <td>{product.product.productName}</td>
+                <td>{product.quantity}</td>
+                <td>{product.product.original_price.toLocaleString("vi-VN")} đ</td>
+                <td>{product.product.price.toLocaleString("vi-VN")} đ</td>
                 <td className="d-flex gap-3">
-                  {user.is_admin && (
-                    <>
-                      <button
-                        className="btn btn-primary"
-                        onClick={() => handleClickUpdate(product)}
-                      >
-                        Sửa
-                      </button>
-                      <button
-                        className="btn btn-primary"
-                        onClick={() => handleDistribution(product)}
-                      >
-                        Phân phối
-                      </button>
-                    </>
+                  {user.isAdmin === "true" && (
+                    <button
+                      className="btn btn-primary"
+                      onClick={() => handleClickUpdate(product)}
+                    >
+                      Sửa
+                    </button>
                   )}
                   <button
                     className="btn btn-primary"
@@ -109,7 +88,7 @@ const ProductTable = ({
           activeClassName="active"
         />
       </div>
-    </div >
+    </div>
   );
 };
 export default ProductTable;
