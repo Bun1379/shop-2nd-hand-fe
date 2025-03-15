@@ -9,6 +9,7 @@ const ProductTable = ({
   handleClickUpdate,
   handleDistribution,
   handleShowBranchStockOfProduct,
+  branch,
 }) => {
   const handlePageClick = (data) => {
     setPage(data.selected + 1);
@@ -34,17 +35,28 @@ const ProductTable = ({
             products.map((product) => (
               <tr
                 key={product._id}
-                className={`${product.quantity === 0
-                  ? "table-danger"
-                  : product.quantity < 10
+                className={`${
+                  branch && branch.value != 0
+                    ? product.stockInBranch === 0
+                      ? "table-danger"
+                      : product.stockInBranch < 10
+                      ? "table-warning"
+                      : ""
+                    : product.quantity === 0
+                    ? "table-danger"
+                    : product.quantity < 10
                     ? "table-warning"
                     : ""
-                  }`}
+                }`}
               >
                 <td>{product._id}</td>
                 <td>{product.productName}</td>
-                <td>{product.quantity}</td>
-                <td>{product.original_price.toLocaleString("vi-VN")} đ</td>
+                <td>
+                  {branch && branch.value != 0
+                    ? product.stockInBranch
+                    : product.quantity}
+                </td>
+                <td>{product?.original_price?.toLocaleString("vi-VN")} đ</td>
                 <td>{product.price.toLocaleString("vi-VN")} đ</td>
                 <td className="d-flex gap-3">
                   {user.is_admin && (

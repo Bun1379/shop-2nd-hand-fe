@@ -48,18 +48,23 @@ const Product = () => {
     { value: 2, label: "Giá cao → thấp" },
   ];
 
-
   useEffect(() => {
     if (user.is_admin === true) {
       BranchAPI.getAllBranches().then((res) => {
         if (res.status === 200) {
-          const allBranches = res.data.DT.map(branch => ({ value: branch._id, label: branch.name }));
-          setBranches([{ value: 0, label: 'Kho chính' }, ...allBranches]);
+          const allBranches = res.data.DT.map((branch) => ({
+            value: branch._id,
+            label: branch.name,
+          }));
+          setBranches([{ value: 0, label: "Kho chính" }, ...allBranches]);
           setSelectedBranch({ value: 0, label: "Kho chính" });
         }
       });
     } else if (Array.isArray(user.branch) && user.branch.length > 0) {
-      const userBranches = user.branch.map(branch => ({ value: branch._id, label: branch.name }));
+      const userBranches = user.branch.map((branch) => ({
+        value: branch._id,
+        label: branch.name,
+      }));
       setBranches(userBranches);
       setSelectedBranch(userBranches[0]);
     }
@@ -72,6 +77,7 @@ const Product = () => {
         search,
         selectedOptionPrice: selectedSortPrice?.value,
         selectedOptionStock: selectedOptionStock?.value,
+        selectedBranch: selectedBranch?.value,
       });
       if (res.status === 200) {
         setProducts(res.data.DT.products);
@@ -81,12 +87,6 @@ const Product = () => {
       console.log(err.response.data.EM);
     }
   };
-
-  // Gọi lại API khi các giá trị thay đổi
-  useEffect(() => {
-    fetchDataProduct();
-  }, [selectedBranch, search, selectedOptionStock, selectedSortPrice, page]);
-
 
   const handleClickUpdate = async (product) => {
     try {
@@ -107,6 +107,19 @@ const Product = () => {
     if (page !== 1) setPage(1);
     fetchDataProduct();
   };
+
+  // Gọi lại API khi các giá trị thay đổi
+  useEffect(() => {
+    fetchDataProduct();
+  }, [
+    selectedBranch,
+    search,
+    selectedOptionStock,
+    selectedSortPrice,
+    page,
+    showAddProduct,
+    showUpdateProduct,
+  ]);
 
   return (
     <div className="p-4">
@@ -151,7 +164,6 @@ const Product = () => {
                 value={selectedSortPrice}
                 onChange={setSelectedSortPrice}
               />
-
             </div>
             <div className="d-flex justify-content-end gap-2 mt-2">
               <button className="btn btn-primary" onClick={onClickSearch}>
@@ -172,6 +184,7 @@ const Product = () => {
         handleClickUpdate={handleClickUpdate}
         handleDistribution={handleDistribution}
         handleShowBranchStockOfProduct={handleShowBranchStockOfProduct}
+        branch={selectedBranch}
       />
       <ModalAddProduct
         showAdd={showAddProduct}
@@ -181,6 +194,7 @@ const Product = () => {
         showUpdate={showUpdateProduct}
         setShowUpdate={setShowUpdateProduct}
         product={product}
+        setProduct={setProduct}
       />
       <ModalAddBranchStock
         selectedProduct={product}
