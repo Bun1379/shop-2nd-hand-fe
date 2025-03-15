@@ -6,8 +6,9 @@ const BranchTable = ({ branches, handleEditBranch }) => {
       <thead>
         <tr>
           <th>Mã chi nhánh</th>
+          <th>Tên chi nhánh</th>
           <th>Địa chỉ</th>
-          <th>Action</th>
+          <th>Hành động</th>
         </tr>
       </thead>
       <tbody>
@@ -16,6 +17,7 @@ const BranchTable = ({ branches, handleEditBranch }) => {
           branches.map((branch) => (
             <tr key={branch._id}>
               <td>{branch._id}</td>
+              <td>{branch.name}</td>
               <td>{branch.address}</td>
               <td className="d-flex gap-3">
                 <button

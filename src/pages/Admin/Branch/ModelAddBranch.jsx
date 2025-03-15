@@ -12,7 +12,6 @@ const ModelAddBranch = ({ show, setShow, selectedBranch, fetchDataBranch }) => {
   const [locations, setLocations] = useState([]);
   const [districts, setDistricts] = useState([]);
   const [wards, setWards] = useState([]);
-
   useEffect(() => {
     setLocations(DGHC);
   }, []);
@@ -63,10 +62,12 @@ const ModelAddBranch = ({ show, setShow, selectedBranch, fetchDataBranch }) => {
       let response;
       if (selectedBranch) {
         response = await BranchAPI.updateBranch(selectedBranch._id, {
+          name: formData.name,
           address: `${formData.address}, ${formData.ward}, ${formData.district}, ${formData.city}`,
         });
       } else {
         response = await BranchAPI.addBranch({
+          name: formData.name,
           address: `${formData.address}, ${formData.ward}, ${formData.district}, ${formData.city}`,
         });
       }
@@ -98,6 +99,19 @@ const ModelAddBranch = ({ show, setShow, selectedBranch, fetchDataBranch }) => {
       </Modal.Header>
       <Modal.Body>
         <Form>
+          <div className="form-group mt-2">
+            <label>Tên chi nhánh</label>
+            <input
+              type="text"
+              name="name"
+              className="form-control"
+              value={formData.name}
+              onChange={(e) =>
+                setFormData({ ...formData, name: e.target.value })
+              }
+              required
+            />
+          </div>
           <div className="row mt-2">
             <div className="col-4">
               <label>Thành phố</label>

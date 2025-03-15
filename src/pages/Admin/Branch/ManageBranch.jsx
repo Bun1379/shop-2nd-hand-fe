@@ -34,7 +34,7 @@ const ManageBranch = () => {
     <div className="p-4">
       <h1>Quản lý chi nhánh</h1>
       <hr />
-      <button className="btn btn-primary" onClick={handleAddBranch}>
+      <button className="btn btn-primary mb-3" onClick={handleAddBranch}>
         Thêm chi nhánh
       </button>
       {loading && (
