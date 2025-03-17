@@ -29,6 +29,10 @@ class BranchStockAPI {
   static async getBranchStockWithProduct(productId) {
     return axiosClient.get("/branch-stock/product/" + productId);
   }
+
+  static async createBranchStockRequest(data) {
+    return axiosPrivate.post("/branch-stock/request", data);
+  }
 }
 
 export default BranchStockAPI;

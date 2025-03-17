@@ -150,7 +150,7 @@ const ModalAddBranchStock = ({
       </Modal.Header>
       <Modal.Body>
         <Form>
-          <Table bordered className="text-center">
+          <Table striped bordered hover className="text-center" >
             <thead>
               <tr>
                 <th>Chi nhánh</th>
@@ -167,8 +167,8 @@ const ModalAddBranchStock = ({
                     {branch._id === "main"
                       ? selectedProduct?.quantity
                       : dataEachBranch.find(
-                          (item) => item.branch._id === branch._id
-                        )?.quantity || 0}
+                        (item) => item.branch._id === branch._id
+                      )?.quantity || 0}
                   </td>
                   <td>
                     <Form.Control

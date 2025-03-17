@@ -1,5 +1,6 @@
 import { Table } from "react-bootstrap";
 import ReactPaginate from "react-paginate";
+import { toast } from "react-toastify";
 
 const ProductTable = ({
   products,
@@ -10,11 +11,25 @@ const ProductTable = ({
   handleDistribution,
   handleShowBranchStockOfProduct,
   branch,
+  setRequestList,
+  requestList,
 }) => {
+  const user = JSON.parse(localStorage.getItem("user"));
+
   const handlePageClick = (data) => {
     setPage(data.selected + 1);
   };
-  const user = JSON.parse(localStorage.getItem("user"));
+
+  const addToRequest = (product) => {
+    if (!requestList.find((item) => item._id === product._id)) {
+      setRequestList([...requestList, product]);
+      toast.success("Sản phẩm đã được thêm vào danh sách nhập hàng");
+    }
+    else {
+      toast.info("Sản phẩm đã được thêm vào danh sách nhập hàng");
+    }
+  };
+
   return (
     <div>
       {" "}
@@ -26,7 +41,7 @@ const ProductTable = ({
             <th>Số lượng</th>
             <th>Giá gốc</th>
             <th>Giá bán</th>
-            <th>Action</th>
+            <th>Hành động</th>
           </tr>
         </thead>
         <tbody>
@@ -35,19 +50,18 @@ const ProductTable = ({
             products.map((product) => (
               <tr
                 key={product._id}
-                className={`${
-                  branch && branch.value != 0
-                    ? product.stockInBranch === 0
-                      ? "table-danger"
-                      : product.stockInBranch < 10
+                className={`${branch && branch.value != 0
+                  ? product.stockInBranch === 0
+                    ? "table-danger"
+                    : product.stockInBranch < 10
                       ? "table-warning"
                       : ""
-                    : product.quantity === 0
+                  : product.quantity === 0
                     ? "table-danger"
                     : product.quantity < 10
-                    ? "table-warning"
-                    : ""
-                }`}
+                      ? "table-warning"
+                      : ""
+                  }`}
               >
                 <td>{product._id}</td>
                 <td>{product.productName}</td>
@@ -81,6 +95,15 @@ const ProductTable = ({
                   >
                     Xem kho
                   </button>
+                  {user.branch.length > 0 && (
+                    <button
+                      className="btn btn-warning"
+                      onClick={() => addToRequest(product)}
+                    >
+                      Yêu cầu nhập hàng
+                    </button>
+                  )}
+
                 </td>
               </tr>
             ))}

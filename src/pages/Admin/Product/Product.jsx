@@ -9,6 +9,7 @@ import ModalUpdateProduct from "./ModalUpdateProduct";
 import Select from "react-select";
 import ModalAddBranchStock from "./ModalAddBranchStock";
 import ModalShowBranchDistribution from "./ModalShowBranchDistribution";
+import ModalRequestStock from "./ModalRequestStock";
 
 const Product = () => {
   const [showAddProduct, setShowAddProduct] = useState(false);
@@ -20,6 +21,12 @@ const Product = () => {
   const [selectedOptionStock, setSelectedOptionStock] = useState(null);
   const [selectedSortPrice, setSelectedSortPrice] = useState(null);
   const [search, setSearch] = useState("");
+
+
+  //RequestStock
+  const [showModalRequest, setShowModalRequest] = useState(false);
+  const [requestList, setRequestList] = useState([]);
+
 
   const [selectedBranch, setSelectedBranch] = useState(null); // Lưu chi nhánh được chọn
   const [branches, setBranches] = useState([]); // Lưu danh sách chi nhánh;
@@ -120,7 +127,6 @@ const Product = () => {
     showAddProduct,
     showUpdateProduct,
   ]);
-
   return (
     <div className="p-4">
       <h1>Quản lý sản phẩm</h1>
@@ -132,9 +138,19 @@ const Product = () => {
           Thêm sản phẩm
         </button>
       )}
+      {
+        user.branch.length > 0 && (
+          <button
+            className="btn btn-primary"
+            onClick={() => setShowModalRequest(true)}
+          >
+            Tạo yêu cầu nhập hàng
+          </button>
+        )
+      }
       <Select
         options={branches}
-        className="w-100 mt-2"
+        className="w-100 mt-2 "
         value={selectedBranch}
         onChange={setSelectedBranch}
       />
@@ -185,7 +201,10 @@ const Product = () => {
         handleDistribution={handleDistribution}
         handleShowBranchStockOfProduct={handleShowBranchStockOfProduct}
         branch={selectedBranch}
+        setRequestList={setRequestList}
+        requestList={requestList}
       />
+
       <ModalAddProduct
         showAdd={showAddProduct}
         setShowAdd={setShowAddProduct}
@@ -206,6 +225,12 @@ const Product = () => {
         show={showBranchStock}
         setShow={setShowBranchStock}
         selectedProduct={product}
+      />
+      <ModalRequestStock
+        showModalRequest={showModalRequest}
+        setShowModalRequest={setShowModalRequest}
+        requestList={requestList}
+        setRequestList={setRequestList}
       />
     </div>
   );
