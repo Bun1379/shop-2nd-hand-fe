@@ -75,22 +75,30 @@ const ModalAddBranchStock = ({
       );
       //preCheck
       for (const [branchId, updates] of sortedUpdates) {
-        if (branchId !== "main") {
-          const { decrease = 0 } = updates;
-
-          if (decrease > 0) {
+        const { increase = 0, decrease = 0 } = updates;
+        const quantity = increase - decrease;
+        if (branchId === "main") {
+          if (quantity < 0) {
+            if (selectedProduct.quantity < quantity) {
+              toast.error("Kho chính không đủ hàng để xuất ra!");
+              return;
+            }
+          }
+        } else {
+          if (quantity < 0) {
             const res =
               await BranchStockAPI.getBranchStocksWithBranchAndProduct(
                 branchId,
                 selectedProduct._id
               );
-            if (!res.data.DT || res.data.DT.quantity < decrease) {
+            if (!res.data.DT || res.data.DT.quantity < quantity) {
               toast.error("Chi nhánh không đủ hàng để xuất ra!");
               return;
             }
           }
         }
       }
+      //
       for (const [branchId, updates] of sortedUpdates) {
         const { increase = 0, decrease = 0 } = updates;
         const quantity = increase - decrease;
