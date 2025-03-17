@@ -10,7 +10,6 @@ const ModalShowBranchDistribution = ({ show, setShow, selectedProduct }) => {
       const res = await BranchStockAPI.getBranchStockWithProduct(
         selectedProduct._id
       );
-      console.log(res);
       if (res.status === 200) {
         setListBranch(res.data.DT);
       }

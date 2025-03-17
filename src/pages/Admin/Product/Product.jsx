@@ -200,6 +200,7 @@ const Product = () => {
         selectedProduct={product}
         show={showDistribution}
         setShow={setShowDistribution}
+        fetchDataProduct={fetchDataProduct}
       />
       <ModalShowBranchDistribution
         show={showBranchStock}
