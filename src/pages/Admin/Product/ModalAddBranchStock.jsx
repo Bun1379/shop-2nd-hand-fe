@@ -79,7 +79,7 @@ const ModalAddBranchStock = ({
         const quantity = increase - decrease;
         if (branchId === "main") {
           if (quantity < 0) {
-            if (selectedProduct.quantity < quantity) {
+            if (selectedProduct.quantity < Math.abs(quantity)) {
               toast.error("Kho chính không đủ hàng để xuất ra!");
               return;
             }
@@ -91,7 +91,7 @@ const ModalAddBranchStock = ({
                 branchId,
                 selectedProduct._id
               );
-            if (!res.data.DT || res.data.DT.quantity < quantity) {
+            if (!res.data.DT || res.data.DT.quantity < Math.abs(quantity)) {
               toast.error("Chi nhánh không đủ hàng để xuất ra!");
               return;
             }
