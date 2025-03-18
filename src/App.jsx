@@ -32,6 +32,7 @@ import ManageCategory from "./pages/Admin/Category/MangeCategory";
 import ManageColor from "./pages/Admin/Color/ManageColor";
 import ManageBranch from "./pages/Admin/Branch/ManageBranch";
 import DiscountPage from "./pages/User/DiscountPage/DiscountPage";
+import ManageBranchStockRequest from "./pages/Admin/BranchStockRequest/ManageBranchStockRequest";
 
 function App() {
   return (
@@ -71,6 +72,10 @@ function App() {
             <Route path="category" element={<ManageCategory />} />
             <Route path="color" element={<ManageColor />} />
             <Route path="branch" element={<ManageBranch />} />
+            <Route
+              path="branch-stock-request"
+              element={<ManageBranchStockRequest />}
+            />
           </Route>
 
           <Route path="/payment/result" element={<PaymentResult />} />

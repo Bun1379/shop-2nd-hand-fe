@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { Button, Modal, Table, Form } from "react-bootstrap";
 import { toast } from "react-toastify";
+import BranchStockRequestAPI from "../../../api/BranchStockRequestAPI";
 
 const ModalRequestStock = ({
+    selectedBranch,
     requestList,
     setRequestList,
     showModalRequest,
@@ -16,8 +18,26 @@ const ModalRequestStock = ({
         toast.success("Sản phẩm đã được xóa khỏi danh sách nhập hàng");
     };
 
-    const submitRequest = () => {
-
+    const submitRequest = async () => {
+        if (requestList.length === 0) {
+            toast.error("Danh sách yêu cầu nhập hàng đang trống");
+            return;
+        }
+        try {
+            const data = {
+                branch: selectedBranch.value,
+                products: requestList.map((item) => item._id)
+            }
+            const res = await BranchStockRequestAPI.createBranchStockRequest(data);
+            if (res.status === 200) {
+                toast.success("Yêu cầu nhập hàng đã được gửi");
+                setRequestList([]);
+                setShowModalRequest(false);
+            }
+        } catch (error) {
+            console.log(error);
+            toast.error("Gửi yêu cầu nhập hàng thất bại");
+        }
     };
 
     return (

@@ -227,6 +227,7 @@ const Product = () => {
         selectedProduct={product}
       />
       <ModalRequestStock
+        selectedBranch={selectedBranch}
         showModalRequest={showModalRequest}
         setShowModalRequest={setShowModalRequest}
         requestList={requestList}
