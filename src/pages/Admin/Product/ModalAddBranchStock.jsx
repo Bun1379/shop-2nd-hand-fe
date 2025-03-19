@@ -24,11 +24,10 @@ const ModalAddBranchStock = ({
       },
     }));
   };
-
   const fetchDataAtEachBranch = async () => {
     try {
       const res = await BranchStockAPI.getBranchStockWithProduct(
-        selectedProduct._id
+        selectedProduct?._id
       );
       if (res.status === 200) {
         setDataEachBranch(res.data.DT);
@@ -79,7 +78,7 @@ const ModalAddBranchStock = ({
         const quantity = increase - decrease;
         if (branchId === "main") {
           if (quantity < 0) {
-            if (selectedProduct.quantity < Math.abs(quantity)) {
+            if (selectedProduct?.quantity < Math.abs(quantity)) {
               toast.error("Kho chính không đủ hàng để xuất ra!");
               return;
             }
@@ -89,7 +88,7 @@ const ModalAddBranchStock = ({
             const res =
               await BranchStockAPI.getBranchStocksWithBranchAndProduct(
                 branchId,
-                selectedProduct._id
+                selectedProduct?._id
               );
             if (!res.data.DT || res.data.DT.quantity < Math.abs(quantity)) {
               toast.error("Chi nhánh không đủ hàng để xuất ra!");
@@ -104,14 +103,14 @@ const ModalAddBranchStock = ({
         const quantity = increase - decrease;
         if (branchId === "main") {
           if (increase !== decrease) {
-            await ProductAPI.UpdateProduct(selectedProduct._id, {
-              quantity: selectedProduct.quantity + quantity,
+            await ProductAPI.UpdateProduct(selectedProduct?._id, {
+              quantity: selectedProduct?.quantity + quantity,
             });
           }
         } else if (increase !== decrease) {
           await BranchStockAPI.updateBranchStock(
             branchId,
-            selectedProduct._id,
+            selectedProduct?._id,
             {
               quantity: Math.abs(quantity),
               type: quantity > 0 ? "increase" : "decrease",
@@ -120,7 +119,8 @@ const ModalAddBranchStock = ({
         }
       }
       toast.success("Cập nhật kho thành công!");
-      fetchDataProduct();
+      if (fetchDataProduct !== undefined)
+        fetchDataProduct();
       setBranchStockUpdates({});
       setShow(false);
     } catch (err) {
@@ -140,11 +140,26 @@ const ModalAddBranchStock = ({
   }, []);
 
   useEffect(() => {
-    if (selectedProduct._id) fetchDataAtEachBranch();
+    if (selectedProduct?._id) fetchDataAtEachBranch();
   }, [show]);
 
   return (
-    <Modal show={show} onHide={handleClose} size="xl" centered>
+    <Modal
+      show={show}
+      onHide={handleClose}
+      size="xl"
+      centered
+      backdropClassName="modal-backdrop-dark"
+      style={{
+        backgroundColor: "rgba(0, 0, 0, 0.2)",
+        position: "fixed",
+        top: 0,
+        left: 0,
+        width: "100%",
+        height: "100%",
+        zIndex: 2000,
+      }}
+    >
       <Modal.Header closeButton>
         <Modal.Title>Phân phối sản phẩm tới chi nhánh</Modal.Title>
       </Modal.Header>
