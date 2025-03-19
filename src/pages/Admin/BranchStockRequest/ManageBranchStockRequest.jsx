@@ -22,14 +22,13 @@ const ManageBranchStockRequest = () => {
 
     const statusOptions = [
         { value: "pending", label: "Chờ duyệt" },
-        { value: "approved", label: "Đã duyệt" },
-        { value: "rejected", label: "Từ chối" },
+        { value: "confirmed", label: "Đang xử lý" },
+        { value: "approved", label: "Hoàn thành" },
     ];
 
     const productStatusOptions = [
         { value: "pending", label: "Chờ duyệt" },
         { value: "transferred", label: "Đã chuyển" },
-        { value: "not_available", label: "Chưa có hàng" },
     ];
 
     useEffect(() => {
@@ -71,9 +70,17 @@ const ManageBranchStockRequest = () => {
         fetchRequests();
     };
 
-    const handleReject = async (id) => {
-        toast.error("Từ chối yêu cầu thành công");
-        fetchRequests();
+    const handleChangeRequestStatus = async (status) => {
+        try {
+            const res = await BranchStockRequestAPI.updateBranchStockRequestStatus(id, status);
+            if (res.status === 200) {
+                toast.success("Thay đổi trạng thái thành công");
+                fetchRequests();
+            }
+        } catch (err) {
+            console.log(err);
+            toast.error("Thay đổi trạng thái thất bại");
+        }
     };
 
     const handleResetButton = () => {
@@ -152,34 +159,20 @@ const ManageBranchStockRequest = () => {
                                 })}`}
                             </td>
                             <td>
-                                <span
-                                    className={`badge ${req.status === "pending"
-                                        ? "bg-warning"
-                                        : req.status === "approved"
-                                            ? "bg-success"
-                                            : "bg-danger"
-                                        }`}
-                                >
-                                    {statusOptions.find((s) => s.value === req.status)?.label}
-                                </span>
+                                <Select
+                                    options={statusOptions.slice(0, 2)}
+                                    value={statusOptions.find((status) => status.value === req.status)}
+                                    onChange={(selected) => handleChangeRequestStatus(selected.value)}
+                                    isDisabled={req.status === "approved"}
+                                />
                             </td>
                             <td>
-                                {req.status === "pending" && (
-                                    <>
-                                        <button
-                                            className="btn btn-success me-2"
-                                            onClick={() => handleShowDetail(req)}
-                                        >
-                                            Xem chi tiết
-                                        </button>
-                                        <button
-                                            className="btn btn-danger"
-                                            onClick={() => handleReject(req._id)}
-                                        >
-                                            Từ chối
-                                        </button>
-                                    </>
-                                )}
+                                <button
+                                    className="btn btn-success me-2"
+                                    onClick={() => handleShowDetail(req)}
+                                >
+                                    Xem chi tiết
+                                </button>
                             </td>
                         </tr>
                     ))}
@@ -213,6 +206,7 @@ const ManageBranchStockRequest = () => {
                 showDetail={showDetail}
                 setShowDetail={setShowDetail}
                 Request={selectedRequest}
+                fetchRequests={fetchRequests}
             />
         </div>
     );
