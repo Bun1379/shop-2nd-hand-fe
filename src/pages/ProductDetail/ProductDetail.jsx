@@ -155,7 +155,6 @@ const ProductDetail = () => {
   const fetchBranchStock = async () => {
     const response = await BranchStock.getBranchStockWithProduct(product._id);
     if (response.status === 200) {
-      console.log(response.data.DT);
       setBranchStock(response.data.DT);
     } else {
       toast.error(response.data.EM);

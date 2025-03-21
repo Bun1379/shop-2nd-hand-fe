@@ -70,24 +70,27 @@ const CartItem = ({
       <div className="row align-items-center">
         <div className="col-auto">
           <input
-            className={`form-check-input shadow-lg border border-primary border-2 ${isChecked ? "bg-primary" : ""}`}
+            className={`form-check-input shadow-lg border border-primary border-2 ${
+              isChecked ? "bg-primary" : ""
+            }`}
             type="checkbox"
             checked={isChecked}
             onChange={handleCheckbox}
           />
-
         </div>
         <div className="col-auto">
           <img
             src={item.product.images[0]}
             alt="product"
             className="img-fluid rounded"
-            style={{ width: "80px", height: "80px" }}
+            style={{ width: "80px", height: "100px", objectFit: "scale-down" }}
           />
         </div>
         <div className="col">
           <h5 className="card-title">{item.product.productName}</h5>
-          <p className="mb-0 me-3">Giá: {item.product.price.toLocaleString()}đ</p>
+          <p className="mb-0 me-3">
+            Giá: {item.product.price.toLocaleString()}đ
+          </p>
         </div>
         <div className="col-auto d-flex align-items-center">
           <div className="d-flex align-items-center">
