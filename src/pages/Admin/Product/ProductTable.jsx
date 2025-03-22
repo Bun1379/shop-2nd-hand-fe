@@ -1,5 +1,6 @@
 import { Table } from "react-bootstrap";
 import ReactPaginate from "react-paginate";
+import { toast } from "react-toastify";
 
 const ProductTable = ({
   products,
@@ -9,14 +10,29 @@ const ProductTable = ({
   handleClickUpdate,
   handleDistribution,
   handleShowBranchStockOfProduct,
+  branch,
+  setRequestList,
+  requestList,
 }) => {
+  const user = JSON.parse(localStorage.getItem("user"));
+
   const handlePageClick = (data) => {
     setPage(data.selected + 1);
   };
+
+  const addToRequest = (product) => {
+    if (!requestList.find((item) => item._id === product._id)) {
+      setRequestList([...requestList, product]);
+      toast.success("Sản phẩm đã được thêm vào danh sách nhập hàng");
+    }
+    else {
+      toast.info("Sản phẩm đã được thêm vào danh sách nhập hàng");
+    }
+  };
+
   return (
     <div>
       {" "}
-      Product Table
       <Table striped bordered hover>
         <thead>
           <tr>
@@ -25,38 +41,69 @@ const ProductTable = ({
             <th>Số lượng</th>
             <th>Giá gốc</th>
             <th>Giá bán</th>
-            <th>Action</th>
+            <th>Hành động</th>
           </tr>
         </thead>
         <tbody>
           {products &&
             products.length > 0 &&
             products.map((product) => (
-              <tr key={product._id}>
+              <tr
+                key={product._id}
+                className={`${branch && branch.value != 0
+                  ? product.stockInBranch === 0
+                    ? "table-danger"
+                    : product.stockInBranch < 10
+                      ? "table-warning"
+                      : ""
+                  : product.quantity === 0
+                    ? "table-danger"
+                    : product.quantity < 10
+                      ? "table-warning"
+                      : ""
+                  }`}
+              >
                 <td>{product._id}</td>
                 <td>{product.productName}</td>
-                <td>{product.quantity}</td>
-                <td>{product.original_price.toLocaleString("vi-VN")} đ</td>
+                <td>
+                  {branch && branch.value != 0
+                    ? product.stockInBranch
+                    : product.quantity}
+                </td>
+                <td>{product?.original_price?.toLocaleString("vi-VN")} đ</td>
                 <td>{product.price.toLocaleString("vi-VN")} đ</td>
                 <td className="d-flex gap-3">
-                  <button
-                    className="btn btn-primary"
-                    onClick={() => handleClickUpdate(product)}
-                  >
-                    Sửa
-                  </button>
-                  <button
-                    className="btn btn-primary"
-                    onClick={() => handleDistribution(product)}
-                  >
-                    Phân phối
-                  </button>
+                  {user.is_admin && (
+                    <>
+                      <button
+                        className="btn btn-primary"
+                        onClick={() => handleClickUpdate(product)}
+                      >
+                        Sửa
+                      </button>
+                      <button
+                        className="btn btn-primary"
+                        onClick={() => handleDistribution(product)}
+                      >
+                        Phân phối
+                      </button>
+                    </>
+                  )}
                   <button
                     className="btn btn-primary"
                     onClick={() => handleShowBranchStockOfProduct(product)}
                   >
                     Xem kho
                   </button>
+                  {user.branch.length > 0 && (
+                    <button
+                      className="btn btn-warning"
+                      onClick={() => addToRequest(product)}
+                    >
+                      Yêu cầu nhập hàng
+                    </button>
+                  )}
+
                 </td>
               </tr>
             ))}

@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Navigate, Outlet } from "react-router-dom";
 import "./AdminLayout.scss";
 import SideBar from "../../components/Sidebar/Sidebar";
+import { toast } from "react-toastify";
 
 const AdminLayout = () => {
   const [collapsed, setCollapsed] = useState(true);
@@ -11,6 +12,7 @@ const AdminLayout = () => {
   };
 
   if (localStorage.getItem("is_admin") !== "true") {
+    toast.error("Bạn không có quyền truy cập vào trang này");
     return <Navigate to="/login" />;
   }
 

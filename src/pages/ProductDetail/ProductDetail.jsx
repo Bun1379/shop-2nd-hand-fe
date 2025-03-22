@@ -155,7 +155,6 @@ const ProductDetail = () => {
   const fetchBranchStock = async () => {
     const response = await BranchStock.getBranchStockWithProduct(product._id);
     if (response.status === 200) {
-      console.log(response.data.DT);
       setBranchStock(response.data.DT);
     } else {
       toast.error(response.data.EM);
@@ -163,6 +162,7 @@ const ProductDetail = () => {
   };
 
   useEffect(() => {
+    window.scrollTo(0, 0);
     fetchReviews();
     setMainImage(product.images[0]);
     fetchFavourite();
@@ -223,15 +223,11 @@ const ProductDetail = () => {
         <Col md={6}>
           <h1 className="product-title">{product.productName}</h1>
 
-
           {product.original_price > 0 && (
             <h4 className="text-muted product-price mt-2">
-              <del>
-                {product.original_price.toLocaleString("vi-VN")} đ
-              </del>
+              <del>{product.original_price.toLocaleString("vi-VN")} đ</del>
             </h4>
-          )
-          }
+          )}
 
           <h3 className="text-danger mt-2 product-price">
             {product.price.toLocaleString()} đ
@@ -244,38 +240,54 @@ const ProductDetail = () => {
 
           <p className="mt-3 product-quantity">
             <span className="fw-bold">Tình trạng: </span>{" "}
-            {optionConditions.find((option) => option.value === product.condition)
-              ?.label || product.condition}
+            {optionConditions.find(
+              (option) => option.value === product.condition
+            )?.label || product.condition}
           </p>
 
           <p className="mt-3 product-quantity">
-            <span className="fw-bold">Size: </span>{" "}
-            {product.size}
+            <span className="fw-bold">Size: </span> {product.size}
           </p>
 
           <p className="mt-3 product-quantity">
             <span className="fw-bold">Sản phẩm hiện có:</span>{" "}
-            <div className="border p-2 rounded bg-light mt-3" style={{ maxHeight: "150px", overflowY: "auto" }}>
-              {/* Tiêu đề */}
-              <div className="d-flex justify-content-between fw-bold border-bottom pb-1">
-                <span>Chi nhánh</span>
-                <span>Số lượng</span>
-              </div>
-              {/* Danh sách chi nhánh */}
-              <ul className="list-unstyled mb-0">
-                {branchStock.map((item, index) => (
-                  <li key={index} className="d-flex justify-content-between border-bottom py-1">
-                    <span>{item.branch.address}</span>
-                    {item.quantity > 0 ?
-                      <span className="fw-bold">{item.quantity}</span> :
+            <div
+              className="border p-2 rounded bg-light mt-3"
+              style={{
+                maxHeight: "300px",
+                overflowY: "auto",
+                overflowX: "hidden",
+              }}
+            >
+              <Row className="fw-bold border-bottom pb-2">
+                <Col xs={8}>Chi nhánh</Col>
+                <Col xs={4} className="text-end">
+                  Số lượng
+                </Col>
+              </Row>
+              {branchStock.map((item, index) => (
+                <Row
+                  key={index}
+                  className="border-bottom py-2 align-items-center"
+                >
+                  <Col xs={10} className="d-flex align-items-center gap-2">
+                    <i className="bi bi-geo-alt text-primary"></i>
+                    <span className="fw-medium">{item.branch.address}</span>
+                  </Col>
+
+                  <Col xs={2} className="text-center">
+                    {item.quantity > 0 ? (
+                      <span className="fw-bold text-success ">
+                        {item.quantity}
+                      </span>
+                    ) : (
                       <span className="text-danger">Hết hàng</span>
-                    }
-                  </li>
-                ))}
-              </ul>
+                    )}
+                  </Col>
+                </Row>
+              ))}
             </div>
           </p>
-
 
           {/* Lựa chọn số lượng và thêm vào giỏ hàng */}
           <div className="product-actions mt-4">
@@ -359,7 +371,8 @@ const ProductDetail = () => {
           ) : (
             <>
               <h4>Đánh giá sản phẩm ({reviews.length})</h4>
-              <Review reviews={currentReviews} /> {/* Hiển thị đánh giá hiện tại */}
+              <Review reviews={currentReviews} />
+              {/* Hiển thị đánh giá hiện tại */}
               {reviews.length > reviewsPerPage && ( // Hiển thị phân trang nếu có nhiều hơn 5 đánh giá}
                 <ReactPaginate
                   previousLabel={"<"}

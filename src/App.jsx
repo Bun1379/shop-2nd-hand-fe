@@ -32,6 +32,8 @@ import ManageCategory from "./pages/Admin/Category/MangeCategory";
 import ManageColor from "./pages/Admin/Color/ManageColor";
 import ManageBranch from "./pages/Admin/Branch/ManageBranch";
 import DiscountPage from "./pages/User/DiscountPage/DiscountPage";
+import ManageBranchStockRequest from "./pages/Admin/BranchStockRequest/ManageBranchStockRequest";
+import PromotionPage from "./pages/User/Promotion/Promotion";
 
 function App() {
   return (
@@ -47,6 +49,7 @@ function App() {
             <Route path="order/:orderId" element={<OrderDetail />} />
             <Route path="search" element={<Search />} />
             <Route path="discount" element={<DiscountPage />} />
+            <Route path="promotion/:slug" element={<PromotionPage />} />
             <Route
               path="user-profile"
               element={<UserProfile initialSection="profile" />}
@@ -71,6 +74,10 @@ function App() {
             <Route path="category" element={<ManageCategory />} />
             <Route path="color" element={<ManageColor />} />
             <Route path="branch" element={<ManageBranch />} />
+            <Route
+              path="branch-stock-request"
+              element={<ManageBranchStockRequest />}
+            />
           </Route>
 
           <Route path="/payment/result" element={<PaymentResult />} />

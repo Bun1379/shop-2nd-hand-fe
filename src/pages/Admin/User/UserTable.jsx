@@ -19,10 +19,10 @@ const UserTable = ({
             <tr>
               <th>STT</th>
               <th>Email</th>
-              <th>Full Name</th>
-              <th>Role</th>
-              <th>Status</th>
-              <th>Action</th>
+              <th>Tên</th>
+              <th>Vai trò</th>
+              <th>Trạng thái</th>
+              <th>Hành động</th>
             </tr>
           </thead>
           <tbody>
@@ -33,14 +33,14 @@ const UserTable = ({
                   <td>{index + 1}</td>
                   <td>{user.email}</td>
                   <td>{user.username}</td>
-                  <td>{user.is_admin ? "ADMIN" : "USER"}</td>
-                  <td>{user.is_active ? "Active" : "Block"}</td>
+                  <td>{user.is_admin ? "Admin" : user.branch.length > 0 ? "Manager" : "User"}</td>
+                  <td>{user.is_active ? "Hoạt động" : "Bị chặn"}</td>
                   <td className="d-flex gap-3">
                     <button
                       className="btn btn-primary"
                       onClick={() => handleUpdateUser(user)}
                     >
-                      Edit
+                      Chỉnh sửa
                     </button>
                   </td>
                 </tr>

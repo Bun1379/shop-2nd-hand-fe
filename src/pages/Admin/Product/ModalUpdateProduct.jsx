@@ -7,7 +7,12 @@ import { Button, Modal } from "react-bootstrap";
 import ReactSelect from "react-select";
 import ColorAPI from "../../../api/ColorAPI";
 
-const ModalUpdateProduct = ({ showUpdate, setShowUpdate, product }) => {
+const ModalUpdateProduct = ({
+  showUpdate,
+  setShowUpdate,
+  product,
+  setProduct,
+}) => {
   const setShow = setShowUpdate;
   const show = showUpdate;
   const optionsSize = [
@@ -77,6 +82,7 @@ const ModalUpdateProduct = ({ showUpdate, setShowUpdate, product }) => {
   const [isLoad, setIsLoad] = useState(false);
 
   const handleClose = () => {
+    setProduct(null);
     setShow(false);
     setName("");
     setDescription("");
@@ -220,8 +226,7 @@ const ModalUpdateProduct = ({ showUpdate, setShowUpdate, product }) => {
       const response = await ProductAPI.UpdateProduct(product._id, data);
       if (response.status === 200) {
         toast.success("Cập nhật sản phẩm thành công");
-        setActionsImage([]);
-        setShow(false);
+        handleClose();
       } else {
         toast.error("Cập nhật sản phẩm thất bại");
       }
@@ -266,9 +271,12 @@ const ModalUpdateProduct = ({ showUpdate, setShowUpdate, product }) => {
       setQuantity(product?.quantity);
       setSelectedCategory(product?.category);
       setListPreviewImage(product?.images);
+      const condition = optionConditions.find(
+        (item) => item.value === product?.condition
+      );
       setCondition({
         value: product?.condition,
-        label: product?.condition,
+        label: condition?.label,
       });
       setSelectedColor({
         value: product?.color?._id,

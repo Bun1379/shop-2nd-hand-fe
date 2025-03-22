@@ -10,6 +10,7 @@ const LogoutModal = ({ show, handleClose }) => {
         localStorage.removeItem("token");
         localStorage.removeItem("user");
         localStorage.removeItem("is_admin");
+        localStorage.removeItem("manager");
         localStorage.removeItem("recentlyViewed");
         toast.success("Đăng xuất thành công !");
         navigate("/login");

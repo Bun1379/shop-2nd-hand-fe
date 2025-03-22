@@ -24,6 +24,7 @@ const ManageBanner = () => {
       const res = await BannerAPI.DeleteBanner(id);
       if (res.status === 200) {
         toast.success("Xóa banner thành công");
+        setShowModalDelete(false);
         fetchDataBanner();
       }
     } catch (err) {
@@ -47,11 +48,10 @@ const ManageBanner = () => {
     fetchDataBanner();
   }, []);
 
-
   const handleShowModalDelete = (id) => {
     setIdDelete(id);
     setShowModalDelete(true);
-  }
+  };
   return (
     <div className="p-4">
       <h1>Quản lý Banner</h1>

@@ -53,6 +53,14 @@ const SideBar = ({ image, collapsed, toggled, handleToggleSidebar }) => {
               Sản phẩm
             </MenuItem>
             <MenuItem
+              icon={<GiClothes />}
+              component={<Link to="/admin/branch-stock-request" />}
+            >
+              {" "}
+              Yêu cầu nhập hàng
+            </MenuItem>
+
+            <MenuItem
               icon={<FaUserCog />}
               component={<Link to="/admin/user" />}
             >

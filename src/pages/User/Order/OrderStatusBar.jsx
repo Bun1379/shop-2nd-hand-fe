@@ -1,7 +1,7 @@
 import React from "react";
 import { Nav, Badge } from "react-bootstrap";
 
-const OrderStatusBar = ({ status, setStatus, totalOrder }) => {
+const OrderStatusBar = ({ status, setStatus, totalOrder, selectedBranches }) => {
   const statusList = [
     { key: "ALL", label: "Tất cả" },
     { key: "PENDING", label: "Chờ xác nhận" },
@@ -11,10 +11,16 @@ const OrderStatusBar = ({ status, setStatus, totalOrder }) => {
     { key: "CANCELLED", label: "Đã hủy" },
   ];
 
+  // Nếu có selectedBranches thì lọc theo chi nhánh, nếu không thì giữ nguyên danh sách đơn hàng
+  const filteredOrders = (selectedBranches && selectedBranches[0] !== "ALL")
+    ? totalOrder.filter(order => selectedBranches.includes(order.branch?._id))
+    : totalOrder;
+
+  // Hàm đếm số lượng đơn theo trạng thái
   const getOrderCount = (key) =>
     key === "ALL"
-      ? totalOrder.length
-      : totalOrder.filter((order) => order.status === key).length;
+      ? filteredOrders.length
+      : filteredOrders.filter((order) => order.status === key).length;
 
   return (
     <Nav

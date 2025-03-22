@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import OrderAPI from "../../../api/OrderAPI";
+import BranchAPI from "../../../api/BranchAPI";
 import OrderTable from "./OrderTable";
 import ModalViewOrder from "./ModalViewOrder";
 import { toast } from "react-toastify";
@@ -16,7 +17,28 @@ const ManageOrder = () => {
   const [dateRange, setDateRange] = useState({ startDate: "", endDate: "" });
   const [priceRange, setPriceRange] = useState({ minPrice: "", maxPrice: "" });
   const [paymentMethod, setPaymentMethod] = useState("");
-  const [sortPrice, setSortPrice] = useState(""); // Thêm state để lưu lựa chọn sắp xếp giá
+  const [sortPrice, setSortPrice] = useState("");
+  const [selectedBranches, setSelectedBranches] = useState([]); // Lưu các chi nhánh được chọn
+  const [branches, setBranches] = useState([]); // Lưu danh sách chi nhánh
+
+  const user = JSON.parse(localStorage.getItem("user"));
+
+  useEffect(() => {
+    if (user.is_admin === true) {
+      BranchAPI.getAllBranches().then((res) => {
+        if (res.status === 200) {
+          const allBranches = res.data.DT.map(branch => ({ value: branch._id, label: branch.name }));
+          setBranches([{ value: "ALL", label: "Tất cả chi nhánh" }, ...allBranches]);
+          setSelectedBranches(["ALL"]);
+        }
+      });
+    } else if (Array.isArray(user.branch) && user.branch.length > 0) {
+      const userBranches = user.branch.map(branch => ({ value: branch._id, label: branch.name }));
+      setBranches(userBranches);
+      setBranches([{ value: "ALL", label: "Tất cả chi nhánh" }, ...userBranches]);
+      setSelectedBranches(["ALL"]);
+    }
+  }, []);
 
   const handleViewOrder = (order) => {
     setOrder(order);
@@ -26,12 +48,10 @@ const ManageOrder = () => {
   const filterOrders = () => {
     let filtered = orders;
 
-    // Lọc theo trạng thái
     if (status !== "ALL") {
       filtered = filtered.filter((order) => order.status === status);
     }
 
-    // Lọc theo khoảng thời gian
     if (dateRange.startDate && dateRange.endDate) {
       const startDate = new Date(dateRange.startDate);
       const endDate = new Date(dateRange.endDate);
@@ -40,7 +60,6 @@ const ManageOrder = () => {
       );
     }
 
-    // Lọc theo giá tiền
     if (priceRange.minPrice || priceRange.maxPrice) {
       filtered = filtered.filter((order) => {
         const orderTotal = order.totalAmount;
@@ -50,62 +69,42 @@ const ManageOrder = () => {
       });
     }
 
-    // Lọc theo phương thức thanh toán
     if (paymentMethod) {
       filtered = filtered.filter((order) => order.paymentMethod === paymentMethod);
     }
 
-    // Sắp xếp theo giá
+    if (!selectedBranches.includes("ALL")) {
+      filtered = filtered.filter((order) => selectedBranches.includes(order.branch?._id));
+    }
+
     if (sortPrice === "asc") {
-      filtered = filtered.sort((a, b) => a.totalAmount - b.totalAmount); // Sắp xếp từ thấp đến cao
+      filtered = filtered.sort((a, b) => a.totalAmount - b.totalAmount);
     } else if (sortPrice === "desc") {
-      filtered = filtered.sort((a, b) => b.totalAmount - a.totalAmount); // Sắp xếp từ cao đến thấp
+      filtered = filtered.sort((a, b) => b.totalAmount - a.totalAmount);
     }
 
     setFilteredOrders(filtered);
   };
-
 
   const handleClearFilters = () => {
     setDateRange({ startDate: "", endDate: "" });
     setPriceRange({ minPrice: "", maxPrice: "" });
     setPaymentMethod("");
     setSortPrice("");
+    setSelectedBranches(user.is_admin ? ["ALL"] : user.branch.map(b => b._id));
   };
 
   const handleConfirm = () => {
     filterOrders();
   };
 
-  const UpdateOrderStatus = async (id, status) => {
-    try {
-      const data = {
-        status: status,
-      };
-      const res = await OrderAPI.UpdateOrderStatus(id, data);
-      if (res.status === 200) {
-        toast.success("Cập nhật trạng thái đơn hàng thành công");
-        fetchDataOrders();
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  useEffect(() => {
+    fetchDataOrders();
+  }, []);
 
-  const UpdateOrderPaymentStatus = async (id, status) => {
-    try {
-      const data = {
-        status: status,
-      };
-      const res = await OrderAPI.UpdateOrderPaymnentStatus(id, data);
-      if (res.status === 200) {
-        toast.success("Cập nhật trạng thái thanh toán thành công");
-        fetchDataOrders();
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  useEffect(() => {
+    filterOrders();
+  }, [orders, status, selectedBranches]);
 
   const fetchDataOrders = async () => {
     try {
@@ -118,27 +117,27 @@ const ManageOrder = () => {
     }
   };
 
-  useEffect(() => {
-    fetchDataOrders();
-  }, []);
-
-  useEffect(() => {
-    filterOrders();
-  }, [orders, status]);
-
   return (
     <div className="p-4">
       <h1>Quản lý đơn hàng</h1>
-      <OrderStatusBar
-        status={status}
-        setStatus={setStatus}
-        totalOrder={orders}
-      />
+      <OrderStatusBar status={status} setStatus={setStatus} totalOrder={orders} selectedBranches={selectedBranches} />
+
       <Accordion defaultActiveKey="1" className="mb-4">
         <Accordion.Item eventKey="0">
           <Accordion.Header>Lọc theo</Accordion.Header>
           <Accordion.Body>
-            {/* Lọc theo khoảng thời gian */}
+            <Form.Group>
+              <Form.Label>Chi nhánh</Form.Label>
+              <Select
+                options={branches}
+                isMulti
+                value={branches.filter(b => selectedBranches.includes(b.value))}
+                onChange={(selectedOptions) =>
+                  setSelectedBranches(selectedOptions.map(option => option.value))
+                }
+              />
+            </Form.Group>
+
             <Form.Group>
               <Form.Label>Khoảng thời gian</Form.Label>
               <div className="d-flex">
@@ -156,7 +155,6 @@ const ManageOrder = () => {
               </div>
             </Form.Group>
 
-            {/* Lọc theo giá tiền */}
             <Form.Group>
               <Form.Label>Khoảng giá</Form.Label>
               <div className="d-flex">
@@ -176,7 +174,6 @@ const ManageOrder = () => {
               </div>
             </Form.Group>
 
-            {/* Lọc theo cách sắp xếp giá */}
             <Form.Group>
               <Form.Label>Sắp xếp theo giá</Form.Label>
               <Select
@@ -189,19 +186,6 @@ const ManageOrder = () => {
               />
             </Form.Group>
 
-            {/* Lọc theo phương thức thanh toán */}
-            <Form.Group>
-              <Form.Label>Phương thức thanh toán</Form.Label>
-              <Select
-                options={[
-                  { value: "COD", label: "COD" },
-                  { value: "ONLINE", label: "Thanh toán trực tuyến" },
-                ]}
-                onChange={(selectedOption) => setPaymentMethod(selectedOption?.value || "")}
-                value={paymentMethod ? { value: paymentMethod, label: paymentMethod === "COD" ? "COD" : "Thanh toán trực tuyến" } : null}
-              />
-            </Form.Group>
-
             <div className="d-flex justify-content-end mt-3">
               <Button variant="primary" onClick={handleConfirm} className="ms-2">Xác nhận</Button>
               <Button variant="danger" onClick={handleClearFilters} className="ms-2">Xóa bộ lọc</Button>
@@ -210,17 +194,8 @@ const ManageOrder = () => {
         </Accordion.Item>
       </Accordion>
 
-      <OrderTable
-        orders={filteredOrders}
-        UpdateOrderStatus={UpdateOrderStatus}
-        handleViewOrder={handleViewOrder}
-        UpdateOrderPaymentStatus={UpdateOrderPaymentStatus}
-      />
-      <ModalViewOrder
-        show={showViewOrder}
-        setShowView={setShowViewOrder}
-        order={order}
-      />
+      <OrderTable orders={filteredOrders} handleViewOrder={handleViewOrder} />
+      <ModalViewOrder show={showViewOrder} setShowView={setShowViewOrder} order={order} />
     </div>
   );
 };

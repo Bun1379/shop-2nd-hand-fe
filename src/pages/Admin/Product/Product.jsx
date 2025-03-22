@@ -1,12 +1,15 @@
 import { useEffect, useState } from "react";
 import ModalAddProduct from "./ModalAddProduct";
 import ProductAPI from "../../../api/ProductAPI";
+import BranchAPI from "../../../api/BranchAPI";
+import BranchStockAPI from "../../../api/BranchStockAPI";
 import ProductTable from "./ProductTable";
 import { Accordion } from "react-bootstrap";
 import ModalUpdateProduct from "./ModalUpdateProduct";
 import Select from "react-select";
 import ModalAddBranchStock from "./ModalAddBranchStock";
 import ModalShowBranchDistribution from "./ModalShowBranchDistribution";
+import ModalRequestStock from "./ModalRequestStock";
 
 const Product = () => {
   const [showAddProduct, setShowAddProduct] = useState(false);
@@ -16,11 +19,20 @@ const Product = () => {
   const [showUpdateProduct, setShowUpdateProduct] = useState(false);
   const [product, setProduct] = useState({});
   const [selectedOptionStock, setSelectedOptionStock] = useState(null);
-  const [selectedOptionPrice, setSelectedOptionPrice] = useState(null);
+  const [selectedSortPrice, setSelectedSortPrice] = useState(null);
   const [search, setSearch] = useState("");
 
+
+  //RequestStock
+  const [showModalRequest, setShowModalRequest] = useState(false);
+  const [requestList, setRequestList] = useState([]);
+
+
+  const [selectedBranch, setSelectedBranch] = useState(null); // Lưu chi nhánh được chọn
+  const [branches, setBranches] = useState([]); // Lưu danh sách chi nhánh;
+  const user = JSON.parse(localStorage.getItem("user"));
+
   //BranchStock
-  //begin
   const [showDistribution, setShowDistribution] = useState(false);
   const handleDistribution = (product) => {
     setProduct(product);
@@ -31,28 +43,48 @@ const Product = () => {
     setProduct(product);
     setShowBranchStock(true);
   };
-  //end
 
   const optionsStock = [
     { value: 0, label: "Hết hàng" },
-    { value: 1, label: "Sắp hết hàng (< 5)" },
+    { value: 1, label: "Sắp hết hàng (< 10)" },
     { value: 2, label: "Còn hàng" },
   ];
 
-  const optionsPrice = [
-    { value: 0, label: "< 100.000" },
-    { value: 1, label: "100.000 - 500.000" },
-    { value: 2, label: "500.000 - 1.000.000" },
-    { value: 3, label: "> 1.000.000" },
+  const optionsSortPrice = [
+    { value: 1, label: "Giá thấp → cao" },
+    { value: 2, label: "Giá cao → thấp" },
   ];
+
+  useEffect(() => {
+    if (user.is_admin === true) {
+      BranchAPI.getAllBranches().then((res) => {
+        if (res.status === 200) {
+          const allBranches = res.data.DT.map((branch) => ({
+            value: branch._id,
+            label: branch.name,
+          }));
+          setBranches([{ value: 0, label: "Kho chính" }, ...allBranches]);
+          setSelectedBranch({ value: 0, label: "Kho chính" });
+        }
+      });
+    } else if (Array.isArray(user.branch) && user.branch.length > 0) {
+      const userBranches = user.branch.map((branch) => ({
+        value: branch._id,
+        label: branch.name,
+      }));
+      setBranches(userBranches);
+      setSelectedBranch(userBranches[0]);
+    }
+  }, []);
 
   const fetchDataProduct = async () => {
     try {
       const res = await ProductAPI.GetProducts({
         page,
         search,
-        selectedOptionPrice: selectedOptionPrice?.value,
+        selectedOptionPrice: selectedSortPrice?.value,
         selectedOptionStock: selectedOptionStock?.value,
+        selectedBranch: selectedBranch?.value,
       });
       if (res.status === 200) {
         setProducts(res.data.DT.products);
@@ -74,7 +106,7 @@ const Product = () => {
 
   const handleResetButton = () => {
     setSelectedOptionStock(null);
-    setSelectedOptionPrice(null);
+    setSelectedSortPrice(null);
     setSearch("");
   };
 
@@ -83,24 +115,49 @@ const Product = () => {
     fetchDataProduct();
   };
 
+  // Gọi lại API khi các giá trị thay đổi
   useEffect(() => {
     fetchDataProduct();
-  }, [page, showAddProduct, showUpdateProduct]);
-
+  }, [
+    selectedBranch,
+    search,
+    selectedOptionStock,
+    selectedSortPrice,
+    page,
+    showAddProduct,
+    showUpdateProduct,
+  ]);
   return (
     <div className="p-4">
       <h1>Quản lý sản phẩm</h1>
-      <button
-        className="btn btn-primary"
-        onClick={() => setShowAddProduct(true)}
-      >
-        Thêm sản phẩm
-      </button>
+      {user.is_admin && (
+        <button
+          className="btn btn-primary"
+          onClick={() => setShowAddProduct(true)}
+        >
+          Thêm sản phẩm
+        </button>
+      )}
+      {
+        user.branch.length > 0 && (
+          <button
+            className="btn btn-primary"
+            onClick={() => setShowModalRequest(true)}
+          >
+            Tạo yêu cầu nhập hàng
+          </button>
+        )
+      }
+      <Select
+        options={branches}
+        className="w-100 mt-2 "
+        value={selectedBranch}
+        onChange={setSelectedBranch}
+      />
       <Accordion className="my-2">
         <Accordion.Item eventKey="0">
           <Accordion.Header>Lọc tìm kiếm</Accordion.Header>
           <Accordion.Body>
-            {/* Nhập số lượng, giá */}
             <div className="d-flex flex-row gap-3 my-2">
               <input
                 type="text"
@@ -117,11 +174,11 @@ const Product = () => {
                 onChange={setSelectedOptionStock}
               />
               <Select
-                options={optionsPrice}
-                placeholder="Chọn mức giá"
+                options={optionsSortPrice}
+                placeholder="Sắp xếp theo giá"
                 className="w-50"
-                value={selectedOptionPrice}
-                onChange={setSelectedOptionPrice}
+                value={selectedSortPrice}
+                onChange={setSelectedSortPrice}
               />
             </div>
             <div className="d-flex justify-content-end gap-2 mt-2">
@@ -143,7 +200,11 @@ const Product = () => {
         handleClickUpdate={handleClickUpdate}
         handleDistribution={handleDistribution}
         handleShowBranchStockOfProduct={handleShowBranchStockOfProduct}
+        branch={selectedBranch}
+        setRequestList={setRequestList}
+        requestList={requestList}
       />
+
       <ModalAddProduct
         showAdd={showAddProduct}
         setShowAdd={setShowAddProduct}
@@ -152,16 +213,25 @@ const Product = () => {
         showUpdate={showUpdateProduct}
         setShowUpdate={setShowUpdateProduct}
         product={product}
+        setProduct={setProduct}
       />
       <ModalAddBranchStock
         selectedProduct={product}
         show={showDistribution}
         setShow={setShowDistribution}
+        fetchDataProduct={fetchDataProduct}
       />
       <ModalShowBranchDistribution
         show={showBranchStock}
         setShow={setShowBranchStock}
         selectedProduct={product}
+      />
+      <ModalRequestStock
+        selectedBranch={selectedBranch}
+        showModalRequest={showModalRequest}
+        setShowModalRequest={setShowModalRequest}
+        requestList={requestList}
+        setRequestList={setRequestList}
       />
     </div>
   );
