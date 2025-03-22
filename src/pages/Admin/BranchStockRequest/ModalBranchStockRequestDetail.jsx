@@ -10,11 +10,11 @@ const ModalBranchStockRequestDetail = ({
     setShowDetail,
     fetchRequests,
 }) => {
+    const user = JSON.parse(localStorage.getItem("user"));
     const [showAddBranchStock, setShowAddBranchStock] = useState(false);
     const [selectedProduct, setSelectedProduct] = useState(null);
     const [requestDetail, setRequestDetail] = useState(Request);
 
-    console.log(requestDetail);
     const productStatusOptions = [
         { value: "pending", label: "Chờ duyệt" },
         { value: "transferred", label: "Đã chuyển" },
@@ -70,7 +70,7 @@ const ModalBranchStockRequestDetail = ({
                                 <th>Ảnh</th>
                                 <th>Tên sản phẩm</th>
                                 <th>Trạng thái</th>
-                                {requestDetail?.status === "pending" &&
+                                {requestDetail?.status === "confirmed" && user.is_admin &&
                                     <th>Hành động</th>
                                 }
                             </tr>
@@ -90,7 +90,7 @@ const ModalBranchStockRequestDetail = ({
                                     <td>
                                         {productStatusOptions.find((s) => s.value === product.status)?.label}
                                     </td>
-                                    {requestDetail?.status === "pending" &&
+                                    {requestDetail?.status === "confirmed" && user.is_admin &&
                                         <td>
                                             <Button
                                                 variant="success"

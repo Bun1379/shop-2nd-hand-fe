@@ -8,6 +8,7 @@ import { toast } from "react-toastify";
 import ModalBranchStockRequestDetail from "./ModalBranchStockRequestDetail";
 
 const ManageBranchStockRequest = () => {
+    const user = JSON.parse(localStorage.getItem("user"));
     const [requests, setRequests] = useState([]);
     const [branches, setBranches] = useState([]);
     const [selectedBranch, setSelectedBranch] = useState(null);
@@ -70,9 +71,12 @@ const ManageBranchStockRequest = () => {
         fetchRequests();
     };
 
-    const handleChangeRequestStatus = async (status) => {
+    const handleChangeRequestStatus = async (id, status) => {
         try {
-            const res = await BranchStockRequestAPI.updateBranchStockRequestStatus(id, status);
+            const res = await BranchStockRequestAPI.updateBranchStockRequestStatus({
+                requestId: id,
+                status: status,
+            });
             if (res.status === 200) {
                 toast.success("Thay đổi trạng thái thành công");
                 fetchRequests();
@@ -82,6 +86,20 @@ const ManageBranchStockRequest = () => {
             toast.error("Thay đổi trạng thái thất bại");
         }
     };
+
+    const handleDeleteRequest = async (id) => {
+        try {
+            const res = await BranchStockRequestAPI.deleteBranchStockRequest(id);
+            if (res.status === 200) {
+                toast.success("Xóa yêu cầu thành công");
+                fetchRequests();
+            }
+        } catch (err) {
+            toast.error(err?.data?.EM);
+            console.log(err);
+        }
+    };
+
 
     const handleResetButton = () => {
         setSelectedBranch(null);
@@ -159,12 +177,16 @@ const ManageBranchStockRequest = () => {
                                 })}`}
                             </td>
                             <td>
-                                <Select
-                                    options={statusOptions.slice(0, 2)}
-                                    value={statusOptions.find((status) => status.value === req.status)}
-                                    onChange={(selected) => handleChangeRequestStatus(selected.value)}
-                                    isDisabled={req.status === "approved"}
-                                />
+                                {user.is_admin ? (
+                                    <Select
+                                        options={statusOptions.slice(0, 2)}
+                                        value={statusOptions.find((status) => status.value === req.status)}
+                                        onChange={(selected) => handleChangeRequestStatus(req._id, selected.value)}
+                                        isDisabled={req.status === "approved"}
+                                    />) :
+                                    (
+                                        statusOptions.find((status) => status.value === req.status)?.label
+                                    )}
                             </td>
                             <td>
                                 <button
@@ -173,6 +195,14 @@ const ManageBranchStockRequest = () => {
                                 >
                                     Xem chi tiết
                                 </button>
+                                {user.is_admin == false && user.branch.length > 0 && req.status == "pending" && (
+                                    <button
+                                        className="btn btn-danger"
+                                        onClick={() => handleDeleteRequest(req._id)}
+                                    >
+                                        Xóa
+                                    </button>
+                                )}
                             </td>
                         </tr>
                     ))}

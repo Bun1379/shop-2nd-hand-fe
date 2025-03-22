@@ -13,6 +13,9 @@ class BranchStockRequestAPI {
     static async updateBranchStockRequestProductStatus(data) {
         return axiosPrivate.put("/branch-stock-request/product/status", data);
     }
+    static async deleteBranchStockRequest(id) {
+        return axiosPrivate.delete(`/branch-stock-request/${id}`);
+    }
 }
 
 export default BranchStockRequestAPI;
