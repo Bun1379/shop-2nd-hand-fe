@@ -128,15 +128,14 @@ const ModalUpdateProduct = ({
 
   const handleUploadImage = (event) => {
     if (event.target && event.target.files && event.target.files.length > 0) {
-      setListPreviewImage([
-        ...listPreviewImage,
-        URL.createObjectURL(event.target.files[0]),
-      ]);
+      const url = URL.createObjectURL(event.target.files[0]);
+      setListPreviewImage([...listPreviewImage, url]);
       setActionsImage([
         ...actionsImage,
         {
           action: "add",
           image: event.target.files[0],
+          url: url,
         },
       ]);
     }
@@ -145,9 +144,15 @@ const ModalUpdateProduct = ({
   const handleDeleteImage = (index) => {
     const urlDeleted = listPreviewImage[index];
     if (urlDeleted.includes("blob")) {
-      toast.error("Không thể xóa ảnh vừa được thêm");
+      const newImage = listPreviewImage.filter((item, idx) => idx !== index);
+      setListPreviewImage(newImage);
+      const newActions = actionsImage.filter(
+        (item, idx) => item.url !== urlDeleted
+      );
+      setActionsImage(newActions);
       return;
     }
+
     const newImage = listPreviewImage.filter((item, idx) => idx !== index);
     setListPreviewImage(newImage);
     setActionsImage([
