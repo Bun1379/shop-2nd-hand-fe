@@ -6,6 +6,8 @@ import LoginLayout from "../../layouts/LoginLayout/LoginLayout";
 import AuthAPI from "../../api/AuthAPI";
 import "./Login.css";
 import { setUserInLocalStorage } from "../../layouts/SocketContext";
+import PasswordInput from "../../components/PasswordInput/PasswordInput";
+
 const Login = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
@@ -49,20 +51,19 @@ const Login = () => {
         <p>Đăng nhập</p>
       </h2>
       <form onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="email">Email:</label>
-          <input
-            type="email"
-            id="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-        </div>
-        <div>
-          <label htmlFor="password">Mật khẩu:</label>
-          <input
-            type="password"
+        <label htmlFor="email">Email:</label>
+        <input
+          className="form-control border border-success border-2 mb-3"
+          type="email"
+          id="email"
+          value={email}
+          placeholder="Nhập email của bạn"
+          onChange={(e) => setEmail(e.target.value)}
+          required
+        />
+        <label htmlFor="password">Mật khẩu:</label>
+        <div className="border border-success border-2 mb-3 rounded">
+          <PasswordInput
             id="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}

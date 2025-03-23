@@ -5,6 +5,7 @@ import { FaArrowLeft } from "react-icons/fa";
 import { useState } from 'react';
 import AuthAPI from '../../api/AuthAPI';
 import { toast } from 'react-toastify';
+import PasswordInput from '../../components/PasswordInput/PasswordInput';
 
 const Signup = () => {
     const navigate = useNavigate();
@@ -15,7 +16,7 @@ const Signup = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (password !== confirmPassword) { // Kiểm tra mật khẩu
-            toast.error('Mật khẩu không khớp!');
+            toast.error('Mật khẩu không khớp !');
             return;
         }
 
@@ -46,29 +47,32 @@ const Signup = () => {
                 <div>
                     <label htmlFor="email">Email:</label>
                     <input
+                        className="form-control border border-success border-2 mb-3"
                         type="email"
                         id="email"
+                        placeholder="Nhập email của bạn"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         required
                     />
                 </div>
-                <div>
-                    <label htmlFor="password">Mật khẩu:</label>
-                    <input
-                        type="password"
+                <label htmlFor="password">Mật khẩu:</label>
+                <div className="rounded border border-success border-2 mb-3">
+                    <PasswordInput
                         id="password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         required
                     />
                 </div>
-                <div>
-                    <label htmlFor="confirmPassword">Nhập lại mật khẩu:</label>
-                    <input
-                        type="password"
+
+                <label htmlFor="confirmPassword">Nhập lại mật khẩu:</label>
+
+                <div className="rounded border border-success border-2 mb-3">
+                    <PasswordInput
                         id="confirmPassword"
                         value={confirmPassword}
+                        placeholder="Nhập lại mật khẩu"
                         onChange={(e) => setConfirmPassword(e.target.value)}
                         required
                     />

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 import AuthAPI from "../../../api/AuthAPI";
+import PasswordInput from "../../../components/PasswordInput/PasswordInput";
 
 const UpdatePassword = ({ email }) => {
   const [currentPassword, setCurrentPassword] = useState("");
@@ -62,9 +63,7 @@ const UpdatePassword = ({ email }) => {
             <label htmlFor="currentPassword" className="form-label">
               Nhập mật khẩu hiện tại:
             </label>
-            <input
-              type="password"
-              className="form-control"
+            <PasswordInput
               id="currentPassword"
               value={currentPassword}
               onChange={(e) => setCurrentPassword(e.target.value)}
@@ -88,6 +87,7 @@ const UpdatePassword = ({ email }) => {
               type="text"
               className="form-control"
               id="OTP"
+              placeholder="Nhập mã OTP"
               value={OTP}
               onChange={(e) => setOTP(e.target.value)}
               required
@@ -97,9 +97,7 @@ const UpdatePassword = ({ email }) => {
             <label htmlFor="newPassword" className="form-label">
               Mật khẩu mới:
             </label>
-            <input
-              type="password"
-              className="form-control"
+            <PasswordInput
               id="newPassword"
               value={newPassword}
               onChange={(e) => setNewPassword(e.target.value)}
@@ -110,11 +108,10 @@ const UpdatePassword = ({ email }) => {
             <label htmlFor="confirmPassword" className="form-label">
               Xác nhận mật khẩu mới:
             </label>
-            <input
-              type="password"
-              className="form-control"
+            <PasswordInput
               id="confirmPassword"
               value={confirmPassword}
+              placeholder="Xác nhận mật khẩu mới"
               onChange={(e) => setConfirmPassword(e.target.value)}
               required
             />

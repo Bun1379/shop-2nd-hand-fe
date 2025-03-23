@@ -50,10 +50,6 @@
     flex-direction: column;
 }
 
-.login-layout-content form div {
-    margin-bottom: 15px;
-}
-
 .login-layout-content label {
     display: block;
     margin-bottom: 10px;
@@ -62,12 +58,9 @@
 
 .login-layout-content input {
     padding: 10px;
-    border: 2px solid #397D54;
-    border-radius: 5px;
     font-size: 16px;
     width: 100%;
     box-sizing: border-box;
-    background-color: #edecec;
 }
 
 .login-layout-content button {

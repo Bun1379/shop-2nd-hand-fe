@@ -38,6 +38,8 @@ const ForgotPW = () => {
         <div>
           <label htmlFor="email">Nhập email bạn đã đăng ký:</label>
           <input
+            className="form-control border border-success border-2 mb-3"
+            placeholder="Nhập email"
             type="email"
             id="email"
             value={email}
