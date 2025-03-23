@@ -108,18 +108,6 @@ const UpdateUser = ({ userInfo }) => {
                         />
                     </div>
                     <div className="mb-3">
-                        <label htmlFor="phone" className="form-label">Số điện thoại:</label>
-                        <input
-                            type="text"
-                            className="form-control"
-                            id="phone"
-                            name="phone"
-                            placeholder="Nhập số điện thoại"
-                            value={formData.phone}
-                            onChange={handleChange}
-                        />
-                    </div>
-                    <div className="mb-3">
                         <label htmlFor="gender" className="form-label">Giới tính:</label>
                         <select
                             className="form-select"

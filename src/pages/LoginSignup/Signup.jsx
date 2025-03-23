@@ -12,6 +12,7 @@ const Signup = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
+    const [username, setUsername] = useState('');
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -23,7 +24,8 @@ const Signup = () => {
         try {
             const response = await AuthAPI.Signup({
                 email,
-                password
+                password,
+                username
             });
             if (response.status === 200) {
                 toast.success('Đăng ký thành công!');
@@ -44,18 +46,26 @@ const Signup = () => {
                 <p>Đăng ký</p>
             </h2>
             <form onSubmit={handleSubmit}>
-                <div>
-                    <label htmlFor="email">Email:</label>
-                    <input
-                        className="form-control border border-success border-2 mb-3"
-                        type="email"
-                        id="email"
-                        placeholder="Nhập email của bạn"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        required
-                    />
-                </div>
+                <label htmlFor="email">Email:</label>
+                <input
+                    className="form-control border border-success border-2 mb-3"
+                    type="email"
+                    id="email"
+                    placeholder="Nhập email của bạn"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                />
+                <label htmlFor="username">Tên của bạn:</label>
+                <input
+                    className="form-control border border-success border-2 mb-3"
+                    type="text"
+                    id="username"
+                    placeholder="Nhập tên của bạn"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    required
+                />
                 <label htmlFor="password">Mật khẩu:</label>
                 <div className="rounded border border-success border-2 mb-3">
                     <PasswordInput

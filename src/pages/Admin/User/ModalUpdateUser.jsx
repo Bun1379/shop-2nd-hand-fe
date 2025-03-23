@@ -11,7 +11,6 @@ import BranchAPI from "../../../api/BranchAPI";
 const ModalUpdateUser = ({ user, showUpdate, setShowUpdate }) => {
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
-  const [phone, setPhone] = useState("");
   const [isAdmin, setIsAdmin] = useState(false);
   const [isManager, setIsManager] = useState(false);
   const [userBranch, setUserBranch] = useState([]);
@@ -31,7 +30,6 @@ const ModalUpdateUser = ({ user, showUpdate, setShowUpdate }) => {
     setShowUpdate(false);
     setEmail("");
     setUsername("");
-    setPhone("");
     setIsAdmin(false);
     setIsManager(false);
     setBranch([]);
@@ -81,7 +79,6 @@ const ModalUpdateUser = ({ user, showUpdate, setShowUpdate }) => {
   useEffect(() => {
     setEmail(user.email);
     setUsername(user.username);
-    setPhone(user.phone);
     setIsAdmin(user.is_admin);
     setIsVerified(user.is_verified);
     setIsActive(user.is_active);
@@ -111,10 +108,6 @@ const ModalUpdateUser = ({ user, showUpdate, setShowUpdate }) => {
             value={username}
             disabled
           />
-        </div>
-        <div className="form-group">
-          <label htmlFor="phone">Số điện thoại</label>
-          <input type="tel" className="form-control" id="phone" value={phone} disabled />
         </div>
         <div className="form-group">
           <label htmlFor="isAdmin">Admin</label>
