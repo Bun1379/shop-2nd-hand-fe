@@ -1,6 +1,6 @@
 import { Button, Table } from "react-bootstrap";
 
-const BlogTable = ({ blogs, handleOpenViewBlog }) => {
+const BlogTable = ({ blogs, handleOpenViewBlog, handleOpenUpdateBlog }) => {
   return (
     <Table striped bordered hover className="mt-2">
       <thead>
@@ -33,7 +33,12 @@ const BlogTable = ({ blogs, handleOpenViewBlog }) => {
             </td>
             <td>
               <Button onClick={() => handleOpenViewBlog(blog)}>Xem</Button>
-              <Button className="mx-2">Sửa</Button>
+              <Button
+                className="mx-2"
+                onClick={() => handleOpenUpdateBlog(blog)}
+              >
+                Sửa
+              </Button>
               <Button variant="danger">Xóa</Button>
             </td>
           </tr>

@@ -5,7 +5,7 @@ import BlogTable from "./BlogTable";
 import ModalViewBlog from "./ModalViewBlog";
 
 const ManageBlog = () => {
-  const [openCreateBlog, setOpenCreateBlog] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
   const [selectedBlog, setSelectedBlog] = useState(null);
   const [isOpenViewBlog, setIsOpenViewBlog] = useState(false);
   const [blogs, setBlogs] = useState([]);
@@ -26,6 +26,11 @@ const ManageBlog = () => {
     setIsOpenViewBlog(true);
   };
 
+  const handleOpenUpdateBlog = (blog) => {
+    setSelectedBlog(blog);
+    setOpenModal(true);
+  };
+
   useEffect(() => {
     fetchDataBlog();
   }, []);
@@ -34,17 +39,20 @@ const ManageBlog = () => {
     <div className="p-4">
       <h1>Quản lý Blog</h1>
       <hr />
-      <button
-        className="btn btn-primary"
-        onClick={() => setOpenCreateBlog(true)}
-      >
+      <button className="btn btn-primary" onClick={() => setOpenModal(true)}>
         Thêm Blog
       </button>
-      <BlogTable blogs={blogs} handleOpenViewBlog={handleOpenViewBlog} />
+      <BlogTable
+        blogs={blogs}
+        handleOpenViewBlog={handleOpenViewBlog}
+        handleOpenUpdateBlog={handleOpenUpdateBlog}
+      />
       <ModalCreateBlog
-        show={openCreateBlog}
-        setShow={setOpenCreateBlog}
+        show={openModal}
+        setShow={setOpenModal}
         fetchDataBlog={fetchDataBlog}
+        selectedBlog={selectedBlog}
+        setSelectedBlog={setSelectedBlog}
       />
       <ModalViewBlog
         blog={selectedBlog}

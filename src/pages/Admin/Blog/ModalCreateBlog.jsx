@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Button, Col, Form, Modal, Row, Spinner } from "react-bootstrap";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
@@ -7,7 +7,13 @@ import "./Blog.css";
 import BlogAPI from "../../../api/BlogAPI";
 import { toast } from "react-toastify";
 
-const ModalCreateBlog = ({ show, setShow, fetchDataBlog }) => {
+const ModalCreateBlog = ({
+  show,
+  setShow,
+  fetchDataBlog,
+  selectedBlog,
+  setSelectedBlog,
+}) => {
   const [content, setContent] = useState("");
   const [title, setTitle] = useState("");
   const [previewImage, setPreviewImage] = useState(null);
@@ -28,7 +34,12 @@ const ModalCreateBlog = ({ show, setShow, fetchDataBlog }) => {
         formData.append("image", uploadResponse.data.DT);
       }
       formData.append("status", status);
-      const response = await BlogAPI.CreateBlog(formData);
+      let response;
+      if (selectedBlog) {
+        response = await BlogAPI.UpdateBlog(selectedBlog._id, formData);
+      } else {
+        response = await BlogAPI.CreateBlog(formData);
+      }
       if (response.status === 200) {
         toast.success("Thêm Blog thành công");
         fetchDataBlog();
@@ -101,12 +112,29 @@ const ModalCreateBlog = ({ show, setShow, fetchDataBlog }) => {
     setPreviewImage(null);
     setImage(null);
     setStatus(true);
+    setIsLoading(false);
+    setIsLoadingSubmit(false);
+    setSelectedBlog(null);
+    if (quillRef.current) {
+      quillRef.current.getEditor().setContents([]);
+    }
   };
+
+  useEffect(() => {
+    if (selectedBlog) {
+      setTitle(selectedBlog.title);
+      setContent(selectedBlog.content);
+      setPreviewImage(selectedBlog.image);
+      setStatus(selectedBlog.status);
+    }
+  }, [selectedBlog]);
 
   return (
     <Modal show={show} onHide={handleClose} size="xl">
       <Modal.Header closeButton>
-        <Modal.Title>Thêm Blog</Modal.Title>
+        <Modal.Title>
+          {selectedBlog ? "Cập nhật Blog" : "Thêm blog"}
+        </Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Form>
@@ -130,7 +158,6 @@ const ModalCreateBlog = ({ show, setShow, fetchDataBlog }) => {
                   type="file"
                   accept="image/*"
                   onChange={handleUploadImage}
-                  required
                 />
                 {previewImage ? (
                   <div className="mt-2">
