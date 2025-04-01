@@ -117,6 +117,11 @@ function Header() {
               </a>
             </li>
             <li className="nav-item">
+              <NavLink className="nav-link" to="/blog">
+                Blog
+              </NavLink>
+            </li>
+            <li className="nav-item">
               <a
                 className="nav-link"
                 onClick={() => handleNavigation("reviews")}

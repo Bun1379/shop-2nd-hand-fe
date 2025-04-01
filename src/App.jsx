@@ -34,6 +34,9 @@ import ManageBranch from "./pages/Admin/Branch/ManageBranch";
 import DiscountPage from "./pages/User/DiscountPage/DiscountPage";
 import ManageBranchStockRequest from "./pages/Admin/BranchStockRequest/ManageBranchStockRequest";
 import PromotionPage from "./pages/User/Promotion/Promotion";
+import ManageBlog from "./pages/Admin/Blog/ManageBlog";
+import BlogPage from "./pages/User/Blog/BlogPage";
+import BlogDetail from "./pages/User/Blog/BlogDetail";
 
 function App() {
   return (
@@ -54,6 +57,8 @@ function App() {
               path="user-profile"
               element={<UserProfile initialSection="profile" />}
             />
+            <Route path="blog" element={<BlogPage />} />
+            <Route path="blog/:slug" element={<BlogDetail />} />
           </Route>
 
           <Route path="/login" element={<Login />} />
@@ -74,6 +79,7 @@ function App() {
             <Route path="category" element={<ManageCategory />} />
             <Route path="color" element={<ManageColor />} />
             <Route path="branch" element={<ManageBranch />} />
+            <Route path="blog" element={<ManageBlog />} />
             <Route
               path="branch-stock-request"
               element={<ManageBranchStockRequest />}
