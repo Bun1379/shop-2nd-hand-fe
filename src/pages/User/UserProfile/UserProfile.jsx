@@ -11,14 +11,14 @@ import UpdatePassword from "./UpdatePassword";
 import Address from "../Address/Address";
 import CancelRequest from "../CancelRequest/CancelRequest";
 import LogoutModal from "../../../components/LogoutModal/LogoutModal";
-
+import { useSocket } from "../../../layouts/SocketContext";
 const UserAccount = ({ initialSection }) => {
   const token = localStorage.getItem("token");
   if (!token) {
     window.location.href = "/login";
   }
   const location = useLocation();
-  const user = JSON.parse(localStorage.getItem("user"));
+  const { user } = useSocket();
   const [activeSection, setActiveSection] = useState(
     location.state?.initialSection || "profile"
   );

@@ -2,7 +2,9 @@ import React, { useState, useEffect } from 'react';
 import UserAPI from '../../../api/UserAPI';
 import { toast } from 'react-toastify';
 import UploadAPI from '../../../api/UploadAPI';
+import { useSocket } from '../../../layouts/SocketContext';
 const UpdateUser = ({ userInfo }) => {
+    const { setUser } = useSocket();
     const [formData, setFormData] = useState({
         username: '',
         email: '',
@@ -80,7 +82,7 @@ const UpdateUser = ({ userInfo }) => {
                 image: avatarUrl || userInfo.image
             };
             localStorage.setItem("user", JSON.stringify(updatedUser));
-            window.location.reload();
+            setUser(updatedUser);
         } catch (error) {
             toast.error(error.response.data.EM);
         }

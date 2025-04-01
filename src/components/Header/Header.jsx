@@ -5,13 +5,13 @@ import NotificationBell from "./NotificationBell";
 import logo from "../../assets/images/logoedit.png";
 import { Badge, Dropdown } from "react-bootstrap";
 import LogoutModal from "../LogoutModal/LogoutModal";
-
+import { useSocket } from "../../layouts/SocketContext";
 import "./Header.css";
 import CartAPI from "../../api/CartAPI";
 function Header() {
   const navigate = useNavigate();
   const location = useLocation();
-  const user = JSON.parse(localStorage.getItem("user"));
+  const { user } = useSocket();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [query, setQuery] = useState("");
   const [showModal, setShowModal] = useState(false);
