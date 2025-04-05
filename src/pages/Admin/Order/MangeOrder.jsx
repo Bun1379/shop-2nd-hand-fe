@@ -117,6 +117,36 @@ const ManageOrder = () => {
     }
   };
 
+  const UpdateOrderStatus = async (id, status) => {
+    try {
+      const data = {
+        status: status,
+      };
+      const res = await OrderAPI.UpdateOrderStatus(id, data);
+      if (res.status === 200) {
+        toast.success("Cập nhật trạng thái đơn hàng thành công");
+        fetchDataOrders();
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const UpdateOrderPaymentStatus = async (id, status) => {
+    try {
+      const data = {
+        status: status,
+      };
+      const res = await OrderAPI.UpdateOrderPaymentStatus(id, data);
+      if (res.status === 200) {
+        toast.success("Cập nhật trạng thái thanh toán thành công");
+        fetchDataOrders();
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <div className="p-4">
       <h1>Quản lý đơn hàng</h1>
@@ -194,7 +224,12 @@ const ManageOrder = () => {
         </Accordion.Item>
       </Accordion>
 
-      <OrderTable orders={filteredOrders} handleViewOrder={handleViewOrder} />
+      <OrderTable
+        orders={filteredOrders}
+        handleViewOrder={handleViewOrder}
+        UpdateOrderStatus={UpdateOrderStatus}
+        UpdateOrderPaymentStatus={UpdateOrderPaymentStatus}
+      />
       <ModalViewOrder show={showViewOrder} setShowView={setShowViewOrder} order={order} />
     </div>
   );
