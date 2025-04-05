@@ -11,7 +11,7 @@ const PurchasedProducts = () => {
   const [productsWithoutReview, setProductsWithoutReview] = useState([]);
   const [productsWithReview, setProductsWithReview] = useState([]);
   const [showReviewModal, setShowReviewModal] = useState(false);
-  const [selectedProduct, setSelectedProduct] = useState({});
+  const [selectedProduct, setSelectedProduct] = useState(null);
   const [currentTab, setCurrentTab] = useState("unreviewed");
 
   const [currentPageWithoutReview, setCurrentPageWithoutReview] = useState(0);
@@ -21,7 +21,9 @@ const PurchasedProducts = () => {
 
   const handleSubmitReview = async (review) => {
     if (!review.rating || !review.comment || review.comment.length < 10) {
-      toast.error("Vui lòng cung cấp đầy đủ đánh giá, nhận xét và nhận xét ít nhất 10 ký tự");
+      toast.error(
+        "Vui lòng cung cấp đầy đủ đánh giá, nhận xét và nhận xét ít nhất 10 ký tự"
+      );
       return;
     }
     if (currentTab === "reviewed") {
@@ -77,11 +79,17 @@ const PurchasedProducts = () => {
 
   // Xử lý phân trang cho sản phẩm chưa đánh giá
   const offsetWithoutReview = currentPageWithoutReview * productsPerPage;
-  const currentProductsWithoutReview = productsWithoutReview.slice(offsetWithoutReview, offsetWithoutReview + productsPerPage);
+  const currentProductsWithoutReview = productsWithoutReview.slice(
+    offsetWithoutReview,
+    offsetWithoutReview + productsPerPage
+  );
 
   // Xử lý phân trang cho sản phẩm đã đánh giá
   const offsetWithReview = currentPageWithReview * productsPerPage;
-  const currentProductsWithReview = productsWithReview.slice(offsetWithReview, offsetWithReview + productsPerPage);
+  const currentProductsWithReview = productsWithReview.slice(
+    offsetWithReview,
+    offsetWithReview + productsPerPage
+  );
 
   return (
     <div className="container mt-1">
@@ -89,7 +97,11 @@ const PurchasedProducts = () => {
       <ul className="nav nav-tabs bg-white" id="purchasedTabs" role="tablist">
         <li className="nav-item w-50" role="presentation">
           <button
-            className={`w-100 nav-link ${currentTab === "unreviewed" ? "active text-white bg-success" : "text-dark"}`}
+            className={`w-100 nav-link ${
+              currentTab === "unreviewed"
+                ? "active text-white bg-success"
+                : "text-dark"
+            }`}
             id="unreviewed-tab"
             onClick={() => setCurrentTab("unreviewed")}
             type="button"
@@ -99,7 +111,11 @@ const PurchasedProducts = () => {
         </li>
         <li className="nav-item w-50" role="presentation">
           <button
-            className={`w-100 nav-link ${currentTab === "reviewed" ? "active text-white bg-success" : "text-dark"}`}
+            className={`w-100 nav-link ${
+              currentTab === "reviewed"
+                ? "active text-white bg-success"
+                : "text-dark"
+            }`}
             id="reviewed-tab"
             onClick={() => setCurrentTab("reviewed")}
             type="button"
@@ -109,8 +125,16 @@ const PurchasedProducts = () => {
         </li>
       </ul>
       <div className="tab-content mt-3" id="purchasedTabContent">
-        <div className={`tab-pane fade ${currentTab === "unreviewed" ? "show active" : ""}`}>
-          {currentProductsWithoutReview.length === 0 && <p className="text-center mt-4 text-primary">Không có sản phẩm nào</p>}
+        <div
+          className={`tab-pane fade ${
+            currentTab === "unreviewed" ? "show active" : ""
+          }`}
+        >
+          {currentProductsWithoutReview.length === 0 && (
+            <p className="text-center mt-4 text-primary">
+              Không có sản phẩm nào
+            </p>
+          )}
           {currentProductsWithoutReview.map((product) => (
             <PurchasedProductItem
               key={product._id}
@@ -118,31 +142,42 @@ const PurchasedProducts = () => {
               handleShowReviewModal={handleShowReviewModal}
             />
           ))}
-          {productsWithoutReview.length > 0 && productsWithoutReview.length > productsPerPage && (
-            <div className="d-flex justify-content-center mt-4">
-              <ReactPaginate
-                nextLabel=">"
-                previousLabel="<"
-                breakLabel={"..."}
-                pageCount={Math.ceil(productsWithoutReview.length / productsPerPage)}
-                onPageChange={handlePageClickWithoutReview}
-                pageClassName="page-item"
-                pageLinkClassName="page-link"
-                previousClassName="page-item"
-                previousLinkClassName="page-link"
-                nextClassName="page-item"
-                nextLinkClassName="page-link"
-                breakClassName="page-item"
-                breakLinkClassName="page-link"
-                containerClassName="pagination"
-                activeClassName="active"
-                pageRangeDisplayed={5}
-              />
-            </div>
-          )}
+          {productsWithoutReview.length > 0 &&
+            productsWithoutReview.length > productsPerPage && (
+              <div className="d-flex justify-content-center mt-4">
+                <ReactPaginate
+                  nextLabel=">"
+                  previousLabel="<"
+                  breakLabel={"..."}
+                  pageCount={Math.ceil(
+                    productsWithoutReview.length / productsPerPage
+                  )}
+                  onPageChange={handlePageClickWithoutReview}
+                  pageClassName="page-item"
+                  pageLinkClassName="page-link"
+                  previousClassName="page-item"
+                  previousLinkClassName="page-link"
+                  nextClassName="page-item"
+                  nextLinkClassName="page-link"
+                  breakClassName="page-item"
+                  breakLinkClassName="page-link"
+                  containerClassName="pagination"
+                  activeClassName="active"
+                  pageRangeDisplayed={5}
+                />
+              </div>
+            )}
         </div>
-        <div className={`tab-pane fade ${currentTab === "reviewed" ? "show active" : ""}`}>
-          {currentProductsWithReview.length === 0 && <p className="text-center mt-4 text-primary">Không có sản phẩm nào</p>}
+        <div
+          className={`tab-pane fade ${
+            currentTab === "reviewed" ? "show active" : ""
+          }`}
+        >
+          {currentProductsWithReview.length === 0 && (
+            <p className="text-center mt-4 text-primary">
+              Không có sản phẩm nào
+            </p>
+          )}
           {currentProductsWithReview.map(({ review }) => (
             <ReviewedProductItem
               key={review._id}
@@ -150,28 +185,31 @@ const PurchasedProducts = () => {
               handleShowReviewModal={handleShowReviewModal}
             />
           ))}
-          {productsWithReview.length > 0 && productsWithReview.length > productsPerPage && (
-            <div className="d-flex justify-content-center mt-4">
-              <ReactPaginate
-                nextLabel=">"
-                previousLabel="<"
-                breakLabel={"..."}
-                pageCount={Math.ceil(productsWithReview.length / productsPerPage)}
-                onPageChange={handlePageClickWithReview}
-                pageClassName="page-item"
-                pageLinkClassName="page-link"
-                previousClassName="page-item"
-                previousLinkClassName="page-link"
-                nextClassName="page-item"
-                nextLinkClassName="page-link"
-                breakClassName="page-item"
-                breakLinkClassName="page-link"
-                containerClassName="pagination"
-                activeClassName="active"
-                pageRangeDisplayed={5}
-              />
-            </div>
-          )}
+          {productsWithReview.length > 0 &&
+            productsWithReview.length > productsPerPage && (
+              <div className="d-flex justify-content-center mt-4">
+                <ReactPaginate
+                  nextLabel=">"
+                  previousLabel="<"
+                  breakLabel={"..."}
+                  pageCount={Math.ceil(
+                    productsWithReview.length / productsPerPage
+                  )}
+                  onPageChange={handlePageClickWithReview}
+                  pageClassName="page-item"
+                  pageLinkClassName="page-link"
+                  previousClassName="page-item"
+                  previousLinkClassName="page-link"
+                  nextClassName="page-item"
+                  nextLinkClassName="page-link"
+                  breakClassName="page-item"
+                  breakLinkClassName="page-link"
+                  containerClassName="pagination"
+                  activeClassName="active"
+                  pageRangeDisplayed={5}
+                />
+              </div>
+            )}
         </div>
       </div>
 
@@ -180,8 +218,9 @@ const PurchasedProducts = () => {
         setShow={setShowReviewModal}
         handleSubmitReview={handleSubmitReview}
         review={selectedProduct}
+        setReview={setSelectedProduct}
       />
-    </div >
+    </div>
   );
 };
 

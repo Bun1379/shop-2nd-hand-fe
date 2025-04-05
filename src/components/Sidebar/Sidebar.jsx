@@ -1,5 +1,11 @@
 import { Sidebar, Menu, MenuItem, SubMenu } from "react-pro-sidebar";
-import { FaTachometerAlt, FaUserCog, FaBox, FaHome } from "react-icons/fa";
+import {
+  FaTachometerAlt,
+  FaUserCog,
+  FaBox,
+  FaHome,
+  FaBlog,
+} from "react-icons/fa";
 import { CiBoxList, CiLogout } from "react-icons/ci";
 import { GiClothes } from "react-icons/gi";
 import { Link, useNavigate } from "react-router-dom";
@@ -44,6 +50,10 @@ const SideBar = ({ image, collapsed, toggled, handleToggleSidebar }) => {
             <MenuItem icon={<FaHome />} component={<Link to="/admin/banner" />}>
               {" "}
               Banner
+            </MenuItem>
+            <MenuItem icon={<FaBlog />} component={<Link to="/admin/blog" />}>
+              {" "}
+              Blog
             </MenuItem>
             <MenuItem
               icon={<GiClothes />}
