@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import BannerAPI from "../../../api/BannerAPI";
 import ProductItem from "../../../components/ProductItem/ProductItem";
+import { Image } from "react-bootstrap";
 
 const PromotionPage = () => {
   const { slug } = useParams();
@@ -25,6 +26,7 @@ const PromotionPage = () => {
   return (
     <div>
       <h1>{promotion.title}</h1>
+      <Image src={promotion?.image} fluid />
       <div
         className="w-100 mt-4"
         style={{
