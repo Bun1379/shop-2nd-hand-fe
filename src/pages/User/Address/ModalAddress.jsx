@@ -8,7 +8,6 @@ import Map from "../../../components/Map/Map";
 
 const AddressModal = ({ show, handleClose, onSave, initialData }) => {
     const [formData, setFormData] = useState({});
-    const [mapData, setMapData] = useState({});
 
     useEffect(() => {
         setFormData({
@@ -35,22 +34,28 @@ const AddressModal = ({ show, handleClose, onSave, initialData }) => {
     }, []);
 
     useEffect(() => {
-        if (formData.city) {
-            const selectedCity = locations.find(city => city.name === formData.city);
-            setDistricts(selectedCity?.districts || []);
-        } else {
-            setDistricts([]);
+        const selectedCity = locations.find(city => city.name.includes(formData.city));
+        if (selectedCity && selectedCity.name !== formData.city) {
+            setFormData(prev => ({ ...prev, city: selectedCity.name }));
         }
+        setDistricts(selectedCity?.districts || []);
     }, [formData.city, locations]);
 
     useEffect(() => {
-        if (formData.district) {
-            const selectedDistrict = districts.find(district => district.name === formData.district);
-            setWards(selectedDistrict?.wards || []);
-        } else {
-            setWards([]);
+        const selectedDistrict = districts.find(district => district.name.includes(formData.district));
+        if (selectedDistrict && selectedDistrict.name !== formData.district) {
+            setFormData(prev => ({ ...prev, district: selectedDistrict.name }));
         }
+        setWards(selectedDistrict?.wards || []);
     }, [formData.district, districts]);
+
+    useEffect(() => {
+        const selectedWard = wards.find(ward => ward.name.includes(formData.ward));
+        if (selectedWard && selectedWard.name !== formData.ward) {
+            setFormData(prev => ({ ...prev, ward: selectedWard.name }));
+        }
+    }, [formData.ward, wards]);
+
 
     const handleChange = (selectedOption, name) => {
         setFormData({ ...formData, [name]: selectedOption?.value || null }); // Chỉ lưu value
@@ -64,18 +69,6 @@ const AddressModal = ({ show, handleClose, onSave, initialData }) => {
         }
         onSave(formData);
     };
-
-    useEffect(() => {
-        if (mapData.city && mapData.district && mapData.ward && mapData.address) {
-            setFormData((prev) => ({
-                ...prev,
-                city: locations.find(city => city.name.includes(mapData.city))?.name,
-                district: districts.find(district => district.name.includes(mapData.district))?.name,
-                ward: wards.find(ward => ward.name.includes(mapData.ward))?.name,
-                address: mapData.address,
-            }));
-        }
-    }, [mapData]);
 
     // console.log("formData", formData);
 
@@ -157,7 +150,7 @@ const AddressModal = ({ show, handleClose, onSave, initialData }) => {
 
                     <Map
                         formData={formData}
-                        setMapData={setMapData}
+                        setFormData={setFormData}
                     />
 
                     <Button className="mt-2" variant="primary" type="submit">

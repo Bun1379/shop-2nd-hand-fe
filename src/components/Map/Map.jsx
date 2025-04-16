@@ -5,7 +5,7 @@ import axios from "axios";
 const API_KEY = import.meta.env.VITE_MAP_API_KEY;
 const MAP_TOKEN = import.meta.env.VITE_MAP_TOKEN;
 
-const Map = ({ formData, setMapData }) => {
+const Map = ({ formData, setFormData }) => {
     const [viewport, setViewport] = useState({
         width: "100%",
         height: "400px",
@@ -59,7 +59,8 @@ const Map = ({ formData, setMapData }) => {
             console.log("Kết quả reverse geocode:", res.data);
             const result = res.data?.results?.[0];
             if (result) {
-                setMapData(() => ({
+                setFormData((prev) => ({
+                    ...prev,
                     city: result.compound.province,
                     district: result.compound.district,
                     ward: result.compound.commune,
