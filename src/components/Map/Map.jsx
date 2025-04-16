@@ -2,6 +2,9 @@ import React, { useEffect, useState } from "react";
 import ReactMapGL, { Marker } from "@goongmaps/goong-map-react";
 import axios from "axios";
 
+const API_KEY = import.meta.env.VITE_MAP_API_KEY;
+const MAP_TOKEN = import.meta.env.VITE_MAP_TOKEN;
+
 const Map = ({ formData, setMapData }) => {
     const [viewport, setViewport] = useState({
         width: "100%",
@@ -25,7 +28,7 @@ const Map = ({ formData, setMapData }) => {
                 const res = await axios.get("https://rsapi.goong.io/Geocode", {
                     params: {
                         address: fullAddress,
-                        api_key: env.MAP_API_KEY,
+                        api_key: API_KEY,
                     },
                 });
                 console.log("Kết quả geocode:", res.data);
@@ -50,10 +53,10 @@ const Map = ({ formData, setMapData }) => {
             const res = await axios.get("https://rsapi.goong.io/Geocode", {
                 params: {
                     latlng: `${lat},${lng}`,
-                    api_key: env.MAP_API_KEY,
+                    api_key: API_KEY,
                 },
             });
-            // console.log("Kết quả reverse geocode:", res.data);
+            console.log("Kết quả reverse geocode:", res.data);
             const result = res.data?.results?.[0];
             if (result) {
                 setMapData(() => ({
@@ -79,7 +82,7 @@ const Map = ({ formData, setMapData }) => {
         <ReactMapGL
             {...viewport}
             onViewportChange={setViewport}
-            goongApiAccessToken={env.MAP_TOKEN}
+            goongApiAccessToken={MAP_TOKEN}
         >
             <Marker
                 latitude={marker.latitude}
