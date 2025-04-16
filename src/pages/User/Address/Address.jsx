@@ -3,11 +3,13 @@ import AddressAPI from "../../../api/AddressAPI";
 import ModalAddress from "./ModalAddress";
 import { Button, Row, Col } from "react-bootstrap";
 import { toast } from "react-toastify";
+import ModalConfirm from "../../../components/ConfirmModal/ConfirmModal";
 
 const Address = () => {
     const [addresses, setAddresses] = useState([]);
     const [showModal, setShowModal] = useState(false);
     const [currentAddress, setCurrentAddress] = useState(null);
+    const [showConfirm, setShowConfirm] = useState(false);
 
     useEffect(() => {
         loadAddresses();
@@ -33,6 +35,17 @@ const Address = () => {
         setShowModal(false);
         setCurrentAddress(null);
     };
+
+    const openConfirm = (address = null) => {
+        setCurrentAddress(address);
+        setShowConfirm(true);
+    }
+
+    const closeConfirm = () => {
+        setShowConfirm(false);
+        setCurrentAddress(null);
+    };
+
 
     const handleSave = async (addressData) => {
         try {
@@ -91,7 +104,7 @@ const Address = () => {
                                 <div className="d-flex gap-2">
                                     <Button variant="warning" onClick={() => openModal(address)}>Cập Nhật</Button>
                                     {!address.isDefault && (
-                                        <Button variant="danger" onClick={() => handleDelete(address._id)}>Xóa</Button>
+                                        <Button variant="danger" onClick={() => openConfirm(address)}>Xóa</Button>
                                     )}
                                     <Button
                                         variant="info"
@@ -111,6 +124,15 @@ const Address = () => {
                 handleClose={closeModal}
                 onSave={handleSave}
                 initialData={currentAddress}
+            />
+            <ModalConfirm
+                show={showConfirm}
+                onClose={() => closeConfirm()}
+                onConfirm={() => {
+                    handleDelete(currentAddress._id);
+                    setShowConfirm(false);
+                }}
+                text="Bạn có chắc chắn muốn xóa địa chỉ này không?"
             />
         </div>
     );
