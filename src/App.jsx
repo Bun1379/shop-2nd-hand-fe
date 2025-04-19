@@ -37,11 +37,13 @@ import PromotionPage from "./pages/User/Promotion/Promotion";
 import ManageBlog from "./pages/Admin/Blog/ManageBlog";
 import BlogPage from "./pages/User/Blog/BlogPage";
 import BlogDetail from "./pages/User/Blog/BlogDetail";
+import ScrollToTop from "./helper/ScrollToTop";
 
 function App() {
   return (
     <SocketProvider>
       <BrowserRouter>
+        <ScrollToTop />
         <Routes>
           <Route path="/" element={<UserLayout />}>
             <Route index element={<Home />} />
