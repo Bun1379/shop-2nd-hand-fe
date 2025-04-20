@@ -21,6 +21,7 @@ const SideBar = ({ image, collapsed, toggled, handleToggleSidebar }) => {
 
   const handleShow = () => setShowModal(true); // Mở modal
   const handleClose = () => setShowModal(false); // Đóng modal
+  const user = JSON.parse(localStorage.getItem("user"));
   return (
     <>
       <Sidebar collapsed={collapsed} className="h-100">
@@ -47,14 +48,7 @@ const SideBar = ({ image, collapsed, toggled, handleToggleSidebar }) => {
             Thống kê
           </MenuItem>
           <SubMenu label="Quản lý" icon={<CiBoxList />}>
-            <MenuItem icon={<FaHome />} component={<Link to="/admin/banner" />}>
-              {" "}
-              Banner
-            </MenuItem>
-            <MenuItem icon={<FaBlog />} component={<Link to="/admin/blog" />}>
-              {" "}
-              Blog
-            </MenuItem>
+
             <MenuItem
               icon={<GiClothes />}
               component={<Link to="/admin/product" />}
@@ -70,52 +64,67 @@ const SideBar = ({ image, collapsed, toggled, handleToggleSidebar }) => {
               Yêu cầu nhập hàng
             </MenuItem>
 
-            <MenuItem
-              icon={<FaUserCog />}
-              component={<Link to="/admin/user" />}
-            >
-              {" "}
-              Người dùng
-            </MenuItem>
             <MenuItem icon={<FaBox />} component={<Link to="/admin/order" />}>
               {" "}
               Đơn hàng
             </MenuItem>
-            <MenuItem
-              icon={<RiCoupon2Fill />}
-              component={<Link to="/admin/discount" />}
-            >
-              {" "}
-              Mã giảm giá
-            </MenuItem>
+
             <MenuItem
               icon={<CiBoxList />}
               component={<Link to="/admin/cancel-request" />}
             >
               {" "}
               Yêu cầu hủy đơn
+
+
             </MenuItem>
-            <MenuItem
-              icon={<TbCategoryPlus />}
-              component={<Link to="/admin/category" />}
-            >
-              {" "}
-              Danh mục
-            </MenuItem>
-            <MenuItem
-              icon={<IoMdColorPalette />}
-              component={<Link to="/admin/color" />}
-            >
-              {" "}
-              Màu sắc
-            </MenuItem>
-            <MenuItem
-              icon={<IoMdColorPalette />}
-              component={<Link to="/admin/branch" />}
-            >
-              {" "}
-              Chi nhánh
-            </MenuItem>
+            {user.is_admin === true && (
+              <>
+                <MenuItem
+                  icon={<FaUserCog />}
+                  component={<Link to="/admin/user" />}
+                >
+                  {" "}
+                  Người dùng
+                </MenuItem>
+                <MenuItem
+                  icon={<RiCoupon2Fill />}
+                  component={<Link to="/admin/discount" />}
+                >
+                  {" "}
+                  Mã giảm giá
+                </MenuItem>
+                <MenuItem icon={<FaHome />} component={<Link to="/admin/banner" />}>
+                  {" "}
+                  Banner
+                </MenuItem>
+                <MenuItem icon={<FaBlog />} component={<Link to="/admin/blog" />}>
+                  {" "}
+                  Blog
+                </MenuItem>
+                <MenuItem
+                  icon={<TbCategoryPlus />}
+                  component={<Link to="/admin/category" />}
+                >
+                  {" "}
+                  Danh mục
+                </MenuItem>
+                <MenuItem
+                  icon={<IoMdColorPalette />}
+                  component={<Link to="/admin/color" />}
+                >
+                  {" "}
+                  Màu sắc
+                </MenuItem>
+                <MenuItem
+                  icon={<IoMdColorPalette />}
+                  component={<Link to="/admin/branch" />}
+                >
+                  {" "}
+                  Chi nhánh
+                </MenuItem>
+              </>
+            )}
           </SubMenu>
           <MenuItem icon={<CiLogout />} onClick={() => handleShow()}>
             {" "}
