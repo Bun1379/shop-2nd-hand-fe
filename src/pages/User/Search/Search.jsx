@@ -71,6 +71,7 @@ const Search = () => {
         condition: selectedCondition.value,
         color: selectedColor.value,
         page: 1,
+        limit: 8,
       });
       //   console.log(search);
       console.log(response.data.DT);
@@ -89,6 +90,7 @@ const Search = () => {
         sortOrder: sort.value,
         category: selectedCategories,
         page: page + 1,
+        limit: 8,
       });
       // console.log(sort.value, page + 1);
       // console.log(response.data.DT.products);
@@ -132,7 +134,7 @@ const Search = () => {
   }, []);
 
   return (
-    <div className="d-flex flex-row gap-3">
+    <div className="d-flex flex-row gap-2">
       <SearchFilter
         onSelectCategory={handleCategorySelect}
         onSearch={fetchData}
@@ -145,18 +147,18 @@ const Search = () => {
         selectedCondition={selectedCondition}
         selectedCategories={selectedCategories}
       />
-      <div className="text-center w-100">
-        Kết quả tìm kiếm cho: {searchParams.get("query")}
+      <div className="d-flex flex-column w-100">
+        <div className="">
+          Kết quả tìm kiếm cho: {searchParams.get("query")}
+        </div>
         <ReactSelect options={options} value={sort} onChange={setSort} />
-        <div className="d-flex justify-content-center flex-wrap">
+        <div className="d-flex flex-wrap gap-3 mt-2 justify-content-center">
           {products.length === 0 && <div>Không tìm thấy sản phẩm</div>}
           {products.length > 0 &&
             products.map((product) => (
-              <div
-                className="m-2"
-                key={product._id}
+              <div key={product._id} className=""
                 style={{
-                  width: "240px",
+                  width: "calc(25% - 0.75rem)",
                 }}
               >
                 <ProductItem key={product._id} product={product} />
@@ -164,7 +166,7 @@ const Search = () => {
             ))}
         </div>
         {page < totalPages && (
-          <Button className="primary" onClick={loadMore}>
+          <Button className="primary mt-3" onClick={loadMore}>
             Xem thêm
           </Button>
         )}

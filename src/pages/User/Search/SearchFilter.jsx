@@ -66,9 +66,8 @@ const SearchFilter = ({
             categories.map((category) => (
               <div
                 key={category._id}
-                className={`list-group-item list-group-item-action d-flex align-items-center ${
-                  selectedCategories.includes(category._id) ? "active" : ""
-                }`}
+                className={`list-group-item list-group-item-action d-flex align-items-center ${selectedCategories.includes(category._id) ? "active" : ""
+                  }`}
                 onClick={() => handleCategorySelect(category._id)}
                 style={{ cursor: "pointer" }}
               >

@@ -105,20 +105,14 @@ function Home() {
         {/* Product List */}
         <div className="container-fluid w-100 bg-white border border-2 border-success rounded justify-content-center ">
           <div
-            className="w-100 mt-4"
-            style={{
-              display: "flex",
-              flexWrap: "wrap",
-              justifyContent: "center",
-              gap: "3rem",
-            }}
+            className="mt-4 d-flex flex-wrap gap-3 justify-content-center"
           >
             {arrayProducts.map((product) => (
               <div
-                className="product-item text-wrap shadow"
+                className=""
                 key={product._id}
                 style={{
-                  width: "240px",
+                  width: "calc(20% - 1rem)",
                 }}
               >
                 <ProductItem product={product} />
