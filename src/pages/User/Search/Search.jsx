@@ -5,7 +5,8 @@ import ProductItem from "../../../components/ProductItem/ProductItem";
 import SearchFilter from "./SearchFilter";
 import ReactSelect from "react-select";
 import ColorAPI from "../../../api/ColorAPI";
-import { Button } from "react-bootstrap";
+import ReactPaginate from "react-paginate";
+import { use } from "react";
 
 const Search = () => {
   const [searchParams] = useSearchParams();
@@ -70,36 +71,19 @@ const Search = () => {
         category: selectedCategories,
         condition: selectedCondition.value,
         color: selectedColor.value,
-        page: 1,
+        page: page,
         limit: 8,
       });
       //   console.log(search);
       console.log(response.data.DT);
       setProducts(response.data.DT.products);
       setTotalPages(response.data.DT.totalPages);
-      setPage(1);
     } catch (error) {
       console.error("Error:", error);
     }
   };
 
-  const loadMore = async () => {
-    try {
-      const response = await ProductAPI.GetProducts({
-        search: searchParams.get("query"),
-        sortOrder: sort.value,
-        category: selectedCategories,
-        page: page + 1,
-        limit: 8,
-      });
-      // console.log(sort.value, page + 1);
-      // console.log(response.data.DT.products);
-      setProducts([...products, ...response.data.DT.products]);
-      setPage(page + 1);
-    } catch (error) {
-      console.error("Error:", error);
-    }
-  };
+
 
   const handleCategorySelect = (id) => {
     if (selectedCategories.includes(id)) {
@@ -111,8 +95,17 @@ const Search = () => {
     }
   };
 
+  const handlePageClick = ({ selected }) => {
+    setPage(selected + 1);
+  };
+
+  useEffect(() => {
+    fetchData(searchParams.get("query"));
+  }, [page]);
+
   useEffect(() => {
     const search = searchParams.get("query");
+    setPage(1);
     fetchData(search);
   }, [
     searchParams,
@@ -146,13 +139,16 @@ const Search = () => {
         selectedColor={selectedColor}
         selectedCondition={selectedCondition}
         selectedCategories={selectedCategories}
+        optionSort={options}
+        setSort={setSort}
+        sort={sort}
       />
       <div className="d-flex flex-column w-100">
-        <div className="">
+        {/* <div className="">
           Kết quả tìm kiếm cho: {searchParams.get("query")}
-        </div>
-        <ReactSelect options={options} value={sort} onChange={setSort} />
-        <div className="d-flex flex-wrap gap-3 mt-2 justify-content-center">
+        </div> */}
+        {/* <ReactSelect options={options} value={sort} onChange={setSort} /> */}
+        <div className="d-flex flex-wrap gap-3 justify-content-center">
           {products.length === 0 && <div>Không tìm thấy sản phẩm</div>}
           {products.length > 0 &&
             products.map((product) => (
@@ -165,10 +161,29 @@ const Search = () => {
               </div>
             ))}
         </div>
-        {page < totalPages && (
-          <Button className="primary mt-3" onClick={loadMore}>
-            Xem thêm
-          </Button>
+        {totalPages > 1 && (
+          <div className="d-flex justify-content-center mt-4">
+            <ReactPaginate
+              nextLabel=">"
+              onPageChange={handlePageClick}
+              pageRangeDisplayed={5}
+              pageCount={totalPages}
+              previousLabel="<"
+              marginPagesDisplayed={2}
+              pageClassName="page-item"
+              pageLinkClassName="page-link"
+              previousClassName="page-item"
+              previousLinkClassName="page-link"
+              nextClassName="page-item"
+              nextLinkClassName="page-link"
+              breakLabel="..."
+              breakClassName="page-item"
+              breakLinkClassName="page-link"
+              containerClassName="pagination"
+              activeClassName="active"
+              forcePage={page - 1}
+            />
+          </div>
         )}
       </div>
     </div>
