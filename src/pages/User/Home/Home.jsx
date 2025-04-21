@@ -49,6 +49,26 @@ function Home() {
     fetchDataProducts();
   }, [page]);
 
+  const [itemWidth, setItemWidth] = useState("20%");
+
+  useEffect(() => {
+    function handleResize() {
+      const width = window.innerWidth;
+      if (width < 768) {
+        setItemWidth("calc(calc(100%/1) - 1rem)");
+      } else if (width < 1200) {
+        setItemWidth("calc(calc(100%/3) - 1rem)");
+      } else {
+        setItemWidth("calc(calc(100%/5) - 1rem)");
+      }
+    }
+
+    window.addEventListener("resize", handleResize);
+    handleResize(); // gọi lần đầu
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   return (
     <>
       <div className="my-5">
@@ -105,14 +125,14 @@ function Home() {
         {/* Product List */}
         <div className="container-fluid w-100 bg-white border border-2 border-success rounded justify-content-center ">
           <div
-            className="mt-4 d-flex flex-wrap gap-3 justify-content-center"
+            className="mt-4 d-flex flex-wrap justify-content-center gap-3"
           >
             {arrayProducts.map((product) => (
               <div
                 className=""
                 key={product._id}
                 style={{
-                  width: "calc(20% - 1rem)",
+                  width: itemWidth,
                 }}
               >
                 <ProductItem product={product} />

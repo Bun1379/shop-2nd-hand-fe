@@ -148,15 +148,12 @@ const Search = () => {
           Kết quả tìm kiếm cho: {searchParams.get("query")}
         </div> */}
         {/* <ReactSelect options={options} value={sort} onChange={setSort} /> */}
-        <div className="d-flex flex-wrap gap-3 justify-content-center">
+        <div className="justify-content-center row">
           {products.length === 0 && <div>Không tìm thấy sản phẩm</div>}
           {products.length > 0 &&
             products.map((product) => (
-              <div key={product._id} className=""
-                style={{
-                  width: "calc(25% - 0.75rem)",
-                }}
-              >
+              <div key={product._id} className="col-12 col-md-6 col-lg-3 mb-3">
+
                 <ProductItem key={product._id} product={product} />
               </div>
             ))}

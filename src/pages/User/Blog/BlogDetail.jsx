@@ -60,40 +60,46 @@ const BlogDetail = () => {
             dangerouslySetInnerHTML={{ __html: blog?.content }}
           />
         </Col>
-        <Col className="d-none d-md-block" md={4}>
-          <Card className="bg-white shadow-sm mb-5 rounded">
-            <Card.Body>
-              <Card.Title>Mục Lục</Card.Title>
-              <ul className="list-group list-group-flush">
-                {headings.map((heading, index) => {
-                  let displayText = heading.text;
+        <Col className="d-none d-md-block " md={4}>
+          <div style={{ position: "sticky", top: "90px" }}>
+            <Card className="bg-white shadow-sm rounded ">
+              <Card.Body>
+                <Card.Title>Mục Lục</Card.Title>
+                <ul className="list-group list-group-flush">
+                  {headings.map((heading, index) => {
+                    let displayText = heading.text;
 
-                  if (heading.level === "h1") {
-                    counterH1++;
-                    counterH2 = 0;
-                    displayText = `${counterH1}. ${heading.text}`;
-                  } else if (heading.level === "h2") {
-                    counterH2++;
-                    displayText = `${counterH1}.${counterH2} ${heading.text}`;
-                  }
+                    if (heading.level === "h1") {
+                      counterH1++;
+                      counterH2 = 0;
+                      displayText = `${counterH1}. ${heading.text}`;
+                    } else if (heading.level === "h2") {
+                      counterH2++;
+                      displayText = `${counterH1}.${counterH2} ${heading.text}`;
+                    }
 
-                  return (
-                    <li key={heading.id} className="list-group-item">
-                      <a
-                        href={`#${heading.id}`}
-                        style={{
-                          paddingLeft: heading.level === "h2" ? "20px" : "0px",
-                        }}
-                        className={`text-decoration-none text-black`}
-                      >
-                        {displayText}
-                      </a>
-                    </li>
-                  );
-                })}
-              </ul>
-            </Card.Body>
-          </Card>
+                    return (
+                      <li key={heading.id} className="list-group-item">
+                        <a
+                          href={`#${heading.id}`}
+                          style={{
+                            paddingLeft: heading.level === "h2" ? "20px" : "0px",
+                            transition: "color 0.2s",
+                            color: "#333",
+                          }}
+                          className={`text-decoration-none`}
+                          onMouseEnter={(e) => (e.target.style.color = "#007bff")}
+                          onMouseLeave={(e) => (e.target.style.color = "#333")}
+                        >
+                          {displayText}
+                        </a>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </Card.Body>
+            </Card>
+          </div>
         </Col>
       </Row>
     </div>

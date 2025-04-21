@@ -3,7 +3,7 @@ import { axiosClient, axiosPrivate } from "./Axios";
 class BlogAPI {
   static async GetBlog(params = {}) {
     const url = "/blog";
-    return axiosPrivate.get(url, { params });
+    return axiosClient.get(url, { params });
   }
 
   static async CreateBlog(data) {
@@ -23,7 +23,7 @@ class BlogAPI {
 
   static async GetBlogBySlug(slug) {
     const url = `/blog/${slug}`;
-    return axiosPrivate.get(url);
+    return axiosClient.get(url);
   }
 }
 

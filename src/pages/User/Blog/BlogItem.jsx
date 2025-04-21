@@ -38,7 +38,7 @@ const BlogItem = ({ blog }) => {
         <Card.Text className="text-truncate">
           {truncateContent(blog.content)}
         </Card.Text>
-        <Card.Text className="small">Last updated 3 mins ago</Card.Text>
+        <Card.Text className="small">Cập nhật vào: {new Date(blog.updatedAt).toLocaleString("VN")}</Card.Text>
       </Card.ImgOverlay>
     </Card>
   );

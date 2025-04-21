@@ -22,8 +22,9 @@ const BlogPage = () => {
 
   return (
     <div>
-      <h1>Blog Page</h1>
-      <hr />
+      <h1 className="w-100 text-center text-uppercase mb-4 mt-5 bg-white border border-2 border-success rounded p-3">
+        Blog thời trang
+      </h1>
       <Row>
         {blogs.map((blog) => (
           <Col key={blog._id} md={4} xs={12} className="mb-4">

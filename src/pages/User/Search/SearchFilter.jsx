@@ -75,7 +75,7 @@ const SearchFilter = ({
         <input
           type="text"
           className="form-control"
-          placeholder="Tìm kiếm sản phẩm..."
+          placeholder="Nhập tên sản phẩm"
           value={searchText}
           onChange={(e) => setSearchText(e.target.value)}
         />

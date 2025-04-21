@@ -36,7 +36,13 @@ const ProductItem = ({ product }) => {
   };
 
   return (
-    <Card className="h-100 w-100" onClick={handleClick} style={{ cursor: "pointer", boxShadow: "#888888 5px 10px 18px" }}>
+    <Card
+      className="h-100 w-100"
+      onClick={handleClick}
+      style={{
+        cursor: "pointer", boxShadow: "#888888 5px 10px 18px"
+      }}
+    >
       <div className="image-container">
         {product.images.map((image, index) => (
           <img
