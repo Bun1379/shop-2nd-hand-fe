@@ -9,6 +9,7 @@ import { setUserInLocalStorage } from "../../layouts/SocketContext";
 import PasswordInput from "../../components/PasswordInput/PasswordInput";
 
 const Login = () => {
+  localStorage.clear();
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");

@@ -38,6 +38,7 @@ import ManageBlog from "./pages/Admin/Blog/ManageBlog";
 import BlogPage from "./pages/User/Blog/BlogPage";
 import BlogDetail from "./pages/User/Blog/BlogDetail";
 import ScrollToTop from "./helper/ScrollToTop";
+import notfoundImg from './assets/images/notfound.png';
 
 function App() {
   return (
@@ -89,7 +90,11 @@ function App() {
           </Route>
 
           <Route path="/payment/result" element={<PaymentResult />} />
-          <Route path="*" element={<h1>404 Not Found</h1>} />
+          <Route path="*" element={
+            <div className="d-flex justify-content-center align-items-center" style={{ height: '100vh' }}>
+              <img src={notfoundImg} alt="404 Not Found" className="img-fluid rounded-circle " style={{ objectFit: 'cover', width: '600px', height: '600px' }} />
+            </div>
+          } />
         </Routes>
       </BrowserRouter>
       <ToastContainer
