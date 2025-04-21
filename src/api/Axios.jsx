@@ -1,6 +1,5 @@
 import axios from "axios";
 import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
 const BASE_URL = `${import.meta.env.VITE_API_URL}/api/v1`;
 
 // Tạo axios client chung
@@ -17,10 +16,8 @@ const axiosPrivate = axios.create({
 axiosPrivate.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem("token");
-    const navigate = useNavigate();
     if (!token) {
       toast.error("Vui lòng đăng nhập để thực hiện thao tác này");
-      navigate("/login");
     } else {
       config.headers["Authorization"] = `Bearer ${token}`;
       return config;
@@ -38,7 +35,7 @@ axiosPrivate.interceptors.response.use(
   (error) => {
     if (error.response.data && error.response.data.EC === -999) {
       localStorage.removeItem("token");
-      navigate("/login");
+      window.location.href = "/login";
     }
     return Promise.reject(error);
   }
