@@ -66,6 +66,11 @@ const SearchFilter = ({
     }
   }
 
+  const handleResetFilter = () => {
+    setSearchText("");
+    resetFilter();
+  }
+
   return (
     <div className="filter-sidebar p-3 rounded bg-white shadow-sm" style={{ minWidth: "250px" }}>
 
@@ -234,7 +239,7 @@ const SearchFilter = ({
       </div>
 
       {/* Xóa bộ lọc */}
-      <button className="btn btn-outline-danger w-100" onClick={resetFilter}>
+      <button className="btn btn-outline-danger w-100" onClick={handleResetFilter}>
         Xóa tất cả bộ lọc
       </button>
     </div>
