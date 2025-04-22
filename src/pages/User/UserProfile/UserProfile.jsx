@@ -12,6 +12,20 @@ import Address from "../Address/Address";
 import CancelRequest from "../CancelRequest/CancelRequest";
 import LogoutModal from "../../../components/LogoutModal/LogoutModal";
 import { useSocket } from "../../../layouts/SocketContext";
+import { Card, Image, ListGroup } from "react-bootstrap";
+import {
+  Person,
+  Lock,
+  BoxSeam,
+  XCircle,
+  Cart,
+  Bell,
+  GeoAlt,
+  Heart,
+  Tag,
+  BoxArrowRight,
+} from "react-bootstrap-icons";
+
 const UserAccount = ({ initialSection }) => {
   const token = localStorage.getItem("token");
   if (!token) {
@@ -54,102 +68,99 @@ const UserAccount = ({ initialSection }) => {
 
   return (
     <div className="container" style={{ marginTop: "100px" }}>
-      <div className="row">
-        <div className="user-profile col-md-3 text-center">
-          <img
+      <div className="row align-items-start">
+        <Card className="shadow-sm border-0 text-center p-3 mb-4 user-profile col-md-3">
+          <Image
             src={user.image}
-            alt="Avatar"
-            className="img-fluid rounded-circle border border-2 border-primary"
-            style={{ width: "200px", height: "200px", objectFit: "cover" }}
+            roundedCircle
+            className="border border-3 border-primary mx-auto"
+            style={{ width: "150px", height: "150px", objectFit: "cover" }}
           />
-
-          <ul className="list-group mt-3">
-            <li
-              className={`list-group-item ${
-                activeSection === "profile" ? "active" : ""
-              }`}
+          <ListGroup variant="flush" className="mt-4">
+            <ListGroup.Item
+              action
+              active={activeSection === "profile"}
               onClick={() => setActiveSection("profile")}
             >
+              <Person className="me-2" />
               Thông tin cá nhân
-            </li>
-            <li
-              className={`list-group-item ${
-                activeSection === "update-password" ? "active" : ""
-              }`}
+            </ListGroup.Item>
+            <ListGroup.Item
+              action
+              active={activeSection === "update-password"}
               onClick={() => setActiveSection("update-password")}
             >
+              <Lock className="me-2" />
               Đổi mật khẩu
-            </li>
-            <li
-              className={`list-group-item ${
-                activeSection === "orders" ? "active" : ""
-              }`}
+            </ListGroup.Item>
+            <ListGroup.Item
+              action
+              active={activeSection === "orders"}
               onClick={() => setActiveSection("orders")}
             >
+              <BoxSeam className="me-2" />
               Đơn hàng
-            </li>
-            <li
-              className={`list-group-item ${
-                activeSection === "cancelRequest" ? "active" : ""
-              }`}
+            </ListGroup.Item>
+            <ListGroup.Item
+              action
+              active={activeSection === "cancelRequest"}
               onClick={() => setActiveSection("cancelRequest")}
             >
+              <XCircle className="me-2" />
               Yêu cầu hủy đơn hàng
-            </li>
-            <li
-              className={`list-group-item ${
-                activeSection === "productsPurchase" ? "active" : ""
-              }`}
+            </ListGroup.Item>
+            <ListGroup.Item
+              action
+              active={activeSection === "productsPurchase"}
               onClick={() => setActiveSection("productsPurchase")}
             >
+              <Cart className="me-2" />
               Sản phẩm đã mua
-            </li>
-            <li
-              className={`list-group-item ${
-                activeSection === "notifications" ? "active" : ""
-              }`}
+            </ListGroup.Item>
+            <ListGroup.Item
+              action
+              active={activeSection === "notifications"}
               onClick={() => setActiveSection("notifications")}
             >
+              <Bell className="me-2" />
               Thông báo
-            </li>
-            <li
-              className={`list-group-item ${
-                activeSection === "addresses" ? "active" : ""
-              }`}
+            </ListGroup.Item>
+            <ListGroup.Item
+              action
+              active={activeSection === "addresses"}
               onClick={() => setActiveSection("addresses")}
             >
+              <GeoAlt className="me-2" />
               Sổ địa chỉ
-            </li>
-            <li
-              className={`list-group-item ${
-                activeSection === "favourites" ? "active" : ""
-              }`}
+            </ListGroup.Item>
+            <ListGroup.Item
+              action
+              active={activeSection === "favourites"}
               onClick={() => setActiveSection("favourites")}
             >
+              <Heart className="me-2" />
               Sản phẩm yêu thích
-            </li>
-            <li
-              className={`list-group-item ${
-                activeSection === "discounts" ? "active" : ""
-              }`}
+            </ListGroup.Item>
+            <ListGroup.Item
+              action
+              active={activeSection === "discounts"}
               onClick={() => setActiveSection("discounts")}
             >
+              <Tag className="me-2" />
               Túi mã giảm giá
-            </li>
-            <li
-              className={`list-group-item ${
-                activeSection === "logout" ? "active" : ""
-              }`}
+            </ListGroup.Item>
+            <ListGroup.Item
+              action
+              variant="danger"
               onClick={() => handleShow()}
             >
+              <BoxArrowRight className="me-2" />
               Đăng xuất
-            </li>
-          </ul>
-        </div>
+            </ListGroup.Item>
+          </ListGroup>
+        </Card>
         <div className="col-md-9">
-          <div className="border p-3 border-success border-2 rounded">
-            {renderContent()}
-          </div>
+          <Card className="border-0 shadow-sm p-3">{renderContent()}</Card>
         </div>
       </div>
       <LogoutModal show={showModal} handleClose={handleClose} />

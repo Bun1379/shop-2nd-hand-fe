@@ -83,8 +83,6 @@ const Search = () => {
     }
   };
 
-
-
   const handleCategorySelect = (id) => {
     if (selectedCategories.includes(id)) {
       setSelectedCategories((prev) =>
@@ -127,7 +125,7 @@ const Search = () => {
   }, []);
 
   return (
-    <div className="d-flex flex-row gap-2">
+    <div className="d-flex flex-row gap-2 align-items-start ">
       <SearchFilter
         onSelectCategory={handleCategorySelect}
         onSearch={fetchData}
@@ -153,7 +151,6 @@ const Search = () => {
           {products.length > 0 &&
             products.map((product) => (
               <div key={product._id} className="col-12 col-md-6 col-lg-3 mb-3">
-
                 <ProductItem key={product._id} product={product} />
               </div>
             ))}

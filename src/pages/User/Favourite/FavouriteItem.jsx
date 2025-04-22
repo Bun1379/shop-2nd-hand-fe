@@ -1,40 +1,55 @@
-import { Card, Row, Col, Button, Image } from "react-bootstrap";
+import { Card, Button, Image, Stack } from "react-bootstrap";
+import { MdDetails } from "react-icons/md";
+import { useNavigate } from "react-router-dom";
 
-const FavouriteItem = ({ product, handleRemoveFavourite }) => {
+const Favourite = ({ product, handleRemoveFavourite }) => {
+  const navigate = useNavigate();
+
   return (
-    <Card className="my-3 shadow-sm border-0">
-      <Card.Body className="d-flex justify-content-between align-items-center">
-        {/* Image */}
-        <div className="d-flex align-items-center">
+    <Card className="my-3 shadow-sm border-0 p-2">
+      <Card.Body>
+        <Stack direction="horizontal" gap={3} className="align-items-center">
+          {/* Image */}
           <Image
             src={product.images[0]}
             alt={product.productName}
             rounded
-            fluid
-            style={{ width: "60px", height: "60px", objectFit: "cover" }}
+            style={{ width: "70px", height: "70px", objectFit: "cover" }}
+            className="border border-1"
           />
 
-          {/* Product details */}
-          <div className="ms-3">
-            <p className="fw-bold mb-0">{product.productName}</p>
-            <p className="text-muted mb-0">
+          {/* Product Info */}
+          <div className="flex-grow-1">
+            <h6 className="mb-1 fw-semibold">{product.productName}</h6>
+            <p className="mb-0 text-muted">
               Giá: {product.price.toLocaleString("vi-VN")} đ
             </p>
           </div>
-        </div>
 
-        {/* Remove button */}
-        <Col xs={3} className="text-end">
-          <Button
-            variant="danger"
-            onClick={() => handleRemoveFavourite(product._id)}
-          >
-            Bỏ yêu thích
-          </Button>
-        </Col>
+          {/* Actions */}
+          <div className="d-flex gap-2">
+            <Button
+              variant="outline-primary"
+              size="sm"
+              onClick={() =>
+                navigate("/product-detail", { state: { product } })
+              }
+            >
+              Xem chi tiết
+            </Button>
+
+            <Button
+              variant="outline-danger"
+              size="sm"
+              onClick={() => handleRemoveFavourite(product._id)}
+            >
+              Bỏ yêu thích
+            </Button>
+          </div>
+        </Stack>
       </Card.Body>
     </Card>
   );
 };
 
-export default FavouriteItem;
+export default Favourite;
