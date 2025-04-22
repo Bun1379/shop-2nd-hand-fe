@@ -66,7 +66,7 @@ const CartItem = ({
   }, [quantity]);
 
   return (
-    <div className="card shadow-sm mb-3 p-3 w-75">
+    <div className="card shadow-sm mb-3 p-3">
       <div className="row align-items-center">
         <div className="col-auto">
           <input

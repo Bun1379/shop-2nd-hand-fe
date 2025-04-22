@@ -4,6 +4,8 @@ import ModalViewOrder from "../Order/ModalViewOrder";
 import { Button } from "react-bootstrap";
 import { toast } from "react-toastify";
 import ConfirmModal from "../../../components/ConfirmModal/ConfirmModal";
+import BranchAPI from "../../../api/BranchAPI";
+import Select from "react-select";
 
 const CancelRequestAdmin = () => {
   const [cancelRequest, setCancelRequest] = useState([]);
@@ -11,6 +13,9 @@ const CancelRequestAdmin = () => {
   const [order, setOrder] = useState({});
   const [showModalDelete, setShowModalDelete] = useState(false);
   const [showModalConfirm, setShowModalConfirm] = useState(false);
+  const [branches, setBranches] = useState([]);
+  const [selectedBranches, setSelectedBranches] = useState([]);
+  const [filteredRequest, setFilteredRequest] = useState([]);
 
   const fetchDataCancelRequest = async () => {
     try {
@@ -43,17 +48,69 @@ const CancelRequestAdmin = () => {
     }
   };
 
+  const user = JSON.parse(localStorage.getItem("user"));
+
+  const filterRequest = () => {
+    let filtered = cancelRequest;
+
+    if (!selectedBranches.includes("ALL")) {
+      filtered = filtered.filter((item) =>
+        selectedBranches.includes(item?.order?.branch)
+      );
+    }
+
+    setFilteredRequest(filtered);
+  };
+
+  useEffect(() => {
+    if (user.is_admin === true) {
+      BranchAPI.getAllBranches().then((res) => {
+        if (res.status === 200) {
+          const allBranches = res.data.DT.map((branch) => ({
+            value: branch._id,
+            label: branch.name,
+          }));
+          setBranches([
+            { value: "ALL", label: "Tất cả chi nhánh" },
+            ...allBranches,
+          ]);
+          setSelectedBranches(["ALL"]);
+        }
+      });
+    } else if (Array.isArray(user.branch) && user.branch.length > 0) {
+      const userBranches = user.branch.map((branch) => ({
+        value: branch._id,
+        label: branch.name,
+      }));
+      setBranches(userBranches);
+      setSelectedBranches(userBranches[0].value);
+    }
+  }, []);
+
+  useEffect(() => {
+    filterRequest();
+  }, [selectedBranches, cancelRequest]);
+
   useEffect(() => {
     fetchDataCancelRequest();
   }, []);
+
   return (
     <div className="p-4">
       <h1>Yêu cầu hủy đơn hàng</h1>
+      <Select
+        options={branches}
+        isMulti
+        value={branches.filter((b) => selectedBranches.includes(b.value))}
+        onChange={(selectedOptions) =>
+          setSelectedBranches(selectedOptions.map((option) => option.value))
+        }
+      />
       <hr />
-      {cancelRequest.length === 0 && <p>Hiện tại không có yêu cầu nào</p>}
-      {cancelRequest &&
-        cancelRequest.length > 0 &&
-        cancelRequest.map((request) => (
+      {filteredRequest.length === 0 && <p>Hiện tại không có yêu cầu nào</p>}
+      {filteredRequest &&
+        filteredRequest.length > 0 &&
+        filteredRequest.map((request) => (
           <div key={request._id} className="card mb-3">
             <div className="card-body">
               <h5 className="card-title">Mã đơn hàng: {request.order._id}</h5>

@@ -69,7 +69,10 @@ const UserAccount = ({ initialSection }) => {
   return (
     <div className="container" style={{ marginTop: "100px" }}>
       <div className="row align-items-start">
-        <Card className="shadow-sm border-0 text-center p-3 mb-4 user-profile col-md-3">
+        <Card
+          className="shadow-sm border-0 text-center p-3 mb-4 user-profile col-md-3"
+          style={{ position: "sticky", top: "100px" }}
+        >
           <Image
             src={user.image}
             roundedCircle
