@@ -96,21 +96,39 @@ const Cart = () => {
           </button>
         </div>
       )}
-      <div className="">
-        {cart.map((item) => (
-          <CartItem
-            key={item.product._id}
-            item={item}
-            onCheckbox={handleCheckbox}
-            handleUpdateCart={handleUpdateCart}
-            handleDeleteProduct={handleDeleteProduct}
-          />
-        ))}
-        <TotalPrice
-          total={total}
-          handleCheckOut={handleCheckOut}
-          totalProduct={totalProduct}
-        />
+      <div className="row">
+        <div className="col-md-9 col-12">
+          {cart.map((item) => (
+            <CartItem
+              key={item.product._id}
+              item={item}
+              onCheckbox={handleCheckbox}
+              handleUpdateCart={handleUpdateCart}
+              handleDeleteProduct={handleDeleteProduct}
+            />
+          ))}
+        </div>
+
+        <div className="col-md-3 col-12 mt-3 mt-md-0">
+          <div
+            className="d-none d-md-block"
+            style={{ position: "sticky", top: "100px" }}
+          >
+            <TotalPrice
+              total={total}
+              handleCheckOut={handleCheckOut}
+              totalProduct={totalProduct}
+            />
+          </div>
+
+          <div className="d-block d-md-none">
+            <TotalPrice
+              total={total}
+              handleCheckOut={handleCheckOut}
+              totalProduct={totalProduct}
+            />
+          </div>
+        </div>
       </div>
     </div>
   );

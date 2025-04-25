@@ -7,7 +7,7 @@ import HomeReview from "./Review/HomeReview";
 import ReactPaginate from "react-paginate";
 import ProductItem from "../../../components/ProductItem/ProductItem";
 import BranchStock from "../../../api/BranchStockAPI";
-import { useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 function Home() {
   const [arrayProducts, setArrayProducts] = useState([]);
   const [banner, setBanner] = useState([]);
@@ -54,12 +54,15 @@ function Home() {
   useEffect(() => {
     function handleResize() {
       const width = window.innerWidth;
-      if (width < 768) {
-        setItemWidth("calc(calc(100%/1) - 1rem)");
+
+      if (width < 576) {
+        setItemWidth("calc(50% - 0.5rem)");
+      } else if (width < 768) {
+        setItemWidth("calc(50% - 0.75rem)");
       } else if (width < 1200) {
-        setItemWidth("calc(calc(100%/3) - 1rem)");
+        setItemWidth("calc(33.333% - 1rem)");
       } else {
-        setItemWidth("calc(calc(100%/5) - 1rem)");
+        setItemWidth("calc(20% - 1rem)");
       }
     }
 
@@ -124,9 +127,7 @@ function Home() {
         </h1>
         {/* Product List */}
         <div className="container-fluid w-100 bg-white border border-2 border-success rounded justify-content-center ">
-          <div
-            className="mt-4 d-flex flex-wrap justify-content-center gap-3"
-          >
+          <div className="mt-4 d-flex flex-wrap justify-content-center gap-3">
             {arrayProducts.map((product) => (
               <div
                 className=""
@@ -141,26 +142,20 @@ function Home() {
           </div>
 
           {/* Pagination */}
-          <div className="d-flex justify-content-center mt-4">
-            <ReactPaginate
-              nextLabel=">"
-              onPageChange={handlePageClick}
-              pageRangeDisplayed={5}
-              pageCount={totalPages}
-              previousLabel="<"
-              marginPagesDisplayed={2}
-              pageClassName="page-item"
-              pageLinkClassName="page-link"
-              previousClassName="page-item"
-              previousLinkClassName="page-link"
-              nextClassName="page-item"
-              nextLinkClassName="page-link"
-              breakLabel="..."
-              breakClassName="page-item"
-              breakLinkClassName="page-link"
-              containerClassName="pagination"
-              activeClassName="active"
-            />
+          <div className="text-end mt-3 me-3 mb-3">
+            <a
+              style={{
+                fontWeight: "bold",
+                fontSize: "1.2rem",
+                color: "#208454",
+                cursor: "pointer",
+              }}
+              onClick={() => {
+                navigate("/search");
+              }}
+            >
+              Xem thêm &gt;&gt;&gt;
+            </a>
           </div>
         </div>
 
