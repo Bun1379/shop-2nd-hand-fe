@@ -148,6 +148,11 @@ function Header() {
                 Tìm kiếm
               </NavLink>
             </li>
+            <li className="nav-item">
+              <NavLink className="nav-link" to="/discount">
+                Mã giảm giá
+              </NavLink>
+            </li>
             {localStorage.getItem("is_admin") === "true" && (
               <li className="nav-item">
                 <NavLink className="nav-link" to="/admin">

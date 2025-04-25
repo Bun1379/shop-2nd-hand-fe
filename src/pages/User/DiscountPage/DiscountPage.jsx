@@ -17,7 +17,7 @@ import Select from "react-select";
 const DiscountPage = () => {
   const optionsFilter = [
     { value: "", label: "Tất cả" },
-    { value: "PRODUCT", label: "Giảm giá sản phẩm" },
+    { value: "PRODUCT", label: "Giảm giá đơn hàng " },
     { value: "SHIPPING", label: "Giảm giá vận chuyển" },
   ];
   const [discounts, setDiscounts] = useState([]);
@@ -67,6 +67,8 @@ const DiscountPage = () => {
 
   return (
     <Container className="mt-4">
+      <h2 className="w-100 text-center text-uppercase mb-4 mt-5 bg-white border border-2 border-success rounded p-3">
+        Mã Giảm Giá Dành Cho Bạn</h2>
       <Select
         className="mb-4"
         options={optionsFilter}
@@ -74,7 +76,6 @@ const DiscountPage = () => {
         onChange={setTypeFilter}
         placeholder="Lọc theo loại"
       />
-      <h2 className="text-center mb-4">Mã Giảm Giá Dành Cho Bạn</h2>
       {loading ? (
         <div className="text-center">
           <Spinner animation="border" variant="primary" />
@@ -89,7 +90,9 @@ const DiscountPage = () => {
                     {discount.discountCode}
                   </Card.Title>
                   <Card.Text className="text-center">
-                    Giảm {discount.discountPercentage}% cho đơn hàng của bạn!
+                    {discount.type == "SHIPPING"
+                      ? `Giảm ${discount.discountPercentage}% phí vận chuyển` :
+                      `Giảm ${discount.discountPercentage}% đơn hàng`}
                     <p>
                       Hết hạn:{" "}
                       <span className="fw-bold">
@@ -99,11 +102,11 @@ const DiscountPage = () => {
                       </span>
                     </p>
                   </Card.Text>
-                  <Card.Footer className="text-center text-muted">
+                  <Card.Footer className="text-center bg-white">
                     {userDiscounts.length > 0 &&
-                    userDiscounts.find(
-                      (userDiscount) => userDiscount._id === discount._id
-                    ) ? (
+                      userDiscounts.find(
+                        (userDiscount) => userDiscount._id === discount._id
+                      ) ? (
                       <Card.Text className="text-danger">Đã nhận</Card.Text>
                     ) : (
                       <Button
