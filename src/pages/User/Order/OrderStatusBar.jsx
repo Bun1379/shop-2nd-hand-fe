@@ -25,7 +25,7 @@ const OrderStatusBar = ({ status, setStatus, totalOrder, selectedBranches }) => 
   return (
     <Nav
       variant="pills"
-      className="justify-content-center flex-wrap bg-white p-3 rounded shadow-sm"
+      className="justify-content-center flex-wrap bg-white p-3 rounded shadow-lg border border-1"
     >
       {statusList.map((item) => (
         <Nav.Item key={item.key} className="mx-1">

@@ -7,11 +7,12 @@ import {
   FaBlog,
 } from "react-icons/fa";
 import { CiBoxList, CiLogout } from "react-icons/ci";
-import { GiClothes } from "react-icons/gi";
 import { Link, useNavigate } from "react-router-dom";
 import { RiCoupon2Fill } from "react-icons/ri";
-import { TbCategoryPlus } from "react-icons/tb";
 import { IoMdColorPalette } from "react-icons/io";
+import { HiOfficeBuilding } from "react-icons/hi";
+import { MdCancel } from "react-icons/md";
+import { FaTruck, FaTshirt, FaChartLine, FaTags } from "react-icons/fa";
 import LogoutModal from "../LogoutModal/LogoutModal";
 import { useState } from "react";
 
@@ -43,21 +44,21 @@ const SideBar = ({ image, collapsed, toggled, handleToggleSidebar }) => {
             {" "}
             Ishio Store
           </MenuItem>
-          <MenuItem icon={<FaTachometerAlt />} component={<Link to="/admin" />}>
+          <MenuItem icon={<FaChartLine />} component={<Link to="/admin" />}>
             {" "}
             Thống kê
           </MenuItem>
           <SubMenu label="Quản lý" icon={<CiBoxList />}>
 
             <MenuItem
-              icon={<GiClothes />}
+              icon={<FaTshirt />}
               component={<Link to="/admin/product" />}
             >
               {" "}
               Sản phẩm
             </MenuItem>
             <MenuItem
-              icon={<GiClothes />}
+              icon={<FaTruck />}
               component={<Link to="/admin/branch-stock-request" />}
             >
               {" "}
@@ -70,7 +71,7 @@ const SideBar = ({ image, collapsed, toggled, handleToggleSidebar }) => {
             </MenuItem>
 
             <MenuItem
-              icon={<CiBoxList />}
+              icon={<MdCancel />}
               component={<Link to="/admin/cancel-request" />}
             >
               {" "}
@@ -103,7 +104,7 @@ const SideBar = ({ image, collapsed, toggled, handleToggleSidebar }) => {
                   Blog
                 </MenuItem>
                 <MenuItem
-                  icon={<TbCategoryPlus />}
+                  icon={<FaTags />}
                   component={<Link to="/admin/category" />}
                 >
                   {" "}
@@ -117,7 +118,7 @@ const SideBar = ({ image, collapsed, toggled, handleToggleSidebar }) => {
                   Màu sắc
                 </MenuItem>
                 <MenuItem
-                  icon={<IoMdColorPalette />}
+                  icon={<HiOfficeBuilding />}
                   component={<Link to="/admin/branch" />}
                 >
                   {" "}

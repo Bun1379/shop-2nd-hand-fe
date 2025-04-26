@@ -89,7 +89,7 @@ const Address = () => {
             <Row>
                 {addresses.map((address) => (
                     <Col md={6} key={address._id} className="mt-3">
-                        <div className="card position-relative">
+                        <div className="card position-relative shadow-lg">
                             {address.isDefault && (
                                 <span className="position-absolute top-0 end-0 badge bg-danger text-light" style={{ margin: '17px' }}>
                                     Mặc định

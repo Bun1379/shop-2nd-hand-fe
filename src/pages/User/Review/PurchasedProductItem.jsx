@@ -2,7 +2,7 @@ import { Card, Row, Col, Button, Image } from "react-bootstrap";
 
 const PurchasedProductItem = ({ product, handleShowReviewModal }) => {
   return (
-    <Card className="my-3 shadow-sm border-0">
+    <Card className="my-3 shadow-lg">
       <Card.Body className="d-flex justify-content-between align-items-center">
         {/* Left side - Image and Product Name */}
         <div className="d-flex align-items-center">

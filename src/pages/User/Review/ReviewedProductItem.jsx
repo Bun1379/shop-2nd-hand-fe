@@ -4,7 +4,7 @@ import "@smastrom/react-rating/style.css";
 
 const ReviewedProductItem = ({ review, handleShowReviewModal }) => {
   return (
-    <Card className="my-3 shadow-sm border-0">
+    <Card className="my-3 shadow-lg">
       <Card.Body>
         <Row>
           {/* Hình ảnh và thông tin sản phẩm */}

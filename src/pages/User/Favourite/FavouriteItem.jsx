@@ -6,7 +6,7 @@ const Favourite = ({ product, handleRemoveFavourite }) => {
   const navigate = useNavigate();
 
   return (
-    <Card className="my-3 shadow-sm border-0 p-2">
+    <Card className="my-3 shadow-lg border-1 p-2">
       <Card.Body>
         <Stack direction="horizontal" gap={3} className="align-items-center">
           {/* Image */}
