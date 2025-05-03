@@ -60,23 +60,45 @@ const ModalViewOrder = ({ show, setShowView, order }) => {
           </div>
           {/* Danh sách sản phẩm */}
           <div className="col-md-12">
-            <div className="bg-success text-white p-3 rounded mb-3 shadow">
-              <Row className="align-items-center">
-                <Col xs={2}>Sản phẩm</Col>
-                <Col xs={4}></Col>
-                <Col xs={1}>Size</Col>
-                <Col xs={2} className="text-center">Đơn giá</Col>
-                <Col xs={1} className="text-center">Số lượng</Col>
-                <Col xs={2} className="text-end">Thành tiền</Col>
-              </Row>
-            </div>
-            {products?.map((product) => (
-              <CheckoutItem item={product} key={product._id} />
-            ))}
-            {pendingProducts?.map((product) => (
-              <CheckoutItem item={product} key={product._id} />
-            ))}
+            {/* Danh sách sản phẩm đã xác nhận */}
+            {products?.length > 0 && (
+              <>
+                <div className="bg-success text-white p-3 rounded mb-3 shadow">
+                  <Row className="align-items-center">
+                    <Col xs={2}>Sản phẩm</Col>
+                    <Col xs={4}></Col>
+                    <Col xs={1}>Size</Col>
+                    <Col xs={2} className="text-center">Đơn giá</Col>
+                    <Col xs={1} className="text-center">Số lượng</Col>
+                    <Col xs={2} className="text-end">Thành tiền</Col>
+                  </Row>
+                </div>
+                {products.map((product) => (
+                  <CheckoutItem item={product} key={product._id} />
+                ))}
+              </>
+            )}
+
+            {/* Danh sách sản phẩm hết hàng */}
+            {pendingProducts?.length > 0 && (
+              <>
+                <div className="bg-warning text-dark p-3 rounded mb-3 shadow mt-4">
+                  <Row className="align-items-center">
+                    <Col xs={2}>Sản phẩm (Hết hàng)</Col>
+                    <Col xs={4}></Col>
+                    <Col xs={1}>Size</Col>
+                    <Col xs={2} className="text-center">Đơn giá</Col>
+                    <Col xs={1} className="text-center">Số lượng</Col>
+                    <Col xs={2} className="text-end">Thành tiền</Col>
+                  </Row>
+                </div>
+                {pendingProducts.map((product) => (
+                  <CheckoutItem item={product} key={product._id} />
+                ))}
+              </>
+            )}
           </div>
+
 
           {/* Thông tin thanh toán */}
           <div className="col-md-4">

@@ -16,6 +16,9 @@ class BranchStockRequestAPI {
     static async deleteBranchStockRequest(id) {
         return axiosPrivate.delete(`/branch-stock-request/${id}`);
     }
+    static async getPendingStockByBranchAndProduct(params) {
+        return axiosPrivate.get(`/branch-stock-request/pending-stock`, { params });
+    }
 }
 
 export default BranchStockRequestAPI;

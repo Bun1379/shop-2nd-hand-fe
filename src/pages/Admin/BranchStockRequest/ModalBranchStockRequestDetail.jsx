@@ -116,6 +116,7 @@ const ModalBranchStockRequestDetail = ({
                 setShow={setShowAddBranchStock}
                 selectedProduct={selectedProduct}
                 fetchDataProduct={handleApproveProduct}
+                branch={requestDetail?.branch}
             />
         </>
     );

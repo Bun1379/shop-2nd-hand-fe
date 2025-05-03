@@ -4,16 +4,38 @@ import { Button, Form, Modal, Table } from "react-bootstrap";
 import { toast } from "react-toastify";
 import BranchStockAPI from "../../../api/BranchStockAPI";
 import ProductAPI from "../../../api/ProductAPI";
+import BranchStockRequestAPI from "../../../api/BranchStockRequestAPI";
+import { use } from "react";
 
 const ModalAddBranchStock = ({
   show,
   setShow,
   selectedProduct,
   fetchDataProduct,
+  branch,
 }) => {
   const [listBranch, setListBranch] = useState([]);
   const [dataEachBranch, setDataEachBranch] = useState([]);
   const [branchStockUpdates, setBranchStockUpdates] = useState({});
+  const [pendingStock, setPendingStock] = useState(0);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await BranchStockRequestAPI.getPendingStockByBranchAndProduct({
+          branchId: branch?._id,
+          productId: selectedProduct?._id,
+        });
+        if (res.status === 200) {
+          setPendingStock(res.data.DT);
+        }
+      } catch (err) {
+        console.log(err.response?.data?.EM);
+      }
+    };
+    fetchData();
+  }, [branch, selectedProduct]);
+
 
   const handleChangeQuantity = (branchId, type, value) => {
     setBranchStockUpdates((prev) => ({
@@ -161,9 +183,17 @@ const ModalAddBranchStock = ({
       }}
     >
       <Modal.Header closeButton>
-        <Modal.Title>Phân phối sản phẩm tới chi nhánh</Modal.Title>
+        <Modal.Title>Phân phối sản phẩm tới chi nhánh {branch?.name}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
+        {
+          pendingStock > 0 && (
+            <div className="text-center mb-3 text-danger fw-bold fs-5">
+              Số lượng sản phẩm chi nhánh đang cần: {pendingStock}
+            </div>
+          )
+        }
+
         <Form>
           <Table striped bordered hover className="text-center" >
             <thead>
