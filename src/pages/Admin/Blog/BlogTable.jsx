@@ -39,7 +39,6 @@ const BlogTable = ({ blogs, handleOpenViewBlog, handleOpenUpdateBlog }) => {
               >
                 Sửa
               </Button>
-              <Button variant="danger">Xóa</Button>
             </td>
           </tr>
         ))}

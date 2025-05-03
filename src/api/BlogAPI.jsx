@@ -16,11 +16,6 @@ class BlogAPI {
     return axiosPrivate.put(url, data);
   }
 
-  static async DeleteBlog(id) {
-    const url = `/blog/${id}`;
-    return axiosPrivate.delete(url);
-  }
-
   static async GetBlogBySlug(slug) {
     const url = `/blog/${slug}`;
     return axiosClient.get(url);
