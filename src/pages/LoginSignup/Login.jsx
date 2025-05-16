@@ -17,30 +17,31 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await AuthAPI.Login({
-        email,
-        password,
-      });
+      const response = await AuthAPI.Login({ email, password });
 
       if (response.status === 200) {
-        if (response.data.DT.user.is_active === false) {
+        const { user, token } = response.data.DT;
+
+        if (!user.is_active) {
           toast.error("Tài khoản của bạn đã bị khóa");
-        } else {
-          localStorage.setItem("token", response.data.DT.token);
-          setUserInLocalStorage(response.data.DT.user);
-          if (response.data.DT.user.is_admin === true || response.data.DT.user.branch.length > 0) {
-            localStorage.setItem("is_admin", true);
-          }
+          return;
+        }
+        localStorage.setItem("token", token);
+        setUserInLocalStorage(user);
+        localStorage.setItem("role", user.role);
+        if (user.is_verified) {
           toast.success("Đăng nhập thành công!");
-          if (response.data.DT.user.is_verified === true) {
-            navigate((response.data.DT.user.is_admin || response.data.DT.user.branch.length > 0) ? "/admin" : "/");
-          } else {
-            navigate("/verify", { state: { email } });
-          }
+          navigate(
+            user.role === "ADMIN" || user.role === "MANAGER" ? "/admin" : "/"
+          );
+        } else {
+          navigate("/verify", { state: { email } });
         }
       }
     } catch (error) {
-      toast.error("Đăng nhập thất bại: " + error?.response?.data.EM);
+      toast.error(
+        "Đăng nhập thất bại: " + (error?.response?.data?.EM || error.message)
+      );
     }
   };
   return (

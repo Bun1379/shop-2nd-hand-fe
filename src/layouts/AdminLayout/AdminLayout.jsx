@@ -11,7 +11,7 @@ const AdminLayout = () => {
     setCollapsed(!collapsed);
   };
 
-  if (localStorage.getItem("is_admin") !== "true") {
+  if (localStorage.getItem("role") === "USER") {
     toast.error("Bạn không có quyền truy cập vào trang này");
     return <Navigate to="/login" />;
   }

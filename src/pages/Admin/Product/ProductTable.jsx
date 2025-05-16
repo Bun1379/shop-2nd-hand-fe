@@ -24,8 +24,7 @@ const ProductTable = ({
     if (!requestList.find((item) => item._id === product._id)) {
       setRequestList([...requestList, product]);
       toast.success("Sản phẩm đã được thêm vào danh sách nhập hàng");
-    }
-    else {
+    } else {
       toast.info("Sản phẩm đã được thêm vào danh sách nhập hàng");
     }
   };
@@ -50,18 +49,19 @@ const ProductTable = ({
             products.map((product) => (
               <tr
                 key={product._id}
-                className={`${branch && branch.value != 0
-                  ? product.stockInBranch === 0
-                    ? "table-danger"
-                    : product.stockInBranch < 10
+                className={`${
+                  branch && branch.value != 0
+                    ? product.stockInBranch === 0
+                      ? "table-danger"
+                      : product.stockInBranch < 10
                       ? "table-warning"
                       : ""
-                  : product.quantity === 0
+                    : product.quantity === 0
                     ? "table-danger"
                     : product.quantity < 10
-                      ? "table-warning"
-                      : ""
-                  }`}
+                    ? "table-warning"
+                    : ""
+                }`}
               >
                 <td>{product._id}</td>
                 <td>{product.productName}</td>
@@ -73,7 +73,7 @@ const ProductTable = ({
                 <td>{product?.original_price?.toLocaleString("vi-VN")} đ</td>
                 <td>{product.price.toLocaleString("vi-VN")} đ</td>
                 <td className="d-flex gap-3">
-                  {user.is_admin && (
+                  {user.role === "ADMIN" && (
                     <>
                       <button
                         className="btn btn-primary"
@@ -103,7 +103,6 @@ const ProductTable = ({
                       Yêu cầu nhập hàng
                     </button>
                   )}
-
                 </td>
               </tr>
             ))}

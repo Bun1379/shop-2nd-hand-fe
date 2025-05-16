@@ -7,11 +7,10 @@ import { toast } from "react-toastify";
 import { Button, Modal } from "react-bootstrap";
 import BranchAPI from "../../../api/BranchAPI";
 
-
 const ModalUpdateUser = ({ user, showUpdate, setShowUpdate }) => {
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
-  const [isAdmin, setIsAdmin] = useState(false);
+  const [role, setRole] = useState("");
   const [isManager, setIsManager] = useState(false);
   const [userBranch, setUserBranch] = useState([]);
   const [branch, setBranch] = useState([]);
@@ -19,6 +18,20 @@ const ModalUpdateUser = ({ user, showUpdate, setShowUpdate }) => {
   const [isActive, setIsActive] = useState(false);
   const [previewImage, setPreviewImage] = useState("");
   const [image, setImage] = useState(null);
+
+  useEffect(() => {
+    if (role === "MANAGER") {
+      setIsManager(true);
+    } else {
+      setIsManager(false);
+    }
+  }, [role]);
+
+  const optionRole = [
+    { value: "ADMIN", label: "Admin" },
+    { value: "MANAGER", label: "Manager" },
+    { value: "USER", label: "User" },
+  ];
 
   const handleUploadImage = (event) => {
     const file = event.target.files[0];
@@ -30,7 +43,7 @@ const ModalUpdateUser = ({ user, showUpdate, setShowUpdate }) => {
     setShowUpdate(false);
     setEmail("");
     setUsername("");
-    setIsAdmin(false);
+    setRole("");
     setIsManager(false);
     setBranch([]);
     setUserBranch([]);
@@ -47,17 +60,19 @@ const ModalUpdateUser = ({ user, showUpdate, setShowUpdate }) => {
     } catch (error) {
       toast.error(error.response.data.EM);
     }
-  }
+  };
 
   const handleUpdateUser = async () => {
     try {
       const formData = new FormData();
       formData.append("username", username);
-      formData.append("is_admin", isAdmin);
+      formData.append("role", role);
       formData.append("is_verified", isVerified);
       formData.append("is_active", isActive);
       if (isManager) {
         formData.append("branch", JSON.stringify(userBranch));
+      } else {
+        formData.append("branch", JSON.stringify([]));
       }
 
       if (image) {
@@ -79,13 +94,12 @@ const ModalUpdateUser = ({ user, showUpdate, setShowUpdate }) => {
   useEffect(() => {
     setEmail(user.email);
     setUsername(user.username);
-    setIsAdmin(user.is_admin);
+    setRole(user.role);
     setIsVerified(user.is_verified);
     setIsActive(user.is_active);
     setPreviewImage(user.image);
     setIsManager(user.branch?.length > 0);
-    if (user.branch?.length > 0)
-      setUserBranch(user.branch);
+    if (user.branch?.length > 0) setUserBranch(user.branch);
     handleGetBranch();
   }, [user]);
 
@@ -97,7 +111,13 @@ const ModalUpdateUser = ({ user, showUpdate, setShowUpdate }) => {
       <Modal.Body>
         <div className="form-group">
           <label htmlFor="code">Email</label>
-          <input type="text" className="form-control" id="code" value={email} disabled />
+          <input
+            type="text"
+            className="form-control"
+            id="code"
+            value={email}
+            disabled
+          />
         </div>
         <div className="form-group">
           <label htmlFor="discount">Tên người dùng</label>
@@ -110,29 +130,16 @@ const ModalUpdateUser = ({ user, showUpdate, setShowUpdate }) => {
           />
         </div>
         <div className="form-group">
-          <label htmlFor="isAdmin">Admin</label>
-          <Form.Check
-            type="switch"
+          <label htmlFor="isAdmin">Vai trò</label>
+          <Select
             id="isAdmin"
-            checked={isAdmin}
-            onChange={() => {
-              setIsAdmin(!isAdmin);
-              setIsManager(!isManager);
-            }}
+            placeholder="Chọn vai trò"
+            options={optionRole}
+            value={optionRole.find((option) => option.value === role)}
+            onChange={(value) => setRole(value.value)}
           />
         </div>
         <div className="form-group">
-          <label htmlFor="isManager">Manager</label>
-          <Form.Check
-            type="switch"
-            id="isManager"
-            label="Manager"
-            checked={isManager}
-            onChange={() => {
-              setIsManager(!isManager);
-              setIsAdmin(!isAdmin);
-            }}
-          />
           {isManager && (
             <div className="form-group">
               <label htmlFor="branch">Chi nhánh</label>

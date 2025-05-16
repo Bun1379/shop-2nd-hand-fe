@@ -63,7 +63,7 @@ const CancelRequestAdmin = () => {
   };
 
   useEffect(() => {
-    if (user.is_admin === true) {
+    if (user.role === "ADMIN") {
       BranchAPI.getAllBranches().then((res) => {
         if (res.status === 200) {
           const allBranches = res.data.DT.map((branch) => ({

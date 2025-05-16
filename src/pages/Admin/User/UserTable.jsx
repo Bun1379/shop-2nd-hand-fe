@@ -1,12 +1,7 @@
 import { Table } from "react-bootstrap";
 import ReactPaginate from "react-paginate";
 
-const UserTable = ({
-  users,
-  setPage,
-  totalPages,
-  handleUpdateUser,
-}) => {
+const UserTable = ({ users, setPage, totalPages, handleUpdateUser }) => {
   const handlePageClick = (data) => {
     setPage(data.selected + 1);
   };
@@ -33,7 +28,7 @@ const UserTable = ({
                   <td>{index + 1}</td>
                   <td>{user.email}</td>
                   <td>{user.username}</td>
-                  <td>{user.is_admin ? "Admin" : user.branch.length > 0 ? "Manager" : "User"}</td>
+                  <td>{user.role}</td>
                   <td>{user.is_active ? "Hoạt động" : "Bị chặn"}</td>
                   <td className="d-flex gap-3">
                     <button

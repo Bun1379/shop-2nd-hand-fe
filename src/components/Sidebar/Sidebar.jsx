@@ -49,7 +49,6 @@ const SideBar = ({ image, collapsed, toggled, handleToggleSidebar }) => {
             Thống kê
           </MenuItem>
           <SubMenu label="Quản lý" icon={<CiBoxList />}>
-
             <MenuItem
               icon={<FaTshirt />}
               component={<Link to="/admin/product" />}
@@ -76,10 +75,8 @@ const SideBar = ({ image, collapsed, toggled, handleToggleSidebar }) => {
             >
               {" "}
               Yêu cầu hủy đơn
-
-
             </MenuItem>
-            {user.is_admin === true && (
+            {user.role === "ADMIN" && (
               <>
                 <MenuItem
                   icon={<FaUserCog />}
@@ -95,11 +92,17 @@ const SideBar = ({ image, collapsed, toggled, handleToggleSidebar }) => {
                   {" "}
                   Mã giảm giá
                 </MenuItem>
-                <MenuItem icon={<FaHome />} component={<Link to="/admin/banner" />}>
+                <MenuItem
+                  icon={<FaHome />}
+                  component={<Link to="/admin/banner" />}
+                >
                   {" "}
                   Banner
                 </MenuItem>
-                <MenuItem icon={<FaBlog />} component={<Link to="/admin/blog" />}>
+                <MenuItem
+                  icon={<FaBlog />}
+                  component={<Link to="/admin/blog" />}
+                >
                   {" "}
                   Blog
                 </MenuItem>

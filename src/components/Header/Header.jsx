@@ -153,7 +153,7 @@ function Header() {
                 Mã giảm giá
               </NavLink>
             </li>
-            {localStorage.getItem("is_admin") === "true" && (
+            {localStorage.getItem("role") !== "USER" && (
               <li className="nav-item">
                 <NavLink className="nav-link" to="/admin">
                   MANAGER

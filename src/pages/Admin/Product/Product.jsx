@@ -22,11 +22,9 @@ const Product = () => {
   const [selectedSortPrice, setSelectedSortPrice] = useState(null);
   const [search, setSearch] = useState("");
 
-
   //RequestStock
   const [showModalRequest, setShowModalRequest] = useState(false);
   const [requestList, setRequestList] = useState([]);
-
 
   const [selectedBranch, setSelectedBranch] = useState(null); // Lưu chi nhánh được chọn
   const [branches, setBranches] = useState([]); // Lưu danh sách chi nhánh;
@@ -56,7 +54,7 @@ const Product = () => {
   ];
 
   useEffect(() => {
-    if (user.is_admin === true) {
+    if (user.role === "ADMIN") {
       BranchAPI.getAllBranches().then((res) => {
         if (res.status === 200) {
           const allBranches = res.data.DT.map((branch) => ({
@@ -130,7 +128,7 @@ const Product = () => {
   return (
     <div className="p-4">
       <h1>Quản lý sản phẩm</h1>
-      {user.is_admin && (
+      {user.role === "ADMIN" && (
         <button
           className="btn btn-primary"
           onClick={() => setShowAddProduct(true)}
@@ -138,16 +136,14 @@ const Product = () => {
           Thêm sản phẩm
         </button>
       )}
-      {
-        user.branch.length > 0 && (
-          <button
-            className="btn btn-primary"
-            onClick={() => setShowModalRequest(true)}
-          >
-            Tạo yêu cầu nhập hàng
-          </button>
-        )
-      }
+      {user.branch.length > 0 && (
+        <button
+          className="btn btn-primary"
+          onClick={() => setShowModalRequest(true)}
+        >
+          Tạo yêu cầu nhập hàng
+        </button>
+      )}
       <Select
         options={branches}
         className="w-100 mt-2 "
