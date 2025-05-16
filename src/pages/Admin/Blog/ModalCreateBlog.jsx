@@ -24,6 +24,14 @@ const ModalCreateBlog = ({
   const quillRef = useRef(null);
 
   const handleSubmit = async () => {
+    if (!selectedBlog && !image) {
+      toast.error("Vui lòng chọn ảnh cho bài viết");
+      return;
+    }
+    if (!title || !content) {
+      toast.error("Vui lòng nhập đầy đủ thông tin");
+      return;
+    }
     setIsLoadingSubmit(true);
     const formData = new FormData();
     try {
@@ -41,13 +49,17 @@ const ModalCreateBlog = ({
         response = await BlogAPI.CreateBlog(formData);
       }
       if (response.status === 200) {
-        toast.success("Thêm Blog thành công");
+        if (selectedBlog) {
+          toast.success("Cập nhật Blog thành công");
+        } else {
+          toast.success("Thêm Blog thành công");
+        }
         fetchDataBlog();
         handleClose();
       }
     } catch (error) {
       console.error("Error creating blog:", error);
-      toast.error("Thêm Blog thất bại");
+      toast.error(error.response?.data?.EM || "Có lỗi xảy ra");
     } finally {
       setIsLoadingSubmit(false);
     }

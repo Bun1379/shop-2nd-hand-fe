@@ -12,7 +12,7 @@ const BlogPage = () => {
     try {
       const res = await BlogAPI.GetBlog();
       if (res.status === 200) {
-        setBlogs(res.data.DT);
+        setBlogs(res.data.DT.filter((blog) => blog.status === true));
       }
     } catch (err) {
       console.log(err);
