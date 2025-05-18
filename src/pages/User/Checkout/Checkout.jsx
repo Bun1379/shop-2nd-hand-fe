@@ -101,6 +101,9 @@ const Checkout = () => {
     const data = {
       products: items.map((item) => ({
         productId: item.product._id,
+        image: item.product.images[0],
+        name: item.product.productName,
+        size: item.product.size,
         quantity: item.quantity,
         priceAtCreate: item.price,
       })),
@@ -162,7 +165,7 @@ const Checkout = () => {
       if (response.status === 200) {
         setShippingFee(
           shippingFee -
-          (shippingFee * response.data.DT.discountPercentage) / 100
+            (shippingFee * response.data.DT.discountPercentage) / 100
         );
         setShippingFeePercent(response.data.DT.discountPercentage);
         setDiscountShipping(response.data.DT._id);
@@ -263,10 +266,11 @@ const Checkout = () => {
   //begin
   const checkOutOfStock = async () => {
     try {
-      const response = await BranchStockAPI.getBranchStocksWithBranchAndManyProduct({
-        branchId: selectedBranch.value,
-        productIds: items.map((item) => item.product._id).join(","),
-      });
+      const response =
+        await BranchStockAPI.getBranchStocksWithBranchAndManyProduct({
+          branchId: selectedBranch.value,
+          productIds: items.map((item) => item.product._id).join(","),
+        });
       if (response.status === 200) {
         const productOutOfStock1 = items.filter((item) =>
           response.data.DT.some((stock) => stock == item.product._id)

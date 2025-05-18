@@ -14,6 +14,7 @@ import UserAPI from "../../api/UserAPI";
 import { updateQuantityCart } from "../../components/Header/Header";
 import ReactPaginate from "react-paginate";
 import BranchStock from "../../api/BranchStockAPI";
+import parse from "html-react-parser";
 
 const ProductDetail = () => {
   const navigate = useNavigate();
@@ -357,7 +358,7 @@ const ProductDetail = () => {
       <Row className="mt-5">
         <Col>
           <h4>Chi tiết sản phẩm</h4>
-          <p>{product.description || "Không có thông tin mô tả chi tiết."}</p>
+          {parse(product.description)}
         </Col>
       </Row>
 

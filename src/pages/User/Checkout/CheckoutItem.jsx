@@ -2,12 +2,12 @@ import { Row, Col, Image, Card } from "react-bootstrap";
 
 const CheckoutItem = ({ item }) => {
   return (
-    <Card className="shadow border-0 mb-3">
+    <Card className="border-1 mb-3">
       <Card.Body>
         <Row className="align-items-center">
           <Col xs={1}>
             <Image
-              src={item.product.images[0] || "https://via.placeholder.com/50"}
+              src={item.image || "https://via.placeholder.com/50"}
               alt="product"
               rounded
               fluid
@@ -15,10 +15,10 @@ const CheckoutItem = ({ item }) => {
             />
           </Col>
           <Col xs={5} className="fw-bold">
-            {item.product.productName}
+            {item.name}
           </Col>
           <Col xs={1} className="text-muted">
-            {item.product.size}
+            {item.size}
           </Col>
           <Col xs={2} className="text-center">
             {item.priceAtCreate ? (

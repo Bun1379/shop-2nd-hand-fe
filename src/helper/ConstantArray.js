@@ -1,0 +1,20 @@
+export const fashionFeatures = [
+  {
+    value: "Chất liệu cotton thoáng mát",
+    label: "Chất liệu cotton thoáng mát",
+  },
+  { value: "Phom dáng chuẩn, tôn dáng", label: "Phom dáng chuẩn, tôn dáng" },
+  { value: "Co giãn 4 chiều", label: "Co giãn 4 chiều" },
+  { value: "Thấm hút mồ hôi tốt", label: "Thấm hút mồ hôi tốt" },
+  { value: "Không nhăn, dễ ủi", label: "Không nhăn, dễ ủi" },
+  { value: "Thời trang Unisex", label: "Thời trang Unisex" },
+  { value: "Phối đồ dễ dàng", label: "Phối đồ dễ dàng" },
+  { value: "Size đa dạng", label: "Size đa dạng" },
+  { value: "Phù hợp nhiều độ tuổi", label: "Phù hợp nhiều độ tuổi" },
+  { value: "Phong cách Hàn Quốc", label: "Phong cách Hàn Quốc" },
+  { value: "Phong cách Streetwear", label: "Phong cách Streetwear" },
+  { value: "Phong cách Basic", label: "Phong cách Basic" },
+  { value: "Chất liệu không bong tróc", label: "Chất liệu không bong tróc" },
+  { value: "Đường may tinh tế", label: "Đường may tinh tế" },
+  { value: "Họa tiết ấn tượng", label: "Họa tiết ấn tượng" },
+];
