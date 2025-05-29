@@ -3,6 +3,7 @@ import "../../Admin/Blog/BLog.css";
 import BlogAPI from "../../../api/BlogAPI";
 import { useEffect, useState } from "react";
 import { Card, Col, Row } from "react-bootstrap";
+import parse from "html-react-parser";
 
 const BlogDetail = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -55,10 +56,7 @@ const BlogDetail = () => {
       <hr />
       <Row>
         <Col md={8} xs={12}>
-          <div
-            className="blog-content"
-            dangerouslySetInnerHTML={{ __html: blog?.content }}
-          />
+          <div className="blog-content">{parse(blog?.content)}</div>
         </Col>
         <Col className="d-none d-md-block " md={4}>
           <div style={{ position: "sticky", top: "90px" }}>
@@ -83,12 +81,15 @@ const BlogDetail = () => {
                         <a
                           href={`#${heading.id}`}
                           style={{
-                            paddingLeft: heading.level === "h2" ? "20px" : "0px",
+                            paddingLeft:
+                              heading.level === "h2" ? "20px" : "0px",
                             transition: "color 0.2s",
                             color: "#333",
                           }}
                           className={`text-decoration-none`}
-                          onMouseEnter={(e) => (e.target.style.color = "#007bff")}
+                          onMouseEnter={(e) =>
+                            (e.target.style.color = "#007bff")
+                          }
                           onMouseLeave={(e) => (e.target.style.color = "#333")}
                         >
                           {displayText}

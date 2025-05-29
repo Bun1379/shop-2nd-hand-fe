@@ -61,20 +61,10 @@ const OrderItem = ({ order, handleOnClickOrder, handleReceive }) => {
               </p>
             )}
           {order.products.map((product) => (
-            <OrderProductItem
-              key={product._id}
-              product={product.product}
-              quantity={product.quantity}
-              priceAtCreate={product.priceAtCreate}
-            />
+            <OrderProductItem key={product._id} item={product} />
           ))}
           {order.pendingProducts.map((product) => (
-            <OrderProductItem
-              key={product._id}
-              product={product.product}
-              quantity={product.quantity}
-              priceAtCreate={product.priceAtCreate}
-            />
+            <OrderProductItem key={product._id} item={product} />
           ))}
         </Card.Body>
 
@@ -83,8 +73,8 @@ const OrderItem = ({ order, handleOnClickOrder, handleReceive }) => {
             <span className="text-danger">
               {order.shippingFee > 0
                 ? `Phí vận chuyển: ${order.shippingFee.toLocaleString(
-                  "vi-VN"
-                )} đ`
+                    "vi-VN"
+                  )} đ`
                 : "Miễn phí vận chuyển"}
             </span>
             <span>

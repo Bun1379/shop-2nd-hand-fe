@@ -8,6 +8,10 @@ import CategoryAPI from "../../../api/CategoryAPI";
 import UploadAPI from "../../../api/UploadAPI";
 import ProductAPI from "../../../api/ProductAPI";
 import ColorAPI from "../../../api/ColorAPI";
+import { Image, Spinner } from "react-bootstrap";
+import ReactQuill from "react-quill";
+import { fashionFeatures } from "../../../helper/ConstantArray";
+import OpenAiAPI from "../../../api/OpenaiAPI";
 
 const ModalAddProduct = ({ showAdd, setShowAdd }) => {
   // const [show, setShow] = useState(false);
@@ -65,6 +69,7 @@ const ModalAddProduct = ({ showAdd, setShowAdd }) => {
     value: "S",
     label: "S",
   });
+  const [selectedFeature, setSelectedFeature] = useState([]);
   const [category, setCategory] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState([]);
   const [original_price, setOriginal_Price] = useState(0);
@@ -79,8 +84,40 @@ const ModalAddProduct = ({ showAdd, setShowAdd }) => {
   const [color, setColor] = useState([]);
   const [selectedColor, setSelectedColor] = useState({});
   const [isLoad, setIsLoad] = useState(false);
+  const [isGenerateDescription, setIsGenerateDescription] = useState(false);
+
+  const handleGenerateDescription = async () => {
+    const features = selectedFeature.map((item) => item.value);
+    if (features.length === 0) {
+      toast.error("Vui lòng chọn ít nhất một đặc điểm");
+      return;
+    }
+    if (!name) {
+      toast.error("Vui lòng nhập tên sản phẩm");
+      return;
+    }
+    try {
+      setIsGenerateDescription(true);
+      const res = await OpenAiAPI.GenerateDescription({
+        productName: name,
+        features: features,
+      });
+      if (res.status === 200) {
+        setDescription(res.data.DT);
+        toast.success("Tạo mô tả thành công");
+      } else {
+        toast.error("Tạo mô tả thất bại");
+      }
+    } catch (error) {
+      toast.error("Tạo mô tả thất bại");
+    } finally {
+      setIsGenerateDescription(false);
+    }
+  };
 
   const handleClose = () => {
+    setSelectedFeature([]);
+    setIsGenerateDescription(false);
     setShow(false);
     setName("");
     setDescription("");
@@ -125,21 +162,6 @@ const ModalAddProduct = ({ showAdd, setShowAdd }) => {
     } catch (error) {
       console.log(error);
     }
-  };
-
-  const handleChangeCate = (event) => {
-    const cateId = event.target.value;
-    const cate = category.find((item) => item._id === cateId);
-    if (!cate) return;
-    const isExist = selectedCategory.find((item) => item === cate);
-    if (!isExist) {
-      setSelectedCategory([...selectedCategory, cate]);
-    }
-  };
-
-  const handleRemoveCate = (cateId) => {
-    const newCate = selectedCategory.filter((item) => item._id !== cateId);
-    setSelectedCategory(newCate);
   };
 
   const handleUploadImage = (event) => {
@@ -260,15 +282,6 @@ const ModalAddProduct = ({ showAdd, setShowAdd }) => {
                 onChange={(event) => setName(event.target.value)}
               />
             </div>
-            <div className="col-md-6">
-              <label className="form-label">Mô tả</label>
-              <textarea
-                className="form-control"
-                placeholder="Nhập mô tả"
-                value={description}
-                onChange={(event) => setDescription(event.target.value)}
-              />
-            </div>
 
             <div className="col-md-6">
               <label className="form-label">Size</label>
@@ -280,18 +293,28 @@ const ModalAddProduct = ({ showAdd, setShowAdd }) => {
             </div>
             <div className="col-md-6">
               <label className="form-label">Danh mục: </label>
-              <select
-                className="form-select"
-                // value={role}
-                onChange={handleChangeCate}
-              >
-                <option value="0">Chọn danh mục</option>
-                {category.map((item) => (
-                  <option key={item._id} value={item._id}>
-                    {item.name}
-                  </option>
-                ))}
-              </select>
+              <ReactSelect
+                isMulti
+                options={category?.map((item) => {
+                  return {
+                    value: item._id,
+                    label: item.name,
+                  };
+                })}
+                value={selectedCategory?.map((item) => {
+                  return {
+                    value: item._id,
+                    label: item.name,
+                  };
+                })}
+                onChange={(selected) => {
+                  const selectedIds = selected.map((item) => item.value);
+                  const matched = category.filter((cat) =>
+                    selectedIds.includes(cat._id)
+                  );
+                  setSelectedCategory(matched);
+                }}
+              />
             </div>
 
             <div className="col-md-6">
@@ -315,25 +338,6 @@ const ModalAddProduct = ({ showAdd, setShowAdd }) => {
                 onChange={(event) => setPrice(event.target.value)}
               />
             </div>
-
-            <div className="col-md-12">
-              <label className="form-label">Danh mục được chọn: </label>
-              <ul>
-                {selectedCategory.map((item) => {
-                  return (
-                    <div className="d-flex align-items-center" key={item._id}>
-                      <li>{item.name}</li>
-                      <button
-                        className="btn btn-primary ms-2"
-                        onClick={() => handleRemoveCate(item._id)}
-                      >
-                        X
-                      </button>
-                    </div>
-                  );
-                })}
-              </ul>
-            </div>
             <div className="col-md-12">
               <label
                 className="form-label label-upload btn btn-primary"
@@ -352,11 +356,16 @@ const ModalAddProduct = ({ showAdd, setShowAdd }) => {
               {listPreviewImage && listPreviewImage.length > 0 ? (
                 listPreviewImage.map((item, index) => {
                   return (
-                    <img
+                    <Image
+                      rounded
                       key={index}
                       src={item}
                       alt="preview"
-                      style={{ width: "100px", height: "100px" }}
+                      style={{
+                        width: "100px",
+                        height: "100px",
+                        marginRight: "10px",
+                      }}
                       onClick={() => handleDeleteImage(index)}
                     />
                   );
@@ -389,6 +398,46 @@ const ModalAddProduct = ({ showAdd, setShowAdd }) => {
                 options={color}
                 value={selectedColor}
                 onChange={(selected) => setSelectedColor(selected)}
+              />
+            </div>
+            <div className="col-md-6">
+              <label className="form-label">
+                Đặc điểm (Hỗ trợ việc sinh description)
+              </label>
+              <ReactSelect
+                isMulti
+                options={fashionFeatures}
+                value={selectedFeature}
+                onChange={(selected) => {
+                  setSelectedFeature(selected);
+                }}
+              />
+            </div>
+            <div className="col-md-6 d-flex align-items-end">
+              <Button
+                variant="primary"
+                onClick={handleGenerateDescription}
+                disabled={isGenerateDescription}
+              >
+                {isGenerateDescription ? (
+                  <>
+                    <span className="d-flex align-items-center justify-content-center gap-2">
+                      Đang tạo mô tả
+                      <Spinner animation="grow" size="20" />
+                    </span>
+                  </>
+                ) : (
+                  "Tạo mô tả"
+                )}
+              </Button>
+            </div>
+            <div className="col-md-12">
+              <label className="form-label">Mô tả</label>
+              <ReactQuill
+                readOnly={isGenerateDescription}
+                value={description}
+                onChange={setDescription}
+                theme="snow"
               />
             </div>
           </form>
