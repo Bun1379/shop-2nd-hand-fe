@@ -14,10 +14,10 @@ const UpdateUser = ({ userInfo }) => {
     const [newAvatar, setNewAvatar] = useState(userInfo?.image || '');
     const [fileAvatar, setFileAvatar] = useState(null);
 
-    const isValidPhoneNumber = (phone) => {
-        const phoneRegex = /^(0[3|5|7|8|9]\d{8})$/;
-        return phoneRegex.test(phone);
-    };
+    // const isValidPhoneNumber = (phone) => {
+    //     const phoneRegex = /^(0[3|5|7|8|9]\d{8})$/;
+    //     return phoneRegex.test(phone);
+    // };
 
     useEffect(() => {
         if (userInfo) {
@@ -55,10 +55,10 @@ const UpdateUser = ({ userInfo }) => {
         try {
             const formDataToSend = new FormData();
             formDataToSend.append('username', formData.username);
-            if (!isValidPhoneNumber(formData.phone)) {
-                toast.error('Số điện thoại không hợp lệ!');
-                return;
-            }
+            // if (!isValidPhoneNumber(formData.phone)) {
+            //     toast.error('Số điện thoại không hợp lệ!');
+            //     return;
+            // }
             formDataToSend.append('phone', formData.phone);
             formDataToSend.append('gender', formData.gender);
             let avatarUrl = userInfo.image;
@@ -84,7 +84,8 @@ const UpdateUser = ({ userInfo }) => {
             localStorage.setItem("user", JSON.stringify(updatedUser));
             setUser(updatedUser);
         } catch (error) {
-            toast.error(error.response.data.EM);
+            // toast.error(error.response.data.EM);
+            console.error('Error updating user:', error);
         }
     };
 
