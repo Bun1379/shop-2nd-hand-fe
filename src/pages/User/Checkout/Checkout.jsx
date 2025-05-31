@@ -165,7 +165,7 @@ const Checkout = () => {
       if (response.status === 200) {
         setShippingFee(
           shippingFee -
-            (shippingFee * response.data.DT.discountPercentage) / 100
+          (shippingFee * response.data.DT.discountPercentage) / 100
         );
         setShippingFeePercent(response.data.DT.discountPercentage);
         setDiscountShipping(response.data.DT._id);

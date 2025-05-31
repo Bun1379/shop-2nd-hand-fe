@@ -157,6 +157,8 @@ const ProductDetail = () => {
     const response = await BranchStock.getBranchStockWithProduct(product._id);
     if (response.status === 200) {
       setBranchStock(response.data.DT);
+      const totalStock = response.data.DT.reduce((sum, stock) => sum + stock.quantity, 0);
+      setOutOfStock(totalStock === 0);
     } else {
       toast.error(response.data.EM);
     }
@@ -320,7 +322,7 @@ const ProductDetail = () => {
                   variant="outline-secondary"
                   onClick={handleIncrease}
                   className="action-btn"
-                  disabled={quantity >= product.quantity}
+                  disabled={quantity >= branchStock.reduce((sum, stock) => sum + stock.quantity, 0)}
                 >
                   <FaPlus />
                 </Button>
