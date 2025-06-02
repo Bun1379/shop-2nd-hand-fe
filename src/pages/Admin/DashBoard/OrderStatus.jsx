@@ -21,7 +21,7 @@ ChartJS.register(
 );
 
 const OrderStatus = () => {
-  const [apiData, setApiData] = useState({}); // Start with null to check later
+  const [apiData, setApiData] = useState({});
   const fetchDataOrderStatusDistribute = async () => {
     try {
       const response = await DashBoardAPI.GetOrderStats();
@@ -38,21 +38,69 @@ const OrderStatus = () => {
     return <div>Loading...</div>;
   }
 
+  const options = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        position: 'right',
+        labels: {
+          font: {
+            size: 12,
+            weight: 'bold'
+          },
+          padding: 15,
+          boxWidth: 15
+        }
+      },
+      title: {
+        display: true,
+        text: 'Thống kê tỷ lệ trạng thái đơn hàng',
+        font: {
+          size: 14,
+          weight: 'bold'
+        }
+      },
+      tooltip: {
+        callbacks: {
+          label: function (context) {
+            const total = context.dataset.data.reduce((a, b) => a + b, 0);
+            const percentage = ((context.raw / total) * 100).toFixed(1);
+            return `${context.label}: ${context.raw} (${percentage}%)`;
+          }
+        }
+      }
+    }
+  };
+
   return (
-    <div>
-      <h5>Thống kê tỷ lệ trạng thái đơn hàng</h5>
+    <div style={{ height: '400px', position: 'relative' }}>
       <Pie
         data={{
           labels: Object.keys(apiData),
           datasets: [
             {
               data: Object.values(apiData),
-              backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56"],
-              hoverOffset: 4,
+              backgroundColor: [
+                'rgba(255, 99, 132, 0.8)',
+                'rgba(54, 162, 235, 0.8)',
+                'rgba(255, 206, 86, 0.8)',
+                'rgba(75, 192, 192, 0.8)',
+                'rgba(153, 102, 255, 0.8)'
+              ],
+              borderColor: [
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)'
+              ],
+              borderWidth: 2,
+              hoverOffset: 15
             },
           ],
         }}
-        options={{ responsive: true }}
+        options={options}
       />
     </div>
   );
