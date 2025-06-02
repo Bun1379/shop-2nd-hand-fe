@@ -93,15 +93,14 @@ const PurchasedProducts = () => {
 
   return (
     <div className="container mt-1">
-      <h3 className="text-center mb-4 ">Sản phẩm đã mua</h3>
+      <h3 className="text-center mb-4 ">Đánh giá sản phẩm</h3>
       <ul className="nav nav-tabs bg-white" id="purchasedTabs" role="tablist">
         <li className="nav-item w-50" role="presentation">
           <button
-            className={`w-100 nav-link ${
-              currentTab === "unreviewed"
+            className={`w-100 nav-link ${currentTab === "unreviewed"
                 ? "active text-white bg-success"
                 : "text-dark"
-            }`}
+              }`}
             id="unreviewed-tab"
             onClick={() => setCurrentTab("unreviewed")}
             type="button"
@@ -111,11 +110,10 @@ const PurchasedProducts = () => {
         </li>
         <li className="nav-item w-50" role="presentation">
           <button
-            className={`w-100 nav-link ${
-              currentTab === "reviewed"
+            className={`w-100 nav-link ${currentTab === "reviewed"
                 ? "active text-white bg-success"
                 : "text-dark"
-            }`}
+              }`}
             id="reviewed-tab"
             onClick={() => setCurrentTab("reviewed")}
             type="button"
@@ -126,9 +124,8 @@ const PurchasedProducts = () => {
       </ul>
       <div className="tab-content mt-3" id="purchasedTabContent">
         <div
-          className={`tab-pane fade ${
-            currentTab === "unreviewed" ? "show active" : ""
-          }`}
+          className={`tab-pane fade ${currentTab === "unreviewed" ? "show active" : ""
+            }`}
         >
           {currentProductsWithoutReview.length === 0 && (
             <p className="text-center mt-4 text-primary">
@@ -169,9 +166,8 @@ const PurchasedProducts = () => {
             )}
         </div>
         <div
-          className={`tab-pane fade ${
-            currentTab === "reviewed" ? "show active" : ""
-          }`}
+          className={`tab-pane fade ${currentTab === "reviewed" ? "show active" : ""
+            }`}
         >
           {currentProductsWithReview.length === 0 && (
             <p className="text-center mt-4 text-primary">

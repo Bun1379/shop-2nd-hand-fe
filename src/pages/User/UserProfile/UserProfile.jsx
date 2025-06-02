@@ -18,13 +18,13 @@ import {
   Lock,
   BoxSeam,
   XCircle,
-  Cart,
   Bell,
   GeoAlt,
   Heart,
   Tag,
   BoxArrowRight,
 } from "react-bootstrap-icons";
+import { FaRegStar } from "react-icons/fa";
 
 const UserAccount = ({ initialSection }) => {
   const token = localStorage.getItem("token");
@@ -117,8 +117,8 @@ const UserAccount = ({ initialSection }) => {
               active={activeSection === "productsPurchase"}
               onClick={() => setActiveSection("productsPurchase")}
             >
-              <Cart className="me-2" />
-              Sản phẩm đã mua
+              <FaRegStar className="me-2" />
+              Đánh giá sản phẩm
             </ListGroup.Item>
             <ListGroup.Item
               action
