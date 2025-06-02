@@ -7,7 +7,7 @@ import { Navigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 const User = () => {
-  const isAdmin = JSON.parse(localStorage.getItem("user")).role === "admin";
+  const isAdmin = localStorage.getItem("role") === "ADMIN";
   if (!isAdmin) {
     toast.error("Bạn không có quyền truy cập vào trang này");
     return <Navigate to="/admin" />;
