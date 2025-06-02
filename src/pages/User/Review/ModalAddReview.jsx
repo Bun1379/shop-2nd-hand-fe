@@ -35,6 +35,14 @@ const ModalAddReview = ({
   };
 
   const handleSubmit = () => {
+    if (!rating) {
+      toast.error("Vui lòng chọn đánh giá");
+      return;
+    }
+    if (!comment || comment.length < 10) {
+      toast.error("Vui lòng nhập bình luận ít nhất 10 ký tự");
+      return;
+    }
     handleSubmitReview({ rating, comment, images });
     handleClose();
   };

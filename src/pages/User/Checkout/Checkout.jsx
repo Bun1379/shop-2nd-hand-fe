@@ -105,7 +105,7 @@ const Checkout = () => {
         name: item.product.productName,
         size: item.product.size,
         quantity: item.quantity,
-        priceAtCreate: item.price,
+        priceAtCreate: item.product.price,
       })),
       totalAmount: afterDiscount,
       address: `${selectedAddress.address}, ${selectedAddress.district}, ${selectedAddress.ward}, ${selectedAddress.city}`,
@@ -165,7 +165,7 @@ const Checkout = () => {
       if (response.status === 200) {
         setShippingFee(
           shippingFee -
-          (shippingFee * response.data.DT.discountPercentage) / 100
+            (shippingFee * response.data.DT.discountPercentage) / 100
         );
         setShippingFeePercent(response.data.DT.discountPercentage);
         setDiscountShipping(response.data.DT._id);

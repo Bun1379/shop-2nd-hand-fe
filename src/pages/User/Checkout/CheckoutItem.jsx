@@ -7,7 +7,7 @@ const CheckoutItem = ({ item }) => {
         <Row className="align-items-center">
           <Col xs={1}>
             <Image
-              src={item.image || "https://via.placeholder.com/50"}
+              src={item.image ?? item.product.images[0]}
               alt="product"
               rounded
               fluid
@@ -15,10 +15,10 @@ const CheckoutItem = ({ item }) => {
             />
           </Col>
           <Col xs={5} className="fw-bold">
-            {item.name}
+            {item.name ?? item.product.productName}
           </Col>
           <Col xs={1} className="text-muted">
-            {item.size}
+            {item.size ?? item.product.size}
           </Col>
           <Col xs={2} className="text-center">
             {item.priceAtCreate ? (
