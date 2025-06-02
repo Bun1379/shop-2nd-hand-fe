@@ -59,10 +59,7 @@ const Checkout = () => {
       const response = await BranchAPI.getAllBranches();
       if (response.status === 200) {
         setBranchList(
-          response.data.DT.map((branch) => ({
-            value: branch._id,
-            label: branch.address,
-          }))
+          response.data.DT
         );
       }
     } catch (error) {
@@ -165,7 +162,7 @@ const Checkout = () => {
       if (response.status === 200) {
         setShippingFee(
           shippingFee -
-            (shippingFee * response.data.DT.discountPercentage) / 100
+          (shippingFee * response.data.DT.discountPercentage) / 100
         );
         setShippingFeePercent(response.data.DT.discountPercentage);
         setDiscountShipping(response.data.DT._id);
@@ -344,7 +341,7 @@ const Checkout = () => {
           style={{ height: "auto", margin: "0 auto" }}
         >
           <div className="d-flex gap-3">
-            <div className="flex-grow-1 flex-shrink-1 d-flex flex-column gap-2">
+            <div className="flex-grow-1 flex-shrink-1 d-flex flex-column gap-2" style={{ width: '100%' }}>
               <Button className="btn w-25" onClick={() => setIsModalOpen(true)}>
                 Chọn Địa Chỉ
               </Button>
@@ -352,7 +349,11 @@ const Checkout = () => {
                 <div className="card">
                   <div className="card-body">
                     <h5 className="card-title">{selectedAddress.name}</h5>
-                    <p className="card-text mt-1">
+                    <p className="card-text mt-1" style={{
+                      whiteSpace: 'nowrap',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis'
+                    }}>
                       Số điện thoại: {selectedAddress.phone}
                       <br />
                       Địa chỉ: {selectedAddress.address},{" "}
@@ -369,16 +370,41 @@ const Checkout = () => {
                 selectedAddress={selectedAddress}
                 setSelectedAddress={setSelectedAddress}
               />
-              <span className="fw-bold mb-0 ms-3">Chi nhánh giao hàng: </span>
-              <Select
-                options={branchList}
-                onChange={setSelectedBranch}
-                value={selectedBranch}
-                placeholder="Chọn chi nhánh giao hàng"
-              />
+              <div className="w-100">
+                <span className="fw-bold mb-0 ms-3">Chi nhánh giao hàng: </span>
+                <div className="mt-2" style={{ width: '100%' }}>
+                  <Select
+                    options={branchList.map(branch => ({
+                      value: branch._id,
+                      label: `${branch.name} - ${branch.address}`
+                    }))}
+                    onChange={(option) => setSelectedBranch(option)}
+                    value={selectedBranch}
+                    placeholder="Chọn chi nhánh giao hàng"
+                    styles={{
+                      control: (base) => ({
+                        ...base,
+                        width: '100%'
+                      }),
+                      option: (base) => ({
+                        ...base,
+                        whiteSpace: 'nowrap',
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis'
+                      }),
+                      singleValue: (base) => ({
+                        ...base,
+                        whiteSpace: 'nowrap',
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis'
+                      })
+                    }}
+                  />
+                </div>
+              </div>
             </div>
 
-            <div className="flex-grow-1">
+            <div className="flex-grow-1" style={{ width: '50%' }}>
               <span className="fw-bold mb-0 ms-3">Phương thức thanh toán:</span>
               <Select
                 options={options}

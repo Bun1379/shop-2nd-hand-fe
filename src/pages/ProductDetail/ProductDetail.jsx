@@ -255,36 +255,50 @@ const ProductDetail = () => {
           <p className="mt-3 product-quantity">
             <span className="fw-bold">Sản phẩm hiện có:</span>{" "}
             <div
-              className="border p-2 rounded bg-light mt-3"
+              className="border p-3 rounded mt-3"
               style={{
                 maxHeight: "300px",
                 overflowY: "auto",
                 overflowX: "hidden",
+                boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+                backgroundColor: "#f8f9fa"
               }}
             >
-              <Row className="fw-bold border-bottom pb-2">
-                <Col xs={8}>Chi nhánh</Col>
-                <Col xs={4} className="text-end">
-                  Số lượng
+              <Row className="fw-bold border-bottom pb-2 mb-2" style={{ backgroundColor: "#e9ecef" }}>
+                <Col xs={8} className="py-2">
+                  <i className="bi bi-shop me-2"></i>Chi nhánh
+                </Col>
+                <Col xs={4} className="text-end py-2">
+                  <i className="bi bi-box-seam me-2"></i>Số lượng
                 </Col>
               </Row>
               {branchStock.map((item, index) => (
                 <Row
                   key={index}
-                  className="border-bottom py-2 align-items-center"
+                  className="border-bottom py-3 align-items-center hover-effect"
+                  style={{
+                    transition: "all 0.3s ease",
+                    cursor: "pointer",
+                    ":hover": {
+                      backgroundColor: "#f1f3f5"
+                    }
+                  }}
                 >
                   <Col xs={10} className="d-flex align-items-center gap-2">
-                    <i className="bi bi-geo-alt text-primary"></i>
-                    <span className="fw-medium">{item.branch.address}</span>
+                    <i className="bi bi-geo-alt text-primary fs-5"></i>
+                    <div>
+                      <span className="fw-medium d-block" style={{ color: '#2563eb', fontSize: '1.1rem' }}>{item.branch.name}</span>
+                      <span className="text-muted small">{item.branch.address}</span>
+                    </div>
                   </Col>
 
                   <Col xs={2} className="text-center">
                     {item.quantity > 0 ? (
-                      <span className="fw-bold text-success ">
+                      <span className="badge bg-success p-2" style={{ fontSize: '0.9rem' }}>
                         {item.quantity}
                       </span>
                     ) : (
-                      <span className="text-danger">Hết hàng</span>
+                      <span className="badge bg-danger p-2" style={{ fontSize: '0.9rem' }}>Hết hàng</span>
                     )}
                   </Col>
                 </Row>
