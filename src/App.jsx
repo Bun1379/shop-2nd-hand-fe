@@ -33,6 +33,7 @@ import ManageCategory from "./pages/Admin/Category/MangeCategory";
 import ManageColor from "./pages/Admin/Color/ManageColor";
 import ManageBranch from "./pages/Admin/Branch/ManageBranch";
 import DiscountPage from "./pages/User/DiscountPage/DiscountPage";
+import Policy from "./pages/Policy/Policy";
 import ManageBranchStockRequest from "./pages/Admin/BranchStockRequest/ManageBranchStockRequest";
 import PromotionPage from "./pages/User/Promotion/Promotion";
 import ManageBlog from "./pages/Admin/Blog/ManageBlog";
@@ -63,6 +64,7 @@ function App() {
             />
             <Route path="blog" element={<BlogPage />} />
             <Route path="blog/:slug" element={<BlogDetail />} />
+            <Route path="/policy" element={<Policy />} />
           </Route>
 
           <Route path="/login" element={<Login />} />
