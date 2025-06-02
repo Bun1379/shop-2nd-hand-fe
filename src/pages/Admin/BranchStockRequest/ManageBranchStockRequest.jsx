@@ -201,16 +201,14 @@ const ManageBranchStockRequest = () => {
                 >
                   Xem chi tiết
                 </button>
-                {user.role !== "ADMIN" &&
-                  user.branch.length > 0 &&
-                  req.status == "pending" && (
-                    <button
-                      className="btn btn-danger"
-                      onClick={() => handleDeleteRequest(req._id)}
-                    >
-                      Xóa
-                    </button>
-                  )}
+                {req.status == "pending" && (
+                  <button
+                    className="btn btn-danger"
+                    onClick={() => handleDeleteRequest(req._id)}
+                  >
+                    Xóa
+                  </button>
+                )}
               </td>
             </tr>
           ))}

@@ -67,6 +67,7 @@ const UpdatePassword = ({ email }) => {
               id="currentPassword"
               value={currentPassword}
               onChange={(e) => setCurrentPassword(e.target.value)}
+              placeholder="Nhập mật khẩu hiện tại"
               required
             />
           </div>
