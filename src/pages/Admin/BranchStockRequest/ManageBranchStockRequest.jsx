@@ -35,10 +35,23 @@ const ManageBranchStockRequest = () => {
   useEffect(() => {
     BranchAPI.getAllBranches().then((res) => {
       if (res.status === 200) {
-        const branchOptions = res.data.DT.map((branch) => ({
-          value: branch._id,
-          label: branch.name,
-        }));
+        let branchOptions;
+        if (user.role === "MANAGER") {
+          // Filter branches based on user's managed branches
+          const managedBranches = user.branch || [];
+          branchOptions = res.data.DT
+            .filter(branch => managedBranches.some(managedBranch => managedBranch._id === branch._id))
+            .map(branch => ({
+              value: branch._id,
+              label: branch.name,
+            }));
+          console.log("Filtered Branch Options:", branchOptions);
+        } else {
+          branchOptions = res.data.DT.map((branch) => ({
+            value: branch._id,
+            label: branch.name,
+          }));
+        }
         setBranches([{ value: 0, label: "Tất cả" }, ...branchOptions]);
       }
     });
@@ -52,8 +65,15 @@ const ManageBranchStockRequest = () => {
         productStatus: selectedProductStatus?.value,
       });
       if (res.status === 200) {
-        // console.log(res.data.DT);
-        setRequests(res.data.DT);
+        let filteredRequests = res.data.DT;
+        if (user.role === "MANAGER") {
+          // Filter requests based on user's managed branches
+          const managedBranches = user.branch || [];
+          filteredRequests = res.data.DT.filter(request =>
+            managedBranches.some(managedBranch => managedBranch._id === request.branch._id)
+          );
+        }
+        setRequests(filteredRequests);
         setCurrentPage(0);
       }
     } catch (err) {
