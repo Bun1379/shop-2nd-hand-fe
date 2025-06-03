@@ -126,7 +126,7 @@ const Checkout = () => {
         const PaymentData = {
           amount: afterDiscount,
           orderId: rs.data.DT._id,
-          returnUrl: "https://ishio-shop.onrender.com/payment/result",
+          returnUrl: "https://ishio-store.onrender.com/payment/result",
         };
         const response = await PaymentAPI.postPayment(PaymentData);
         if (response.status === 200) {
