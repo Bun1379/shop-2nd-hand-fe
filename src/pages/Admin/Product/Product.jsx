@@ -80,7 +80,7 @@ const Product = () => {
       const res = await ProductAPI.GetProducts({
         page,
         search,
-        selectedOptionPrice: selectedSortPrice?.value,
+        sortOrder: selectedSortPrice?.value,
         selectedOptionStock: selectedOptionStock?.value,
         selectedBranch: selectedBranch?.value,
       });
