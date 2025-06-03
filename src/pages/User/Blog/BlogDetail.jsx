@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom";
-import "../../Admin/Blog/BLog.css";
+import "../../Admin/Blog/Blog.css";
 import BlogAPI from "../../../api/BlogAPI";
 import { useEffect, useState } from "react";
 import { Card, Col, Row } from "react-bootstrap";
