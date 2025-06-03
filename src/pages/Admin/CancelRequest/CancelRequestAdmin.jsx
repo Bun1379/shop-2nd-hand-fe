@@ -55,7 +55,7 @@ const CancelRequestAdmin = () => {
 
     if (!selectedBranches.includes("ALL")) {
       filtered = filtered.filter((item) =>
-        selectedBranches.includes(item?.order?.branch)
+        selectedBranches.includes(item?.order?.branch?._id)
       );
     }
 
