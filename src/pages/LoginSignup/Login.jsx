@@ -6,7 +6,10 @@ import LoginLayout from "../../layouts/LoginLayout/LoginLayout";
 import AuthAPI from "../../api/AuthAPI";
 import "./Login.css";
 import { setUserInLocalStorage } from "../../layouts/SocketContext";
+import PasswordInput from "../../components/PasswordInput/PasswordInput";
+
 const Login = () => {
+  localStorage.clear();
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -14,28 +17,31 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await AuthAPI.Login({
-        email,
-        password,
-      });
+      const response = await AuthAPI.Login({ email, password });
 
       if (response.status === 200) {
-        if (response.data.DT.user.is_active === false) {
+        const { user, token } = response.data.DT;
+
+        if (!user.is_active) {
           toast.error("Tài khoản của bạn đã bị khóa");
-        } else {
-          localStorage.setItem("token", response.data.DT.token);
-          setUserInLocalStorage(response.data.DT.user);
-          localStorage.setItem("is_admin", response.data.DT.user.is_admin);
+          return;
+        }
+        localStorage.setItem("token", token);
+        setUserInLocalStorage(user);
+        localStorage.setItem("role", user.role);
+        if (user.is_verified) {
           toast.success("Đăng nhập thành công!");
-          if (response.data.DT.user.is_verified === true) {
-            navigate(response.data.DT.user.is_admin ? "/admin" : "/");
-          } else {
-            navigate("/verify", { state: { email } });
-          }
+          navigate(
+            user.role === "ADMIN" || user.role === "MANAGER" ? "/admin" : "/"
+          );
+        } else {
+          navigate("/verify", { state: { email } });
         }
       }
     } catch (error) {
-      toast.error("Đăng nhập thất bại: " + error.response.data.EM);
+      toast.error(
+        "Đăng nhập thất bại: " + (error?.response?.data?.EM || error.message)
+      );
     }
   };
   return (
@@ -47,20 +53,19 @@ const Login = () => {
         <p>Đăng nhập</p>
       </h2>
       <form onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="email">Email:</label>
-          <input
-            type="email"
-            id="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-        </div>
-        <div>
-          <label htmlFor="password">Mật khẩu:</label>
-          <input
-            type="password"
+        <label htmlFor="email">Email:</label>
+        <input
+          className="form-control border border-success border-2 mb-3"
+          type="email"
+          id="email"
+          value={email}
+          placeholder="Nhập email của bạn"
+          onChange={(e) => setEmail(e.target.value)}
+          required
+        />
+        <label htmlFor="password">Mật khẩu:</label>
+        <div className="border border-success border-2 mb-3 rounded">
+          <PasswordInput
             id="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}

@@ -75,64 +75,72 @@ const OrderTable = ({
             <th>Tổng tiền đơn hàng</th>
             <th>Phương thức thanh toán</th>
             <th>Tình trạng thanh toán</th>
-            <th>Actions</th>
+            <th>Hành động</th>
           </tr>
         </thead>
         <tbody>
           {currentOrders && currentOrders.length > 0 ? (
-            currentOrders.map((order) => (
-              <tr key={order._id}>
-                <td>{order._id}</td>
-                <td>
-                  {`${new Date(order.createdAt).toLocaleDateString("vi-VN")} ${new Date(order.createdAt).toLocaleTimeString("vi-VN", {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  })}`}
-                </td>
-                <td>{order.name}</td>
-                <td>
-                  <Select
-                    options={options}
-                    defaultValue={options.find(
-                      (option) => option.value === order.status
-                    )}
-                    onChange={(selected) =>
-                      UpdateOrderStatus(order._id, selected.value)
-                    }
-                  />
-                </td>
+            currentOrders.map((order) => {
+              const highlightClass =
+                order.pendingProducts.length > 0 && ["PENDING", "CONFIRMED"].includes(order.status)
+                  ? "table-danger"
+                  : "";
 
-                <td>{order.totalAmount.toLocaleString("vi-VN")} đ</td>
-                <td>{order.paymentMethod}</td>
-                <td>
-                  <Select
-                    options={optionsPayment}
-                    defaultValue={optionsPayment.find(
-                      (option) => option.value === order.paymentStatus
-                    )}
-                    onChange={(selected) =>
-                      UpdateOrderPaymentStatus(order._id, selected.value)
-                    }
-                  />
-                </td>
-                <td className="d-flex gap-3">
-                  <button
-                    className="btn btn-primary"
-                    onClick={() => handleViewOrder(order)}
-                  >
-                    Xem chi tiết đơn hàng
-                  </button>
-                </td>
-              </tr>
-            ))
+              return (
+                <tr key={order._id} className={highlightClass}>
+                  <td>{order._id}</td>
+                  <td>
+                    {`${new Date(order.createdAt).toLocaleDateString("vi-VN")} ${new Date(order.createdAt).toLocaleTimeString("vi-VN", {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })}`}
+                  </td>
+                  <td>{order.name}</td>
+                  <td>
+                    <Select
+                      options={options}
+                      defaultValue={options.find(
+                        (option) => option.value === order.status
+                      )}
+                      onChange={(selected) =>
+                        UpdateOrderStatus(order._id, selected.value)
+                      }
+                    />
+                  </td>
+
+                  <td>{(order.totalAmount + (order.shippingFee ?? 0)).toLocaleString("vi-VN")} đ</td>
+                  <td>{order.paymentMethod}</td>
+                  <td>
+                    <Select
+                      options={optionsPayment}
+                      defaultValue={optionsPayment.find(
+                        (option) => option.value === order.paymentStatus
+                      )}
+                      onChange={(selected) =>
+                        UpdateOrderPaymentStatus(order._id, selected.value)
+                      }
+                    />
+                  </td>
+                  <td className="d-flex gap-3">
+                    <button
+                      className="btn btn-primary"
+                      onClick={() => handleViewOrder(order)}
+                    >
+                      Xem chi tiết đơn hàng
+                    </button>
+                  </td>
+                </tr>
+              );
+            })
           ) : (
             <tr>
-              <td colSpan="7" className="text-center">
+              <td colSpan="8" className="text-center">
                 No data
               </td>
             </tr>
           )}
         </tbody>
+
       </Table>
       <div className="d-flex justify-content-center">
         <ReactPaginate

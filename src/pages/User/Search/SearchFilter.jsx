@@ -1,8 +1,7 @@
 import "./SearchFilter.css";
-import { FaList, FaSearch } from "react-icons/fa";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 import ColorAPI from "../../../api/ColorAPI";
-import ReactSelect from "react-select";
 import CategoryAPI from "../../../api/CategoryAPI";
 
 const SearchFilter = ({
@@ -16,10 +15,16 @@ const SearchFilter = ({
   selectedColor,
   selectedCondition,
   selectedCategories,
+  optionSort,
+  setSort,
+  sort,
 }) => {
   const [categories, setCategories] = useState([]);
   const [searchText, setSearchText] = useState("");
-
+  const [showCategories, setShowCategories] = useState(false);
+  const [showConditions, setShowConditions] = useState(false);
+  const [showColors, setShowColors] = useState(false);
+  const [showSort, setShowSort] = useState(false);
   const fetchCategories = async () => {
     try {
       const response = await CategoryAPI.getAllCategories();
@@ -37,70 +42,206 @@ const SearchFilter = ({
     onSelectCategory(categoryId);
   };
 
-  return (
-    <div className="col-md-3">
-      <div className="categories">
-        <div className="input-group my-3">
-          <input
-            type="text"
-            className="form-control search-text"
-            id="search"
-            placeholder="Tìm kiếm..."
-            value={searchText}
-            onChange={(e) => setSearchText(e.target.value)}
-          />
-          <button
-            type="button"
-            className="btn btn-outline-first bg-white z-index-0"
-            onClick={() => onSearch(searchText)}
-          >
-            <FaSearch />
-          </button>
-        </div>
+  const handleConditionSelect = (condition) => {
+    if (selectedCondition?.value === condition.value) {
+      setSelectedCondition("");
+    } else {
+      setSelectedCondition(condition);
+    }
+  };
 
-        <button className="btn btn-success w-100 mb-2">
-          <FaList /> Danh mục sản phẩm
+  const handleColorSelect = (color) => {
+    if (selectedColor?.value === color.value) {
+      setSelectedColor("");
+    } else {
+      setSelectedColor(color);
+    }
+  };
+
+  const handleSortSelect = (sortOption) => {
+    if (sort.value === sortOption.value) {
+      setSort({ value: 0, label: "Mặc định" });
+    } else {
+      setSort(sortOption);
+    }
+  }
+
+  const handleResetFilter = () => {
+    setSearchText("");
+    resetFilter();
+  }
+
+  return (
+    <div className="filter-sidebar p-3 rounded bg-white shadow-sm" style={{ minWidth: "250px" }}>
+
+
+      {/* Search Box */}
+      <div className="search-box mb-4">
+        <input
+          type="text"
+          className="form-control"
+          placeholder="Nhập tên sản phẩm"
+          value={searchText}
+          onChange={(e) => setSearchText(e.target.value)}
+        />
+        <button className="btn btn-primary w-100 mt-2" onClick={() => onSearch(searchText)}>
+          Tìm kiếm
         </button>
-        <div className="list-group">
-          {Array.isArray(categories) && categories.length > 0 ? (
-            categories.map((category) => (
-              <div
-                key={category._id}
-                className={`list-group-item list-group-item-action d-flex align-items-center ${
-                  selectedCategories.includes(category._id) ? "active" : ""
-                }`}
-                onClick={() => handleCategorySelect(category._id)}
-                style={{ cursor: "pointer" }}
-              >
-                <span className="flex-grow-1">{category.name}</span>
-              </div>
-            ))
-          ) : (
-            <p>Không có danh mục nào để hiển thị</p>
-          )}
-        </div>
-        <div className="mt-3">
-          <ReactSelect
-            options={optionConditions}
-            value={selectedCondition}
-            onChange={(selectedOption) => setSelectedCondition(selectedOption)}
-            placeholder="Chọn điều kiện"
-          />
-        </div>
-        <div className="mt-3">
-          <ReactSelect
-            options={listColor}
-            value={selectedColor}
-            onChange={(selectedOption) => setSelectedColor(selectedOption)}
-            placeholder="Chọn màu"
-          />
-        </div>
-        <div className="mt-3">
-          <button className="btn btn-danger w-100" onClick={resetFilter}>
-            Xóa bộ lọc
-          </button>
-        </div>
       </div>
+
+      {/* Sort */}
+      <div className="filter-section mb-4">
+        <div
+          className="filter-header d-flex justify-content-between align-items-center mb-2"
+          onClick={() => setShowSort(!showSort)}
+          style={{ cursor: "pointer" }}
+        >
+          <h6 className="m-0 fw-bold">Sắp xếp</h6>
+          {showSort ? <FaChevronUp /> : <FaChevronDown />}
+        </div>
+        {showSort && (
+          <div className="filter-content">
+            {optionSort && optionSort.length > 0 ? (
+              optionSort.map((optionSort) => (
+                <div
+                  key={optionSort.value}
+                  className={`sort-item mb-2 ${sort.value === optionSort.value ? "active" : ""}`}
+                  onClick={() => handleSortSelect(optionSort)}
+                  style={{
+                    padding: "6px 12px",
+                    borderRadius: "6px",
+                    background: sort.value === optionSort.value ? "#208454" : "#f9f9f9",
+                    color: sort.value === optionSort.value ? "#fff" : "#000",
+                    cursor: "pointer",
+                    transition: "background 0.3s",
+                  }}
+                >
+                  {optionSort.label}
+                </div>
+              ))
+            ) : (
+              <p>Không có màu sắc.</p>
+            )}
+          </div>
+        )}
+      </div>
+
+
+      {/* Danh Mục */}
+      <div className="filter-section mb-4">
+        <div
+          className="filter-header d-flex justify-content-between align-items-center mb-2"
+          onClick={() => setShowCategories(!showCategories)}
+          style={{ cursor: "pointer" }}
+        >
+          <h6 className="m-0 fw-bold">Danh mục sản phẩm</h6>
+          {showCategories ? <FaChevronUp /> : <FaChevronDown />}
+        </div>
+        {showCategories && (
+          <div className="filter-content">
+            {Array.isArray(categories) && categories.length > 0 ? (
+              categories.map((category) => (
+                <div
+                  key={category._id}
+                  className={`category-item mb-2 ${selectedCategories.includes(category._id) ? "active" : ""}`}
+                  onClick={() => handleCategorySelect(category._id)}
+                  style={{
+                    padding: "6px 12px",
+                    borderRadius: "6px",
+                    background: selectedCategories.includes(category._id) ? "#208454" : "#f9f9f9",
+                    color: selectedCategories.includes(category._id) ? "#fff" : "#000",
+                    cursor: "pointer",
+                    transition: "background 0.3s",
+                  }}
+                >
+                  {category.name}
+                </div>
+              ))
+            ) : (
+              <p>Không có danh mục.</p>
+            )}
+          </div>
+        )}
+      </div>
+
+      {/* Điều Kiện */}
+      <div className="filter-section mb-4">
+        <div
+          className="filter-header d-flex justify-content-between align-items-center mb-2"
+          onClick={() => setShowConditions(!showConditions)}
+          style={{ cursor: "pointer" }}
+        >
+          <h6 className="m-0 fw-bold">Tình trạng</h6>
+          {showConditions ? <FaChevronUp /> : <FaChevronDown />}
+        </div>
+        {showConditions && (
+          <div className="filter-content">
+            {optionConditions && optionConditions.length > 0 ? (
+              optionConditions.map((condition) => (
+                <div
+                  key={condition.value}
+                  className={`condition-item mb-2 ${selectedCondition?.value === condition.value ? "active" : ""}`}
+                  onClick={() => handleConditionSelect(condition)}
+                  style={{
+                    padding: "6px 12px",
+                    borderRadius: "6px",
+                    background: selectedCondition?.value === condition.value ? "#208454" : "#f9f9f9",
+                    color: selectedCondition?.value === condition.value ? "#fff" : "#000",
+                    cursor: "pointer",
+                    transition: "background 0.3s",
+                  }}
+                >
+                  {condition.label}
+                </div>
+              ))
+            ) : (
+              <p>Không có tình trạng.</p>
+            )}
+          </div>
+        )}
+      </div>
+
+      {/* Màu Sắc */}
+      <div className="filter-section mb-4">
+        <div
+          className="filter-header d-flex justify-content-between align-items-center mb-2"
+          onClick={() => setShowColors(!showColors)}
+          style={{ cursor: "pointer" }}
+        >
+          <h6 className="m-0 fw-bold">Màu sắc</h6>
+          {showColors ? <FaChevronUp /> : <FaChevronDown />}
+        </div>
+        {showColors && (
+          <div className="filter-content">
+            {listColor && listColor.length > 0 ? (
+              listColor.map((color) => (
+                <div
+                  key={color.value}
+                  className={`color-item mb-2 ${selectedColor?.value === color.value ? "active" : ""}`}
+                  onClick={() => handleColorSelect(color)}
+                  style={{
+                    padding: "6px 12px",
+                    borderRadius: "6px",
+                    background: selectedColor?.value === color.value ? "#208454" : "#f9f9f9",
+                    color: selectedColor?.value === color.value ? "#fff" : "#000",
+                    cursor: "pointer",
+                    transition: "background 0.3s",
+                  }}
+                >
+                  {color.label}
+                </div>
+              ))
+            ) : (
+              <p>Không có màu sắc.</p>
+            )}
+          </div>
+        )}
+      </div>
+
+      {/* Xóa bộ lọc */}
+      <button className="btn btn-outline-danger w-100" onClick={handleResetFilter}>
+        Xóa tất cả bộ lọc
+      </button>
     </div>
   );
 };

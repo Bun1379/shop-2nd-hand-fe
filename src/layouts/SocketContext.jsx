@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 
 const SocketContext = createContext();
 
-const socket = io("https://shop-2nd-hand.onrender.com", {
+const socket = io(import.meta.env.VITE_API_URL, {
   transports: ["websocket"],
   autoConnect: true,
 });
@@ -51,7 +51,9 @@ export const SocketProvider = ({ children }) => {
   }, [user]);
 
   return (
-    <SocketContext.Provider value={socket}>{children}</SocketContext.Provider>
+    <SocketContext.Provider value={{ socket, user, setUser }}>
+      {children}
+    </SocketContext.Provider>
   );
 };
 

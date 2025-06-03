@@ -1,6 +1,6 @@
 import axios from "axios";
 import { toast } from "react-toastify";
-const BASE_URL = `https://shop-2nd-hand.onrender.com/api/v1`;
+const BASE_URL = `${import.meta.env.VITE_API_URL}/api/v1`;
 
 // Tạo axios client chung
 const axiosClient = axios.create({

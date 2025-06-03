@@ -31,7 +31,7 @@ class OrderAPI {
     return axiosPrivate.put(url, data);
   }
 
-  static async UpdateOrderPaymnentStatus(orderId, data) {
+  static async UpdateOrderPaymentStatus(orderId, data) {
     const url = `/order/${orderId}/payment-status`;
     return axiosPrivate.put(url, data);
   }

@@ -1,17 +1,19 @@
 import React, { useState, useEffect } from "react";
 import ProductAPI from "../../../api/ProductAPI";
-import { Carousel } from "react-bootstrap";
+import { Button, Carousel } from "react-bootstrap";
 import HomeDiscount from "./Discount/HomeDiscount";
 import BannerAPI from "../../../api/BannerAPI";
 import HomeReview from "./Review/HomeReview";
 import ReactPaginate from "react-paginate";
 import ProductItem from "../../../components/ProductItem/ProductItem";
-
+import BranchStock from "../../../api/BranchStockAPI";
+import { NavLink, useNavigate } from "react-router-dom";
 function Home() {
   const [arrayProducts, setArrayProducts] = useState([]);
   const [banner, setBanner] = useState([]);
   const [totalPages, setTotalPages] = useState(0);
   const [page, setPage] = useState(1);
+  const navigate = useNavigate();
 
   const handlePageClick = (data) => {
     setPage(data.selected + 1);
@@ -47,6 +49,29 @@ function Home() {
     fetchDataProducts();
   }, [page]);
 
+  const [itemWidth, setItemWidth] = useState("20%");
+
+  useEffect(() => {
+    function handleResize() {
+      const width = window.innerWidth;
+
+      if (width < 576) {
+        setItemWidth("calc(50% - 0.5rem)");
+      } else if (width < 768) {
+        setItemWidth("calc(50% - 0.75rem)");
+      } else if (width < 1200) {
+        setItemWidth("calc(33.333% - 1rem)");
+      } else {
+        setItemWidth("calc(20% - 1rem)");
+      }
+    }
+
+    window.addEventListener("resize", handleResize);
+    handleResize(); // gọi lần đầu
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   return (
     <>
       <div className="my-5">
@@ -55,9 +80,8 @@ function Home() {
           {banner.map((banner, index) => (
             <Carousel.Item
               key={index}
-              onClick={(event) => {
-                window.location.href = banner.url;
-                event.preventDefault();
+              onClick={() => {
+                navigate(banner.url);
               }}
             >
               <img
@@ -71,12 +95,14 @@ function Home() {
                 }}
               />
               <Carousel.Caption className="text-white p-4">
-                <h3 style={{
-                  backgroundColor: "rgba(0, 0, 0, 0.3)",
-                  display: "inline-block",
-                  padding: "5px 10px",
-                  borderRadius: "5px",
-                }}>
+                <h3
+                  style={{
+                    backgroundColor: "rgba(0, 0, 0, 0.3)",
+                    display: "inline-block",
+                    padding: "5px 10px",
+                    borderRadius: "5px",
+                  }}
+                >
                   {banner.title}
                 </h3>
               </Carousel.Caption>
@@ -85,7 +111,12 @@ function Home() {
         </Carousel>
 
         {/* Home Discount */}
-        <HomeDiscount />
+        {/* <HomeDiscount /> */}
+        {/* <Button variant="success">
+          <Link to="/discounts" className="text-white text-decoration-none">
+            Săn mã giảm giá
+          </Link>
+        </Button> */}
 
         {/* Title for new products */}
         <h1
@@ -96,21 +127,13 @@ function Home() {
         </h1>
         {/* Product List */}
         <div className="container-fluid w-100 bg-white border border-2 border-success rounded justify-content-center ">
-          <div
-            className="w-100 mt-4"
-            style={{
-              display: "flex",
-              flexWrap: "wrap",
-              justifyContent: "center",
-              gap: "3rem",
-            }}
-          >
+          <div className="mt-4 d-flex flex-wrap justify-content-center gap-3">
             {arrayProducts.map((product) => (
               <div
-                className="product-item text-wrap shadow"
+                className=""
                 key={product._id}
                 style={{
-                  width: "240px",
+                  width: itemWidth,
                 }}
               >
                 <ProductItem product={product} />
@@ -119,26 +142,20 @@ function Home() {
           </div>
 
           {/* Pagination */}
-          <div className="d-flex justify-content-center mt-4">
-            <ReactPaginate
-              nextLabel=">"
-              onPageChange={handlePageClick}
-              pageRangeDisplayed={5}
-              pageCount={totalPages}
-              previousLabel="<"
-              marginPagesDisplayed={2}
-              pageClassName="page-item"
-              pageLinkClassName="page-link"
-              previousClassName="page-item"
-              previousLinkClassName="page-link"
-              nextClassName="page-item"
-              nextLinkClassName="page-link"
-              breakLabel="..."
-              breakClassName="page-item"
-              breakLinkClassName="page-link"
-              containerClassName="pagination"
-              activeClassName="active"
-            />
+          <div className="text-end mt-3 me-3 mb-3">
+            <a
+              style={{
+                fontWeight: "bold",
+                fontSize: "1.2rem",
+                color: "#208454",
+                cursor: "pointer",
+              }}
+              onClick={() => {
+                navigate("/search");
+              }}
+            >
+              Xem thêm &gt;&gt;&gt;
+            </a>
           </div>
         </div>
 

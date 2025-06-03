@@ -5,13 +5,13 @@ import NotificationBell from "./NotificationBell";
 import logo from "../../assets/images/logoedit.png";
 import { Badge, Dropdown } from "react-bootstrap";
 import LogoutModal from "../LogoutModal/LogoutModal";
-
+import { useSocket } from "../../layouts/SocketContext";
 import "./Header.css";
 import CartAPI from "../../api/CartAPI";
 function Header() {
   const navigate = useNavigate();
   const location = useLocation();
-  const user = JSON.parse(localStorage.getItem("user"));
+  const { user } = useSocket();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [query, setQuery] = useState("");
   const [showModal, setShowModal] = useState(false);
@@ -75,11 +75,9 @@ function Header() {
   const handleClose = () => setShowModal(false); // Đóng modal
 
   return (
-    <nav className="navbar navbar-expand-lg navbar-dark bg-success fixed-top fs-4 w-100">
-      <div
-        className="d-flex justify-content-between align-items-center w-100"
-        style={{ marginLeft: "130px", marginRight: "123px" }}
-      >
+    <nav className="navbar navbar-expand-xl navbar-dark bg-success fixed-top fs-4 w-100">
+      <div className="container-fluid" style={{ padding: "0 5%" }}>
+        {/* Logo */}
         <NavLink
           className="navbar-brand d-flex align-items-center"
           to="/"
@@ -93,7 +91,7 @@ function Header() {
             style={{ width: "50px", height: "50px" }}
           />
           <span
-            className="ms-2 "
+            className="ms-2"
             style={{
               fontFamily: "'KouzanBrush', cursive",
               fontSize: "25px",
@@ -105,8 +103,23 @@ function Header() {
             Ishio Store
           </span>
         </NavLink>
+
+        {/* Toggle button */}
+        <button
+          className="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span className="navbar-toggler-icon"></span>
+        </button>
+
+        {/* Navbar Items */}
         <div className="collapse navbar-collapse" id="navbarNav">
-          <ul className="navbar-nav me-auto">
+          <ul className="navbar-nav me-auto mb-2 mb-lg-0">
             <li className="nav-item">
               <a
                 className="nav-link"
@@ -115,6 +128,11 @@ function Header() {
               >
                 Hàng mới
               </a>
+            </li>
+            <li className="nav-item">
+              <NavLink className="nav-link" to="/blog">
+                Blog
+              </NavLink>
             </li>
             <li className="nav-item">
               <a
@@ -130,14 +148,21 @@ function Header() {
                 Tìm kiếm
               </NavLink>
             </li>
-            {localStorage.getItem("is_admin") === "true" && (
+            <li className="nav-item">
+              <NavLink className="nav-link" to="/discount">
+                Mã giảm giá
+              </NavLink>
+            </li>
+            {localStorage.getItem("role") !== "USER" && localStorage.getItem("role") !== null && (
               <li className="nav-item">
                 <NavLink className="nav-link" to="/admin">
-                  ADMIN
+                  MANAGER
                 </NavLink>
               </li>
             )}
           </ul>
+
+          {/* Search Bar */}
 
           <form
             className="d-flex align-items-center me-3"
@@ -158,14 +183,13 @@ function Header() {
             </div>
           </form>
 
+          {/* Right-side icons */}
           <ul className="navbar-nav">
             {isLoggedIn ? (
               <>
-                <li className="nav-item">
-                  <NotificationBell />
-                </li>
-                <li className="nav-item">
-                  <NavLink className="nav-link" to="/cart">
+                <NotificationBell />
+                <li className="nav-item position-relative">
+                  <NavLink className="nav-link " to="/cart">
                     <FaShoppingCart />
                     {productInCart > 0 && (
                       <Badge
@@ -181,13 +205,9 @@ function Header() {
                 </li>
                 <Dropdown align="end">
                   <Dropdown.Toggle
-                    as="button"
-                    className="nav-link header-dropdown-toggle"
-                    href="#"
+                    as="a"
+                    className="nav-link d-flex align-items-center icon-propdown"
                     id="userDropdown"
-                    role="button"
-                    data-bs-toggle="dropdown"
-                    aria-expanded="false"
                   >
                     <img
                       src={user?.image}
@@ -196,7 +216,6 @@ function Header() {
                       style={{ width: "40px", height: "40px" }}
                     />
                   </Dropdown.Toggle>
-
                   <Dropdown.Menu aria-labelledby="userDropdown">
                     <Dropdown.Item
                       as={NavLink}
@@ -204,14 +223,6 @@ function Header() {
                       style={{ backgroundColor: "transparent", color: "black" }}
                     >
                       Tài khoản của tôi
-                    </Dropdown.Item>
-                    <Dropdown.Item
-                      as={NavLink}
-                      to="/user-profile"
-                      style={{ backgroundColor: "transparent", color: "black" }}
-                      state={{ initialSection: "orders" }}
-                    >
-                      Đơn mua
                     </Dropdown.Item>
                     <Dropdown.Item as="button" onClick={handleShow}>
                       Đăng xuất
@@ -236,6 +247,7 @@ function Header() {
           </ul>
         </div>
       </div>
+
       <LogoutModal show={showModal} handleClose={handleClose} />
     </nav>
   );

@@ -9,6 +9,7 @@ const NotificationBell = () => {
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
+  const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();
 
   const handleItemClick = (orderId) => {
@@ -87,19 +88,33 @@ const NotificationBell = () => {
   };
 
   return (
-    <Dropdown align="end" onToggle={(isOpen) => isOpen && fetchNotifications()}>
+    <Dropdown
+      align="end"
+      onToggle={(isOpen) => {
+        if (isOpen) {
+          fetchNotifications();
+        }
+        setShowModal(isOpen);
+      }}
+    >
       <Dropdown.Toggle
-        variant="link"
+        as="a"
         id="notification-dropdown"
-        className="position-relative header-dropdown-toggle mt-2"
-        style={{ textDecoration: "none", color: "rgba(255, 255, 255, 0.55)" }}
+        className="nav-link  align-items-center icon-propdown"
+        style={{
+          textDecoration: "none",
+          cursor: "pointer",
+        }}
       >
-        <FaBell size={24} />
+        <FaBell
+          size={24}
+          color={showModal ? "white" : "rgba(255, 255, 255, 0.55)"}
+        />
         {unreadCount > 0 && (
           <Badge
             bg="danger"
             pill
-            className="position-absolute top-0 start-60 translate-middle"
+            className="position-absolute start-60 translate-middle"
             style={{ fontSize: "0.75rem" }}
           >
             {unreadCount}

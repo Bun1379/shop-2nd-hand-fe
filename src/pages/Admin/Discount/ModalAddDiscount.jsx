@@ -2,12 +2,24 @@ import { useState } from "react";
 import { Modal, Toast } from "react-bootstrap";
 import DiscountAPI from "../../../api/DiscountAPI";
 import { toast } from "react-toastify";
+import Select from "react-select";
 
 const ModalAddDiscount = ({ show, setShow }) => {
+  const type = [
+    {
+      value: "SHIPPING",
+      label: "Giảm giá vận chuyển",
+    },
+    {
+      value: "PRODUCT",
+      label: "Giảm giá sản phẩm",
+    },
+  ];
   const [code, setCode] = useState("");
   const [discount, setDiscount] = useState(0);
   const [expiredAt, setExpiredAt] = useState(null);
   const [usageLimit, setUsageLimit] = useState(null);
+  const [typeDiscount, setTypeDiscount] = useState(type[0].value);
 
   const handleClose = () => {
     setShow(false);
@@ -32,6 +44,7 @@ const ModalAddDiscount = ({ show, setShow }) => {
         discountPercentage: discount,
         expiredAt,
         usageLimit,
+        type: typeDiscount.value,
       });
       if (response.status === 200) {
         toast.success("Add discount successfully");
@@ -70,7 +83,7 @@ const ModalAddDiscount = ({ show, setShow }) => {
           />
         </div>
         <div className="form-group">
-          <label htmlFor="expiredAt">Ngày hết hạn</label>
+          <label htmlFor="expiredAt">Ngày hết hạn (optional)</label>
           <input
             type="date"
             className="form-control"
@@ -88,6 +101,14 @@ const ModalAddDiscount = ({ show, setShow }) => {
             id="usageLimit"
             value={usageLimit}
             onChange={(e) => setUsageLimit(e.target.value)}
+          />
+        </div>
+        <div className="form-group">
+          <label htmlFor="usageLimit">Loại mã giảm giá</label>
+          <Select
+            options={type}
+            onChange={setTypeDiscount}
+            value={typeDiscount}
           />
         </div>
       </Modal.Body>

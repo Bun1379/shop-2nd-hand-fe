@@ -2,7 +2,9 @@ import React, { useState, useEffect } from 'react';
 import UserAPI from '../../../api/UserAPI';
 import { toast } from 'react-toastify';
 import UploadAPI from '../../../api/UploadAPI';
+import { useSocket } from '../../../layouts/SocketContext';
 const UpdateUser = ({ userInfo }) => {
+    const { setUser } = useSocket();
     const [formData, setFormData] = useState({
         username: '',
         email: '',
@@ -12,10 +14,10 @@ const UpdateUser = ({ userInfo }) => {
     const [newAvatar, setNewAvatar] = useState(userInfo?.image || '');
     const [fileAvatar, setFileAvatar] = useState(null);
 
-    const isValidPhoneNumber = (phone) => {
-        const phoneRegex = /^(0[3|5|7|8|9]\d{8})$/;
-        return phoneRegex.test(phone);
-    };
+    // const isValidPhoneNumber = (phone) => {
+    //     const phoneRegex = /^(0[3|5|7|8|9]\d{8})$/;
+    //     return phoneRegex.test(phone);
+    // };
 
     useEffect(() => {
         if (userInfo) {
@@ -53,10 +55,10 @@ const UpdateUser = ({ userInfo }) => {
         try {
             const formDataToSend = new FormData();
             formDataToSend.append('username', formData.username);
-            if (!isValidPhoneNumber(formData.phone)) {
-                toast.error('Số điện thoại không hợp lệ!');
-                return;
-            }
+            // if (!isValidPhoneNumber(formData.phone)) {
+            //     toast.error('Số điện thoại không hợp lệ!');
+            //     return;
+            // }
             formDataToSend.append('phone', formData.phone);
             formDataToSend.append('gender', formData.gender);
             let avatarUrl = userInfo.image;
@@ -80,9 +82,10 @@ const UpdateUser = ({ userInfo }) => {
                 image: avatarUrl || userInfo.image
             };
             localStorage.setItem("user", JSON.stringify(updatedUser));
-            window.location.reload();
+            setUser(updatedUser);
         } catch (error) {
-            toast.error(error.response.data.EM);
+            // toast.error(error.response.data.EM);
+            console.error('Error updating user:', error);
         }
     };
 
@@ -104,18 +107,6 @@ const UpdateUser = ({ userInfo }) => {
                             name="username"
                             placeholder="Nhập tên của bạn"
                             value={formData.username}
-                            onChange={handleChange}
-                        />
-                    </div>
-                    <div className="mb-3">
-                        <label htmlFor="phone" className="form-label">Số điện thoại:</label>
-                        <input
-                            type="text"
-                            className="form-control"
-                            id="phone"
-                            name="phone"
-                            placeholder="Nhập số điện thoại"
-                            value={formData.phone}
                             onChange={handleChange}
                         />
                     </div>

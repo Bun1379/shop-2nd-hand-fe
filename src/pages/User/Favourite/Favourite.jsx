@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import UserAPI from "../../../api/UserAPI";
 import FavouriteItem from "./FavouriteItem";
 import ReactPaginate from "react-paginate";
+import { toast } from "react-toastify";
 
 const Favourite = () => {
   const [products, setProducts] = useState([]);
@@ -22,6 +23,7 @@ const Favourite = () => {
       const response = await UserAPI.PutUpdateFavorite(productId);
       if (response.status === 200) {
         fetchProducts();
+        toast.success("Đã bỏ yêu thích sản phẩm");
       }
     } catch (error) {
       console.error("Error: ", error);
@@ -34,7 +36,10 @@ const Favourite = () => {
 
   const indexOfLastProduct = (currentPage + 1) * productsPerPage;
   const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
-  const currentProducts = products.slice(indexOfFirstProduct, indexOfLastProduct);
+  const currentProducts = products.slice(
+    indexOfFirstProduct,
+    indexOfLastProduct
+  );
 
   const totalPages = Math.ceil(products.length / productsPerPage);
 

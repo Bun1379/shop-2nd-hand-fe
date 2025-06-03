@@ -6,14 +6,15 @@ import { useState } from "react";
 import { toast } from "react-toastify";
 import AuthAPI from "../../api/AuthAPI";
 import { Spinner } from "react-bootstrap";
+
 const ForgotPW = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
-    setLoading(true);
     e.preventDefault();
+    setLoading(true);
     try {
       await AuthAPI.SendOTP({
         email,
@@ -38,6 +39,8 @@ const ForgotPW = () => {
         <div>
           <label htmlFor="email">Nhập email bạn đã đăng ký:</label>
           <input
+            className="form-control border border-success border-2 mb-3"
+            placeholder="Nhập email"
             type="email"
             id="email"
             value={email}
@@ -48,7 +51,6 @@ const ForgotPW = () => {
         <button
           type="submit"
           disabled={loading}
-          onClick={handleSubmit}
           className="btn btn-primary d-flex align-items-center justify-content-center"
           style={{
             height: "40px", // Điều chỉnh chiều cao nếu cần

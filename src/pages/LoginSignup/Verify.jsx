@@ -33,9 +33,11 @@ const Verify = () => {
                 <div>
                     <label htmlFor="otp">Nhập mã OTP được gửi về email đăng ký của bạn</label>
                     <input
+                        className="form-control border border-success border-2 mb-3"
                         type="text"
                         id="otp"
                         value={otp}
+                        placeholder='Nhập mã OTP'
                         onChange={(e) => setotp(e.target.value)}
                         required
                     />

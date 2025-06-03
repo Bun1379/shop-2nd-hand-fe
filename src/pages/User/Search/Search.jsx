@@ -5,7 +5,8 @@ import ProductItem from "../../../components/ProductItem/ProductItem";
 import SearchFilter from "./SearchFilter";
 import ReactSelect from "react-select";
 import ColorAPI from "../../../api/ColorAPI";
-import { Button } from "react-bootstrap";
+import ReactPaginate from "react-paginate";
+import { use } from "react";
 
 const Search = () => {
   const [searchParams] = useSearchParams();
@@ -70,30 +71,13 @@ const Search = () => {
         category: selectedCategories,
         condition: selectedCondition.value,
         color: selectedColor.value,
-        page: 1,
+        page: page,
+        limit: 8,
       });
       //   console.log(search);
       console.log(response.data.DT);
       setProducts(response.data.DT.products);
       setTotalPages(response.data.DT.totalPages);
-      setPage(1);
-    } catch (error) {
-      console.error("Error:", error);
-    }
-  };
-
-  const loadMore = async () => {
-    try {
-      const response = await ProductAPI.GetProducts({
-        search: searchParams.get("query"),
-        sortOrder: sort.value,
-        category: selectedCategories,
-        page: page + 1,
-      });
-      // console.log(sort.value, page + 1);
-      // console.log(response.data.DT.products);
-      setProducts([...products, ...response.data.DT.products]);
-      setPage(page + 1);
     } catch (error) {
       console.error("Error:", error);
     }
@@ -109,8 +93,17 @@ const Search = () => {
     }
   };
 
+  const handlePageClick = ({ selected }) => {
+    setPage(selected + 1);
+  };
+
+  useEffect(() => {
+    fetchData(searchParams.get("query"));
+  }, [page]);
+
   useEffect(() => {
     const search = searchParams.get("query");
+    setPage(1);
     fetchData(search);
   }, [
     searchParams,
@@ -132,7 +125,7 @@ const Search = () => {
   }, []);
 
   return (
-    <div className="d-flex flex-row gap-3">
+    <div className="d-flex flex-row gap-2 align-items-start ">
       <SearchFilter
         onSelectCategory={handleCategorySelect}
         onSearch={fetchData}
@@ -144,27 +137,48 @@ const Search = () => {
         selectedColor={selectedColor}
         selectedCondition={selectedCondition}
         selectedCategories={selectedCategories}
+        optionSort={options}
+        setSort={setSort}
+        sort={sort}
       />
-      <div className="text-center w-100">
-        Kết quả tìm kiếm cho: {searchParams.get("query")}
-        <ReactSelect options={options} value={sort} onChange={setSort} />
-        <div
-          className="d-flex justify-content-center flex-wrap"
-        >
+      <div className="d-flex flex-column w-100">
+        {/* <div className="">
+          Kết quả tìm kiếm cho: {searchParams.get("query")}
+        </div> */}
+        {/* <ReactSelect options={options} value={sort} onChange={setSort} /> */}
+        <div className="justify-content-center row">
           {products.length === 0 && <div>Không tìm thấy sản phẩm</div>}
           {products.length > 0 &&
             products.map((product) => (
-              <div className="m-2"
-                style={{
-
-                  width: '240px',
-                }}
-              >
+              <div key={product._id} className="col-12 col-md-6 col-lg-3 mb-3">
                 <ProductItem key={product._id} product={product} />
               </div>
             ))}
         </div>
-        {page < totalPages && <Button clasName="primary" onClick={loadMore}>Xem thêm</Button>}
+        {totalPages > 1 && (
+          <div className="d-flex justify-content-center mt-4">
+            <ReactPaginate
+              nextLabel=">"
+              onPageChange={handlePageClick}
+              pageRangeDisplayed={5}
+              pageCount={totalPages}
+              previousLabel="<"
+              marginPagesDisplayed={2}
+              pageClassName="page-item"
+              pageLinkClassName="page-link"
+              previousClassName="page-item"
+              previousLinkClassName="page-link"
+              nextClassName="page-item"
+              nextLinkClassName="page-link"
+              breakLabel="..."
+              breakClassName="page-item"
+              breakLinkClassName="page-link"
+              containerClassName="pagination"
+              activeClassName="active"
+              forcePage={page - 1}
+            />
+          </div>
+        )}
       </div>
     </div>
   );

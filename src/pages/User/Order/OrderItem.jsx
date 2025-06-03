@@ -61,12 +61,10 @@ const OrderItem = ({ order, handleOnClickOrder, handleReceive }) => {
               </p>
             )}
           {order.products.map((product) => (
-            <OrderProductItem
-              key={product._id}
-              product={product.product}
-              quantity={product.quantity}
-              priceAtCreate={product.priceAtCreate}
-            />
+            <OrderProductItem key={product._id} item={product} />
+          ))}
+          {order.pendingProducts.map((product) => (
+            <OrderProductItem key={product._id} item={product} />
           ))}
         </Card.Body>
 

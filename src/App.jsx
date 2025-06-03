@@ -1,4 +1,5 @@
-import "bootstrap/dist/css/bootstrap.min.css";
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import "./App.css";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -30,11 +31,22 @@ import CancelRequestAdmin from "./pages/Admin/CancelRequest/CancelRequestAdmin";
 import ManageBanner from "./pages/Admin/Banner/ManageBanner";
 import ManageCategory from "./pages/Admin/Category/MangeCategory";
 import ManageColor from "./pages/Admin/Color/ManageColor";
+import ManageBranch from "./pages/Admin/Branch/ManageBranch";
+import DiscountPage from "./pages/User/DiscountPage/DiscountPage";
+import Policy from "./pages/Policy/Policy";
+import ManageBranchStockRequest from "./pages/Admin/BranchStockRequest/ManageBranchStockRequest";
+import PromotionPage from "./pages/User/Promotion/Promotion";
+import ManageBlog from "./pages/Admin/Blog/ManageBlog";
+import BlogPage from "./pages/User/Blog/BlogPage";
+import BlogDetail from "./pages/User/Blog/BlogDetail";
+import ScrollToTop from "./helper/ScrollToTop";
+import notfoundImg from './assets/images/notfound.png';
 
 function App() {
   return (
     <SocketProvider>
       <BrowserRouter>
+        <ScrollToTop />
         <Routes>
           <Route path="/" element={<UserLayout />}>
             <Route index element={<Home />} />
@@ -44,10 +56,15 @@ function App() {
             <Route path="order" element={<Order />} />
             <Route path="order/:orderId" element={<OrderDetail />} />
             <Route path="search" element={<Search />} />
+            <Route path="discount" element={<DiscountPage />} />
+            <Route path="promotion/:slug" element={<PromotionPage />} />
             <Route
               path="user-profile"
               element={<UserProfile initialSection="profile" />}
             />
+            <Route path="blog" element={<BlogPage />} />
+            <Route path="blog/:slug" element={<BlogDetail />} />
+            <Route path="/policy" element={<Policy />} />
           </Route>
 
           <Route path="/login" element={<Login />} />
@@ -67,10 +84,20 @@ function App() {
             <Route path="banner" element={<ManageBanner />} />
             <Route path="category" element={<ManageCategory />} />
             <Route path="color" element={<ManageColor />} />
+            <Route path="branch" element={<ManageBranch />} />
+            <Route path="blog" element={<ManageBlog />} />
+            <Route
+              path="branch-stock-request"
+              element={<ManageBranchStockRequest />}
+            />
           </Route>
 
           <Route path="/payment/result" element={<PaymentResult />} />
-          <Route path="*" element={<h1>404 Not Found</h1>} />
+          <Route path="*" element={
+            <div className="d-flex justify-content-center align-items-center" style={{ height: '100vh' }}>
+              <img src={notfoundImg} alt="404 Not Found" className="img-fluid rounded-circle " style={{ objectFit: 'cover', width: '600px', height: '600px' }} />
+            </div>
+          } />
         </Routes>
       </BrowserRouter>
       <ToastContainer

@@ -13,6 +13,8 @@ import RecentlyViewedProducts from "../../components/RecentlyView/RecentlyView";
 import UserAPI from "../../api/UserAPI";
 import { updateQuantityCart } from "../../components/Header/Header";
 import ReactPaginate from "react-paginate";
+import BranchStock from "../../api/BranchStockAPI";
+import parse from "html-react-parser";
 
 const ProductDetail = () => {
   const navigate = useNavigate();
@@ -23,6 +25,7 @@ const ProductDetail = () => {
   const [reviews, setReviews] = useState([]);
   const [favouriteText, setFavouriteText] = useState("Yêu thích");
   const [outOfStock, setOutOfStock] = useState(false);
+  const [branchStock, setBranchStock] = useState([]);
 
   const optionConditions = [
     {
@@ -150,16 +153,24 @@ const ProductDetail = () => {
     }
   };
 
+  const fetchBranchStock = async () => {
+    const response = await BranchStock.getBranchStockWithProduct(product._id);
+    if (response.status === 200) {
+      setBranchStock(response.data.DT);
+      const totalStock = response.data.DT.reduce((sum, stock) => sum + stock.quantity, 0);
+      setOutOfStock(totalStock === 0);
+    } else {
+      toast.error(response.data.EM);
+    }
+  };
+
   useEffect(() => {
+    window.scrollTo(0, 0);
     fetchReviews();
     setMainImage(product.images[0]);
     fetchFavourite();
     setQuantity(1);
-    if (product.quantity === 0) {
-      setOutOfStock(true);
-    } else {
-      setOutOfStock(false);
-    }
+    fetchBranchStock();
   }, [product]);
 
   useEffect(() => {
@@ -214,7 +225,14 @@ const ProductDetail = () => {
         {/* Phần chi tiết sản phẩm */}
         <Col md={6}>
           <h1 className="product-title">{product.productName}</h1>
-          <h3 className="text-danger mt-3 product-price">
+
+          {product.original_price > 0 && (
+            <h4 className="text-muted product-price mt-2">
+              <del>{product.original_price.toLocaleString("vi-VN")} đ</del>
+            </h4>
+          )}
+
+          <h3 className="text-danger mt-2 product-price">
             {product.price.toLocaleString()} đ
           </h3>
 
@@ -225,18 +243,67 @@ const ProductDetail = () => {
 
           <p className="mt-3 product-quantity">
             <span className="fw-bold">Tình trạng: </span>{" "}
-            {optionConditions.find((option) => option.value === product.condition)
-              ?.label || product.condition}
+            {optionConditions.find(
+              (option) => option.value === product.condition
+            )?.label || product.condition}
           </p>
 
           <p className="mt-3 product-quantity">
-            <span className="fw-bold">Size: </span>{" "}
-            {product.size}
+            <span className="fw-bold">Size: </span> {product.size}
           </p>
 
           <p className="mt-3 product-quantity">
-            <span className="fw-bold">Số lượng hiện có:</span>{" "}
-            {product.quantity}
+            <span className="fw-bold">Sản phẩm hiện có:</span>{" "}
+            <div
+              className="border p-3 rounded mt-3"
+              style={{
+                maxHeight: "300px",
+                overflowY: "auto",
+                overflowX: "hidden",
+                boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+                backgroundColor: "#f8f9fa"
+              }}
+            >
+              <Row className="fw-bold border-bottom pb-2 mb-2" style={{ backgroundColor: "#e9ecef" }}>
+                <Col xs={8} className="py-2">
+                  <i className="bi bi-shop me-2"></i>Chi nhánh
+                </Col>
+                <Col xs={4} className="text-end py-2">
+                  <i className="bi bi-box-seam me-2"></i>Số lượng
+                </Col>
+              </Row>
+              {branchStock.map((item, index) => (
+                <Row
+                  key={index}
+                  className="border-bottom py-3 align-items-center hover-effect"
+                  style={{
+                    transition: "all 0.3s ease",
+                    cursor: "pointer",
+                    ":hover": {
+                      backgroundColor: "#f1f3f5"
+                    }
+                  }}
+                >
+                  <Col xs={10} className="d-flex align-items-center gap-2">
+                    <i className="bi bi-geo-alt text-primary fs-5"></i>
+                    <div>
+                      <span className="fw-medium d-block" style={{ color: '#2563eb', fontSize: '1.1rem' }}>{item.branch.name}</span>
+                      <span className="text-muted small">{item.branch.address}</span>
+                    </div>
+                  </Col>
+
+                  <Col xs={2} className="text-center">
+                    {item.quantity > 0 ? (
+                      <span className="badge bg-success p-2" style={{ fontSize: '0.9rem' }}>
+                        {item.quantity}
+                      </span>
+                    ) : (
+                      <span className="badge bg-danger p-2" style={{ fontSize: '0.9rem' }}>Hết hàng</span>
+                    )}
+                  </Col>
+                </Row>
+              ))}
+            </div>
           </p>
 
           {/* Lựa chọn số lượng và thêm vào giỏ hàng */}
@@ -269,7 +336,7 @@ const ProductDetail = () => {
                   variant="outline-secondary"
                   onClick={handleIncrease}
                   className="action-btn"
-                  disabled={quantity >= product.quantity}
+                  disabled={quantity >= branchStock.reduce((sum, stock) => sum + stock.quantity, 0)}
                 >
                   <FaPlus />
                 </Button>
@@ -307,7 +374,7 @@ const ProductDetail = () => {
       <Row className="mt-5">
         <Col>
           <h4>Chi tiết sản phẩm</h4>
-          <p>{product.description || "Không có thông tin mô tả chi tiết."}</p>
+          {parse(product.description)}
         </Col>
       </Row>
 
@@ -321,7 +388,8 @@ const ProductDetail = () => {
           ) : (
             <>
               <h4>Đánh giá sản phẩm ({reviews.length})</h4>
-              <Review reviews={currentReviews} /> {/* Hiển thị đánh giá hiện tại */}
+              <Review reviews={currentReviews} />
+              {/* Hiển thị đánh giá hiện tại */}
               {reviews.length > reviewsPerPage && ( // Hiển thị phân trang nếu có nhiều hơn 5 đánh giá}
                 <ReactPaginate
                   previousLabel={"<"}

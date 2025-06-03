@@ -12,7 +12,7 @@ const Notification = () => {
   const [notificationsPerPage] = useState(5); // Số lượng thông báo mỗi trang
 
   const navigate = useNavigate();
-  const socket = useSocket();
+  const { socket } = useSocket();
 
   const handleOnClickOrder = (orderId) => {
     navigate(`/order/${orderId}`);

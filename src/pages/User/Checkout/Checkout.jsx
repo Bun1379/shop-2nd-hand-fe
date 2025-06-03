@@ -7,10 +7,14 @@ import { toast } from "react-toastify";
 import DiscountAPI from "../../../api/DiscountAPI";
 import PaymentAPI from "../../../api/PaymentAPI";
 import UserAPI from "../../../api/UserAPI";
+import BranchAPI from "../../../api/BranchAPI";
 import AddressAPI from "../../../api/AddressAPI";
+import BranchStockAPI from "../../../api/BranchStockAPI";
 import ModalSelectAddress from "./ModalSelectAddress";
+import ModalConfirmOrder from "./ModalConfirmOrder";
 import { Modal, Button, Form, Row, Col } from "react-bootstrap";
 import { updateQuantityCart } from "../../../components/Header/Header";
+import ShippingAPI from "../../../api/ShippingAPI";
 const Checkout = () => {
   const token = localStorage.getItem("token");
   if (!token) {
@@ -18,7 +22,6 @@ const Checkout = () => {
   }
   const location = useLocation();
   const items = location.state;
-  console.log(items);
   const navigation = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedAddress, setSelectedAddress] = useState(null);
@@ -39,6 +42,31 @@ const Checkout = () => {
   });
   const [discountCode, setDiscountCode] = useState("");
   const [listDiscount, setListDiscount] = useState([]);
+  //Pick Branch
+  //begin
+  const [branchList, setBranchList] = useState([]);
+  const [selectedBranch, setSelectedBranch] = useState(null);
+  const [shippingFee, setShippingFee] = useState(0);
+  const [listDiscountShipping, setListDiscountShipping] = useState([]);
+  const [selectedDiscountShipping, setSelectedDiscountShipping] =
+    useState(null);
+  const [discountShipping, setDiscountShipping] = useState("");
+  const [shippingFeePercent, setShippingFeePercent] = useState(0);
+  const [productOutOfStock, setProductOutOfStock] = useState([]);
+  const [isModalConfirmOpen, setIsModalConfirmOpen] = useState(false);
+  const fetchDataBranch = async () => {
+    try {
+      const response = await BranchAPI.getAllBranches();
+      if (response.status === 200) {
+        setBranchList(
+          response.data.DT
+        );
+      }
+    } catch (error) {
+      toast.error("Lỗi: " + error.response.data.EM);
+    }
+  };
+  //end
 
   const loadAddressList = async () => {
     try {
@@ -59,7 +87,6 @@ const Checkout = () => {
         );
         if (defaultAddress) {
           setSelectedAddress(defaultAddress);
-          console.log(selectedAddress);
         }
       }
     } catch (error) {
@@ -67,19 +94,27 @@ const Checkout = () => {
     }
   };
 
-  const handleCheckout = async () => {
+  const handleOrder = async () => {
     const data = {
       products: items.map((item) => ({
         productId: item.product._id,
+        image: item.product.images[0],
+        name: item.product.productName,
+        size: item.product.size,
         quantity: item.quantity,
-        priceAtCreate: item.price,
+        priceAtCreate: item.product.price,
       })),
       totalAmount: afterDiscount,
       address: `${selectedAddress.address}, ${selectedAddress.district}, ${selectedAddress.ward}, ${selectedAddress.city}`,
       phone: selectedAddress.phone,
       name: selectedAddress.name,
       paymentMethod: selectedPaymentMethod.value,
-      discountCode: discountCode,
+      discountCode: [
+        ...(discountCode ? [discountCode] : []),
+        ...(discountShipping ? [discountShipping] : []),
+      ],
+      branchId: selectedBranch?.value,
+      shippingFee: shippingFee,
     };
     try {
       const rs = await OrderAPI.CreateOrder(data);
@@ -108,7 +143,33 @@ const Checkout = () => {
       }
     } catch (error) {
       toast.error(error.response?.data?.EM);
-      toast.error(error.message);
+    }
+  };
+
+  const handleShippingCouponClick = async () => {
+    if (!selectedDiscountShipping) {
+      toast.error("Vui lòng chọn mã giảm giá");
+      return;
+    }
+    if (!shippingFee) {
+      toast.error("Vui lòng chọn chi nhánh vận chuyển");
+      return;
+    }
+    try {
+      const response = await DiscountAPI.getDiscountPercentages(
+        selectedDiscountShipping.value
+      );
+      if (response.status === 200) {
+        setShippingFee(
+          shippingFee -
+          (shippingFee * response.data.DT.discountPercentage) / 100
+        );
+        setShippingFeePercent(response.data.DT.discountPercentage);
+        setDiscountShipping(response.data.DT._id);
+        toast.success("Áp dụng mã giảm giá thành công");
+      }
+    } catch (error) {
+      toast.error(error.response.data.EM);
     }
   };
 
@@ -135,12 +196,26 @@ const Checkout = () => {
     try {
       const response = await UserAPI.GetUserInfo();
       if (response.status === 200) {
-        console.log(response.data.DT.discounts);
         setListDiscount(
           response.data.DT.discounts
             .filter(
               (discount) =>
                 !discount?.usersUsed?.includes(response.data.DT._id) &&
+                discount.type !== "SHIPPING" &&
+                (new Date(discount.expiredAt) > new Date() ||
+                  discount.expiredAt == null)
+            )
+            .map((discount) => ({
+              value: discount._id,
+              label: discount.discountCode,
+            }))
+        );
+        setListDiscountShipping(
+          response.data.DT.discounts
+            .filter(
+              (discount) =>
+                !discount?.usersUsed?.includes(response.data.DT._id) &&
+                discount.type === "SHIPPING" &&
                 (new Date(discount.expiredAt) > new Date() ||
                   discount.expiredAt == null)
             )
@@ -154,6 +229,71 @@ const Checkout = () => {
       toast.error(error.response.data.EM);
     }
   };
+  //shippingFee
+  //begin
+  const calculateShippingFee = async () => {
+    if (selectedBranch === null || selectedAddress === null) return;
+    const addressArr = selectedBranch.label.split(",");
+    try {
+      const response = await ShippingAPI.getShippingMethods({
+        province: selectedAddress.city,
+        district: selectedAddress.district,
+        pick_province: addressArr[addressArr.length - 1].trim(),
+        pick_district: addressArr[addressArr.length - 2].trim(),
+        weight: 1000,
+        value: afterDiscount,
+      });
+      if (response.status === 200) {
+        const fee = response.data.DT.fee.fee;
+        setShippingFee(fee - (fee * shippingFeePercent) / 100);
+      } else {
+        console.log(response);
+      }
+    } catch (error) {
+      toast.error("Lỗi: " + error.message);
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    calculateShippingFee();
+  }, [selectedBranch, selectedAddress, afterDiscount]);
+  //end
+
+  //Check out of stock
+  //begin
+  const checkOutOfStock = async () => {
+    try {
+      const response =
+        await BranchStockAPI.getBranchStocksWithBranchAndManyProduct({
+          branchId: selectedBranch.value,
+          productIds: items.map((item) => item.product._id).join(","),
+        });
+      if (response.status === 200) {
+        const productOutOfStock1 = items.filter((item) =>
+          response.data.DT.some((stock) => stock == item.product._id)
+        );
+        setProductOutOfStock(productOutOfStock1);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleCheckout = async () => {
+    if (selectedBranch === null) {
+      toast.error("Vui lòng chọn chi nhánh giao hàng");
+      return;
+    }
+    await checkOutOfStock();
+    setProductOutOfStock((prev) => {
+      if (prev.length > 0) {
+        setIsModalConfirmOpen(true);
+      } else {
+        handleOrder();
+      }
+      return prev;
+    });
+  };
 
   useEffect(() => {
     loadAddressList();
@@ -164,6 +304,7 @@ const Checkout = () => {
     });
     setTotal(total);
     setAfterDiscount(total);
+    fetchDataBranch();
   }, []);
 
   return (
@@ -177,8 +318,8 @@ const Checkout = () => {
           <Row className="align-items-center fw-bold">
             <Col xs={2}>Sản phẩm</Col>
             <Col xs={4}></Col>
-            <Col xs={2}>Size</Col>
-            <Col xs={1} className="text-center">
+            <Col xs={1}>Size</Col>
+            <Col xs={2} className="text-center">
               Đơn giá
             </Col>
             <Col xs={1} className="text-center">
@@ -196,11 +337,11 @@ const Checkout = () => {
         </div>
 
         <div
-          className="d-flex flex-column shadow border w-100 border-success mb-2 border-2 p-4 gap-3"
+          className="d-flex flex-column shadow border w-100 card p-3"
           style={{ height: "auto", margin: "0 auto" }}
         >
-          <div className="d-flex align-items-center justify-content-around">
-            <div className="d-flex flex-column justify-content-between gap-4">
+          <div className="d-flex gap-3">
+            <div className="flex-grow-1 flex-shrink-1 d-flex flex-column gap-2" style={{ width: '100%' }}>
               <Button className="btn w-25" onClick={() => setIsModalOpen(true)}>
                 Chọn Địa Chỉ
               </Button>
@@ -208,7 +349,11 @@ const Checkout = () => {
                 <div className="card">
                   <div className="card-body">
                     <h5 className="card-title">{selectedAddress.name}</h5>
-                    <p className="card-text mt-1">
+                    <p className="card-text mt-1" style={{
+                      whiteSpace: 'nowrap',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis'
+                    }}>
                       Số điện thoại: {selectedAddress.phone}
                       <br />
                       Địa chỉ: {selectedAddress.address},{" "}
@@ -225,23 +370,86 @@ const Checkout = () => {
                 selectedAddress={selectedAddress}
                 setSelectedAddress={setSelectedAddress}
               />
+              <div className="w-100">
+                <span className="fw-bold mb-0 ms-3">Chi nhánh giao hàng: </span>
+                <div className="mt-2" style={{ width: '100%' }}>
+                  <Select
+                    options={branchList.map(branch => ({
+                      value: branch._id,
+                      label: `${branch.name} - ${branch.address}`
+                    }))}
+                    onChange={(option) => setSelectedBranch(option)}
+                    value={selectedBranch}
+                    placeholder="Chọn chi nhánh giao hàng"
+                    styles={{
+                      control: (base) => ({
+                        ...base,
+                        width: '100%'
+                      }),
+                      option: (base) => ({
+                        ...base,
+                        whiteSpace: 'nowrap',
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis'
+                      }),
+                      singleValue: (base) => ({
+                        ...base,
+                        whiteSpace: 'nowrap',
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis'
+                      })
+                    }}
+                  />
+                </div>
+              </div>
             </div>
 
-            <div className="d-flex flex-column justify-content-between gap-4">
+            <div className="flex-grow-1" style={{ width: '50%' }}>
               <span className="fw-bold mb-0 ms-3">Phương thức thanh toán:</span>
               <Select
                 options={options}
                 defaultValue={selectedPaymentMethod}
                 onChange={setSelectedPaymentMethod}
               />
+              <div className="d-flex flex-column gap-2">
+                <span className="fw-bold mb-0 ms-3">
+                  Mã khuyến mãi sản phẩm:{" "}
+                </span>
+                <Select
+                  options={listDiscount}
+                  onChange={setCoupon}
+                  placeholder="Chọn mã khuyến mãi"
+                />
+                <button className="btn btn-primary" onClick={handleCouponClick}>
+                  Áp dụng
+                </button>
+              </div>
+              <div className="d-flex flex-column gap-2">
+                <span className="fw-bold mb-0 ms-3">
+                  Mã khuyến mãi giao hàng:{" "}
+                </span>
+                <Select
+                  options={listDiscountShipping}
+                  onChange={setSelectedDiscountShipping}
+                  placeholder="Chọn mã khuyến mãi"
+                />
+                <button
+                  className="btn btn-primary"
+                  onClick={handleShippingCouponClick}
+                >
+                  Áp dụng
+                </button>
+              </div>
 
-              <span className="fw-bold mb-0 ms-3">Mã khuyến mãi: </span>
-              <Select options={listDiscount} onChange={setCoupon} />
-              <button className="btn btn-primary" onClick={handleCouponClick}>
-                Áp dụng
-              </button>
               <p className="fw-bold mb-0 ms-3">
                 Tổng tiền: {afterDiscount.toLocaleString("vi-VN")} đ
+              </p>
+              <p className="fw-bold mb-0 ms-3">
+                Phí vận chuyển: {shippingFee.toLocaleString("vi-VN")} đ
+              </p>
+              <p className="fw-bold mb-0 ms-3">
+                Tổng cộng:{" "}
+                {(afterDiscount + shippingFee).toLocaleString("vi-VN")} đ
               </p>
             </div>
           </div>
@@ -251,6 +459,12 @@ const Checkout = () => {
           >
             Thanh toán
           </button>
+          <ModalConfirmOrder
+            isOpen={isModalConfirmOpen}
+            onRequestClose={() => setIsModalConfirmOpen(false)}
+            productOutOfStock={productOutOfStock}
+            handleOrder={handleOrder}
+          />
         </div>
       </div>
     </>

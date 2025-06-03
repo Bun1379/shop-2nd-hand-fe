@@ -3,11 +3,12 @@ import Select from "react-select";
 import { Modal, Button } from "react-bootstrap";
 import { FaCaretDown } from "react-icons/fa";
 import { toast } from "react-toastify";
-import AddressAPI from "../../../api/AddressAPI";
 import DGHC from "../../../assets/DGHC.json";
+import Map from "../../../components/Map/Map";
 
 const AddressModal = ({ show, handleClose, onSave, initialData }) => {
     const [formData, setFormData] = useState({});
+
     useEffect(() => {
         setFormData({
             name: initialData?.name || '',
@@ -17,7 +18,7 @@ const AddressModal = ({ show, handleClose, onSave, initialData }) => {
             ward: initialData?.ward || null,
             address: initialData?.address || '',
         });
-    }, [initialData]);
+    }, [show, handleClose, initialData]);
 
     const [locations, setLocations] = useState([]);
     const [districts, setDistricts] = useState([]);
@@ -33,22 +34,28 @@ const AddressModal = ({ show, handleClose, onSave, initialData }) => {
     }, []);
 
     useEffect(() => {
-        if (formData.city) {
-            const selectedCity = locations.find(city => city.name === formData.city);
-            setDistricts(selectedCity?.districts || []);
-        } else {
-            setDistricts([]);
+        const selectedCity = locations.find(city => city.name.includes(formData.city));
+        if (selectedCity && selectedCity.name !== formData.city) {
+            setFormData(prev => ({ ...prev, city: selectedCity.name }));
         }
+        setDistricts(selectedCity?.districts || []);
     }, [formData.city, locations]);
 
     useEffect(() => {
-        if (formData.district) {
-            const selectedDistrict = districts.find(district => district.name === formData.district);
-            setWards(selectedDistrict?.wards || []);
-        } else {
-            setWards([]);
+        const selectedDistrict = districts.find(district => district.name.includes(formData.district));
+        if (selectedDistrict && selectedDistrict.name !== formData.district) {
+            setFormData(prev => ({ ...prev, district: selectedDistrict.name }));
         }
+        setWards(selectedDistrict?.wards || []);
     }, [formData.district, districts]);
+
+    useEffect(() => {
+        const selectedWard = wards.find(ward => ward.name.includes(formData.ward));
+        if (selectedWard && selectedWard.name !== formData.ward) {
+            setFormData(prev => ({ ...prev, ward: selectedWard.name }));
+        }
+    }, [formData.ward, wards]);
+
 
     const handleChange = (selectedOption, name) => {
         setFormData({ ...formData, [name]: selectedOption?.value || null }); // Chỉ lưu value
@@ -60,13 +67,10 @@ const AddressModal = ({ show, handleClose, onSave, initialData }) => {
             toast.error("Số điện thoại không hợp lệ!");
             return;
         }
-        const exists = await AddressAPI.CheckAddress(formData.city, formData.district, formData.ward, formData.address);
-        if (exists) {
-            onSave(formData);
-        } else {
-            toast.error("Địa chỉ không tồn tại!");
-        }
+        onSave(formData);
     };
+
+    // console.log("formData", formData);
 
     return (
         <Modal show={show} onHide={handleClose} size="lg">
@@ -132,7 +136,7 @@ const AddressModal = ({ show, handleClose, onSave, initialData }) => {
                             />
                         </div>
                     </div>
-                    <div className="form-group mt-2">
+                    <div className="form-group mt-2 mb-3">
                         <label>Địa chỉ cụ thể</label>
                         <input
                             type="text"
@@ -143,6 +147,12 @@ const AddressModal = ({ show, handleClose, onSave, initialData }) => {
                             required
                         />
                     </div>
+
+                    <Map
+                        formData={formData}
+                        setFormData={setFormData}
+                    />
+
                     <Button className="mt-2" variant="primary" type="submit">
                         Lưu
                     </Button>

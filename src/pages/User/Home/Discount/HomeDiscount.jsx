@@ -89,9 +89,9 @@ const DiscountSlider = () => {
                     <Button variant="success">Nhận</Button>
                   )} */}
                   {userDiscounts.length > 0 &&
-                  userDiscounts.find(
-                    (userDiscount) => userDiscount._id === discount._id
-                  ) ? (
+                    userDiscounts.find(
+                      (userDiscount) => userDiscount._id === discount._id
+                    ) ? (
                     <Card.Text className="text-danger">Đã nhận</Card.Text>
                   ) : (
                     <Button

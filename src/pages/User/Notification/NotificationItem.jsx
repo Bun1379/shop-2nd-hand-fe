@@ -50,7 +50,7 @@ const NotificationItem = ({ notification, handleOnClickOrder }) => {
     //     <p className="mb-0">{notification.createdAt}</p>
     //   </div>
     // </div>
-    <div className="card position-relative my-2">
+    <div className="card position-relative my-2 shadow-lg">
       <div className="card-body">
         <h5 className="card-title">{formatMessage(notification.message)}</h5>
         <p className="card-text mt-1">

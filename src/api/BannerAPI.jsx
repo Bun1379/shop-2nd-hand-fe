@@ -20,6 +20,11 @@ class BannerAPI {
     const url = `/banner/${id}`;
     return axiosPrivate.delete(url);
   }
+
+  static async GetProductBySlug(slug) {
+    const url = `/banner/promotions/${slug}`;
+    return axiosClient.get(url);
+  }
 }
 
 export default BannerAPI;

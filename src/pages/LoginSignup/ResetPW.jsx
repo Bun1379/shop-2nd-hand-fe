@@ -5,6 +5,8 @@ import { FaArrowLeft } from "react-icons/fa";
 import { useState } from 'react';
 import AuthAPI from '../../api/AuthAPI';
 import { toast } from 'react-toastify';
+import PasswordInput from '../../components/PasswordInput/PasswordInput';
+
 const ResetPW = () => {
     const [otp, setotp] = useState('');
     const [newPassword, setnewPassword] = useState('');
@@ -38,33 +40,32 @@ const ResetPW = () => {
                 <p>Đặt lại mật khẩu</p>
             </h2>
             <form onSubmit={handleSubmit}>
-                <div>
-                    <label htmlFor="otp">Nhập otp đã gửi vào {email}:</label>
-                    <input
-                        type="text"
-                        id="otp"
-                        value={otp}
-                        onChange={(e) => setotp(e.target.value)}
-                        required />
-                </div>
-                <div>
-                    <label htmlFor="newPassword">Mật khẩu:</label>
-                    <input
-                        type="password"
-                        id="newPassword"
+                <label htmlFor="otp">Nhập otp đã gửi vào {email}:</label>
+                <input
+                    className="form-control border border-success border-2 mb-3"
+                    type="text"
+                    id="otp"
+                    placeholder='Nhập mã OTP'
+                    value={otp}
+                    onChange={(e) => setotp(e.target.value)}
+                    required />
+
+                <label htmlFor="newPassword">Mật khẩu:</label>
+
+                <div className="rounded border border-success border-2 mb-3">
+                    <PasswordInput
                         value={newPassword}
                         onChange={(e) => setnewPassword(e.target.value)}
-                        required
+                        placeholder="Nhập mật khẩu mới"
                     />
                 </div>
-                <div>
-                    <label htmlFor="confirmPassword">Nhập lại mật khẩu:</label>
-                    <input
-                        type="password"
-                        id="confirmPassword"
+
+                <label htmlFor="confirmPassword">Nhập lại mật khẩu:</label>
+                <div className="rounded border border-success border-2 mb-3">
+                    <PasswordInput
                         value={confirmPassword}
                         onChange={(e) => setConfirmPassword(e.target.value)}
-                        required
+                        placeholder="Nhập lại mật khẩu mới"
                     />
                 </div>
                 <button type="submit">Xác nhận</button>

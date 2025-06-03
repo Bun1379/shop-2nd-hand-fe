@@ -3,8 +3,15 @@ import UserAPI from "../../../api/UserAPI";
 import UserTable from "./UserTable";
 import { Modal } from "react-bootstrap";
 import ModalUpdateUser from "./ModalUpdateUser";
+import { Navigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const User = () => {
+  const isAdmin = localStorage.getItem("role") === "ADMIN";
+  if (!isAdmin) {
+    toast.error("Bạn không có quyền truy cập vào trang này");
+    return <Navigate to="/admin" />;
+  }
   const [users, setUsers] = useState([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
