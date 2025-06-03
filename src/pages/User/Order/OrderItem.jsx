@@ -19,7 +19,7 @@ const OrderItem = ({ order, handleOnClickOrder, handleReceive }) => {
     const PaymentData = {
       amount: order.totalAmount,
       orderId: order._id,
-      returnUrl: "https://ishio-shop.onrender.com/payment/result",
+      returnUrl: "https://ishio-store.onrender.com/payment/result",
     };
     try {
       const response = await PaymentAPI.postPayment(PaymentData);
@@ -73,8 +73,8 @@ const OrderItem = ({ order, handleOnClickOrder, handleReceive }) => {
             <span className="text-danger">
               {order.shippingFee > 0
                 ? `Phí vận chuyển: ${order.shippingFee.toLocaleString(
-                    "vi-VN"
-                  )} đ`
+                  "vi-VN"
+                )} đ`
                 : "Miễn phí vận chuyển"}
             </span>
             <span>
