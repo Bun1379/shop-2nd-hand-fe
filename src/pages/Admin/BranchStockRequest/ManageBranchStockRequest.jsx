@@ -117,7 +117,7 @@ const ManageBranchStockRequest = () => {
 
   return (
     <div className="p-4">
-      <h1>Danh sách yêu cầu nhập kho</h1>
+      <h1>Danh sách yêu cầu nhập hàng</h1>
       <Accordion className="my-2">
         <Accordion.Item eventKey="0">
           <Accordion.Header>Lọc tìm kiếm</Accordion.Header>
