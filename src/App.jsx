@@ -1,5 +1,5 @@
-import 'bootstrap/dist/css/bootstrap.min.css';
-import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import "./App.css";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -40,7 +40,8 @@ import ManageBlog from "./pages/Admin/Blog/ManageBlog";
 import BlogPage from "./pages/User/Blog/BlogPage";
 import BlogDetail from "./pages/User/Blog/BlogDetail";
 import ScrollToTop from "./helper/ScrollToTop";
-import notfoundImg from './assets/images/notfound.png';
+import notfoundImg from "./assets/images/notfound.png";
+import LogDistribution from "./pages/Admin/Log/LogDistribution";
 
 function App() {
   return (
@@ -90,14 +91,30 @@ function App() {
               path="branch-stock-request"
               element={<ManageBranchStockRequest />}
             />
+            <Route path="log" element={<LogDistribution />} />
           </Route>
 
           <Route path="/payment/result" element={<PaymentResult />} />
-          <Route path="*" element={
-            <div className="d-flex justify-content-center align-items-center" style={{ height: '100vh' }}>
-              <img src={notfoundImg} alt="404 Not Found" className="img-fluid rounded-circle " style={{ objectFit: 'cover', width: '600px', height: '600px' }} />
-            </div>
-          } />
+          <Route
+            path="*"
+            element={
+              <div
+                className="d-flex justify-content-center align-items-center"
+                style={{ height: "100vh" }}
+              >
+                <img
+                  src={notfoundImg}
+                  alt="404 Not Found"
+                  className="img-fluid rounded-circle "
+                  style={{
+                    objectFit: "cover",
+                    width: "600px",
+                    height: "600px",
+                  }}
+                />
+              </div>
+            }
+          />
         </Routes>
       </BrowserRouter>
       <ToastContainer
