@@ -76,7 +76,7 @@ const ManageOrder = () => {
 
     if (priceRange.minPrice || priceRange.maxPrice) {
       filtered = filtered.filter((order) => {
-        const orderTotal = order.totalAmount;
+        const orderTotal = order.totalAmount + (order.shippingFee ?? 0);
         const minPrice = priceRange.minPrice
           ? parseFloat(priceRange.minPrice)
           : 0;
@@ -119,6 +119,7 @@ const ManageOrder = () => {
   };
 
   const handleConfirm = () => {
+    setOrders([...orders]);
     filterOrders();
   };
 
@@ -258,10 +259,10 @@ const ManageOrder = () => {
                 value={
                   sortPrice
                     ? {
-                        value: sortPrice,
-                        label:
-                          sortPrice === "asc" ? "Thấp đến cao" : "Cao đến thấp",
-                      }
+                      value: sortPrice,
+                      label:
+                        sortPrice === "asc" ? "Thấp đến cao" : "Cao đến thấp",
+                    }
                     : null
                 }
               />
