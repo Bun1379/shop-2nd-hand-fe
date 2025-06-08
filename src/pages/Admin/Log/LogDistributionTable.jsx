@@ -27,9 +27,15 @@ const LogTable = ({ logs, setPage, totalPages }) => {
                 <tr key={log._id}>
                   <td>{log.user.username}</td>
                   <td>{log.product.productName}</td>
-                  <td>{log.branch.name}</td>
+                  <td>{log.branch ? log.branch.name : "Kho chính"}</td>
                   <td>{log.quantity}</td>
-                  <td>{log.action === "ADD" ? "Thêm hàng" : "Xóa hàng"}</td>
+                  <td>
+                    {log.action === "ADD"
+                      ? "Thêm hàng"
+                      : log.action === "REMOVE"
+                      ? "Xóa hàng"
+                      : "Cập nhật hàng"}
+                  </td>
                   <td>{new Date(log.createdAt).toLocaleString()}</td>
                 </tr>
               ))}
