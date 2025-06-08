@@ -31,10 +31,10 @@ const LogTable = ({ logs, setPage, totalPages }) => {
                   <td>{log.quantity}</td>
                   <td>
                     {log.action === "ADD"
-                      ? "Thêm hàng"
+                      ? "Nhập hàng vào"
                       : log.action === "REMOVE"
-                      ? "Xóa hàng"
-                      : "Cập nhật hàng"}
+                        ? "Xuất hàng ra"
+                        : "Cập nhật hàng"}
                   </td>
                   <td>{new Date(log.createdAt).toLocaleString()}</td>
                 </tr>
