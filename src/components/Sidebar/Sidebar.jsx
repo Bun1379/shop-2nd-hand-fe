@@ -127,6 +127,13 @@ const SideBar = ({ image, collapsed, toggled, handleToggleSidebar }) => {
                   {" "}
                   Chi nhánh
                 </MenuItem>
+                <MenuItem
+                  icon={<HiOfficeBuilding />}
+                  component={<Link to="/admin/log" />}
+                >
+                  {" "}
+                  Lịch sử phân phối
+                </MenuItem>
               </>
             )}
           </SubMenu>

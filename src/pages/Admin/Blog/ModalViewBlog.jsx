@@ -1,5 +1,5 @@
 import { Button, Modal } from "react-bootstrap";
-import "./blog.css";
+import "./Blog.css";
 const ModalViewBlog = ({ blog, show, setShow, setSelectedBlog }) => {
   const handleClose = () => {
     setShow(false);
