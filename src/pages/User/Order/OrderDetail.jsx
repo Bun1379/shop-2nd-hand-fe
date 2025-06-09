@@ -93,7 +93,7 @@ const OrderDetail = () => {
       {/* Sản phẩm trong đơn hàng */}
       <div>
         {/* Header */}
-        {order.products?.length === 0 && (
+        {order.products?.length > 0 && (
           <>
             <div className="bg-success text-white p-3 rounded mt-4 mb-3">
               <Row className="align-items-center fw-bold">

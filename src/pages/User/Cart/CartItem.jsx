@@ -38,27 +38,29 @@ const CartItem = ({
   };
 
   const handleQuantity = (event) => {
-    const { value } = event.target;
+    // const { value } = event.target;
 
-    if (/^\d*$/.test(value)) {
-      const validQuantity = Math.max(1, value);
-      if (maxQuantity && validQuantity > maxQuantity) {
-        toast.error(`Số lượng tối đa là ${maxQuantity}`);
-        updateQuantity(maxQuantity);
-        return;
-      }
-      updateQuantity(validQuantity);
-    }
+    // if (/^\d*$/.test(value)) {
+    //   const validQuantity = Math.max(1, value);
+    //   if (maxQuantity && validQuantity > maxQuantity) {
+    //     toast.error(`Số lượng tối đa là ${maxQuantity}`);
+    //     updateQuantity(maxQuantity);
+    //     return;
+    //   }
+    //   updateQuantity(validQuantity);
+    // }
+    updateQuantity(event.target.value);
   };
 
   const handleQuantityButton = (newQuantity) => {
-    const validQuantity = Math.max(1, newQuantity);
-    if (maxQuantity && validQuantity > maxQuantity) {
-      toast.error(`Số lượng tối đa là ${maxQuantity}`);
-      updateQuantity(maxQuantity);
-      return;
-    }
-    updateQuantity(validQuantity);
+    // const validQuantity = Math.max(1, newQuantity);
+    // if (maxQuantity && validQuantity > maxQuantity) {
+    //   toast.error(`Số lượng tối đa là ${maxQuantity}`);
+    //   updateQuantity(maxQuantity);
+    //   return;
+    // }
+    // updateQuantity(validQuantity);
+    updateQuantity(newQuantity);
   };
 
   useEffect(() => {
@@ -70,9 +72,8 @@ const CartItem = ({
       <div className="row align-items-center">
         <div className="col-auto">
           <input
-            className={`form-check-input shadow-lg border border-primary border-2 ${
-              isChecked ? "bg-primary" : ""
-            }`}
+            className={`form-check-input shadow-lg border border-primary border-2 ${isChecked ? "bg-primary" : ""
+              }`}
             type="checkbox"
             checked={isChecked}
             onChange={handleCheckbox}
