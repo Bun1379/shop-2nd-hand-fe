@@ -93,24 +93,41 @@ const OrderDetail = () => {
       {/* Sản phẩm trong đơn hàng */}
       <div>
         {/* Header */}
-        <div className="bg-success text-white p-3 rounded mt-4 mb-3">
-          <Row className="align-items-center fw-bold">
-            <Col xs={1}>Sản phẩm</Col>
-            <Col xs={5}></Col>
-            <Col xs={1}>Size</Col>
-            <Col xs={2} className="text-center">Đơn giá</Col>
-            <Col xs={1} className="text-center">Số lượng</Col>
-            <Col xs={2} className="text-end">Thành tiền</Col>
-          </Row>
-        </div>
+        {order.pendingProducts?.length === 0 && (
+          <>
+            <div className="bg-success text-white p-3 rounded mt-4 mb-3">
+              <Row className="align-items-center fw-bold">
+                <Col xs={1}>Sản phẩm</Col>
+                <Col xs={5}></Col>
+                <Col xs={1}>Size</Col>
+                <Col xs={2} className="text-center">Đơn giá</Col>
+                <Col xs={1} className="text-center">Số lượng</Col>
+                <Col xs={2} className="text-end">Thành tiền</Col>
+              </Row>
+            </div>
+            {order.products?.map((item) => (
+              <CheckoutItem key={item.product._id} item={item} />
+            ))}
+          </>
+        )}
 
-        {order.products?.map((item) => (
-          <CheckoutItem key={item.product._id} item={item} />
-        ))}
-
-        {order.pendingProducts?.map((item) => (
-          <CheckoutItem key={item.product._id} item={item} />
-        ))}
+        {order.pendingProducts?.length > 0 && (
+          <>
+            <div className="bg-warning text-dark p-3 rounded mb-3 shadow mt-4">
+              <Row className="align-items-center">
+                <Col xs={2}>Sản phẩm (Hết hàng)</Col>
+                <Col xs={4}></Col>
+                <Col xs={1}>Size</Col>
+                <Col xs={2} className="text-center">Đơn giá</Col>
+                <Col xs={1} className="text-center">Số lượng</Col>
+                <Col xs={2} className="text-end">Thành tiền</Col>
+              </Row>
+            </div>
+            {order.pendingProducts.map((product) => (
+              <CheckoutItem item={product} key={product._id} />
+            ))}
+          </>
+        )}
       </div>
 
 
