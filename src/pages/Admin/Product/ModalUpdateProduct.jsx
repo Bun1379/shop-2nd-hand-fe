@@ -369,7 +369,7 @@ const ModalUpdateProduct = ({
                   className="form-control"
                   value={original_price}
                   min="0"
-                  onChange={(event) => setOriginal_Price(event.target.value)}
+                  onChange={(event) => setOriginal_Price(Number(event.target.value))}
                 />
               </div>
 
@@ -380,7 +380,7 @@ const ModalUpdateProduct = ({
                   className="form-control"
                   value={price}
                   min="0"
-                  onChange={(event) => setPrice(event.target.value)}
+                  onChange={(event) => setPrice(Number(event.target.value))}
                 />
               </div>
               <div className="col-md-12">
@@ -426,7 +426,7 @@ const ModalUpdateProduct = ({
                   min="0"
                   className="form-control"
                   value={quantity}
-                  onChange={(event) => setQuantity(event.target.value)}
+                  onChange={(event) => setQuantity(Number(event.target.value))}
                 />
               </div>
               <div className="col-md-4">
