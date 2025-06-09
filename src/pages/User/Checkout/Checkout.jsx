@@ -268,7 +268,6 @@ const Checkout = () => {
           branchId: selectedBranch.value,
           products: items,
         });
-      console.log(response);
       if (response.status === 200) {
         const productOutOfStock1 = items.filter((item) =>
           response.data.DT.some((stock) => stock == item.product._id)
