@@ -45,10 +45,9 @@ const ManageOrder = () => {
       }));
       setBranches(userBranches);
       setBranches([
-        { value: "ALL", label: "Tất cả chi nhánh" },
         ...userBranches,
       ]);
-      setSelectedBranches(["ALL"]);
+      setSelectedBranches([userBranches[0].value]);
     }
   }, []);
 
