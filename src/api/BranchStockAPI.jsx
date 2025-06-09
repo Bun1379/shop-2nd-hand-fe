@@ -11,11 +11,11 @@ class BranchStockAPI {
     );
   }
 
-  static async getBranchStocksWithBranchAndManyProduct({ branchId, productIds = [] }) {
+  static async getBranchStocksWithBranchAndManyProduct({ branchId, products = [] }) {
     return axiosClient.get("/branch-stock/product", {
       params: {
         branchId: branchId,
-        productIds: productIds, // Chuyển mảng thành chuỗi
+        products: products,
       },
     });
   }

@@ -8,7 +8,7 @@ const ModalConfirmOrder = ({ isOpen, onRequestClose, productOutOfStock, handleOr
                 <Modal.Title>Thông Báo</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                <h4>Một số sản phẩm đã hết hàng ở chi nhánh này</h4>
+                <h4>Một số sản phẩm không đủ hàng ở chi nhánh này</h4>
                 <div
                     className="bg-success text-white p-2 rounded w-100 align-items-center mb-3"
                     style={{ margin: "auto" }}

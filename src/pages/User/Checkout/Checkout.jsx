@@ -266,8 +266,9 @@ const Checkout = () => {
       const response =
         await BranchStockAPI.getBranchStocksWithBranchAndManyProduct({
           branchId: selectedBranch.value,
-          productIds: items.map((item) => item.product._id).join(","),
+          products: items,
         });
+      console.log(response);
       if (response.status === 200) {
         const productOutOfStock1 = items.filter((item) =>
           response.data.DT.some((stock) => stock == item.product._id)
