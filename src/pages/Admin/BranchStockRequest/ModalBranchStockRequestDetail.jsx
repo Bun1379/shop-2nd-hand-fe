@@ -96,7 +96,9 @@ const ModalBranchStockRequestDetail = ({
                     }
                   </td>
                   {requestDetail?.status === "confirmed" &&
-                    user.role === "ADMIN" && (
+                    user.role === "ADMIN" &&
+                    product.status === "pending" &&
+                    (
                       <td>
                         <Button
                           variant="success"
