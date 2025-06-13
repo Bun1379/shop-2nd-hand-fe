@@ -15,6 +15,7 @@ import { updateQuantityCart } from "../../components/Header/Header";
 import ReactPaginate from "react-paginate";
 import BranchStock from "../../api/BranchStockAPI";
 import parse from "html-react-parser";
+import { Rating } from "@smastrom/react-rating";
 
 const ProductDetail = () => {
   const navigate = useNavigate();
@@ -26,6 +27,7 @@ const ProductDetail = () => {
   const [favouriteText, setFavouriteText] = useState("Yêu thích");
   const [outOfStock, setOutOfStock] = useState(false);
   const [branchStock, setBranchStock] = useState([]);
+  const [averageRating, setAverageRating] = useState(0);
 
   const optionConditions = [
     {
@@ -157,11 +159,21 @@ const ProductDetail = () => {
     const response = await BranchStock.getBranchStockWithProduct(product._id);
     if (response.status === 200) {
       setBranchStock(response.data.DT);
-      const totalStock = response.data.DT.reduce((sum, stock) => sum + stock.quantity, 0);
+      const totalStock = response.data.DT.reduce(
+        (sum, stock) => sum + stock.quantity,
+        0
+      );
       setOutOfStock(totalStock === 0);
     } else {
       toast.error(response.data.EM);
     }
+  };
+
+  // Tính toán đánh giá trung bình
+  const calculateAverageRating = (reviews) => {
+    if (reviews.length === 0) return 0;
+    const totalRating = reviews.reduce((sum, review) => sum + review.rating, 0);
+    return (totalRating / reviews.length).toFixed(1);
   };
 
   useEffect(() => {
@@ -172,6 +184,10 @@ const ProductDetail = () => {
     setQuantity(1);
     fetchBranchStock();
   }, [product]);
+
+  useEffect(() => {
+    setAverageRating(calculateAverageRating(reviews));
+  }, [reviews]);
 
   useEffect(() => {
     addToRecentlyViewed(product);
@@ -224,8 +240,13 @@ const ProductDetail = () => {
 
         {/* Phần chi tiết sản phẩm */}
         <Col md={6}>
-          <h1 className="product-title">{product.productName}</h1>
-
+          <h1 className="product-title mb-2">{product.productName}</h1>
+          <div className="d-flex align-items-center">
+            <Rating value={averageRating} readOnly style={{ width: "20%" }} />
+            <span className="text-muted ms-2">
+              {averageRating} ({reviews.length} đánh giá)
+            </span>
+          </div>
           {product.original_price > 0 && (
             <h4 className="text-muted product-price mt-2">
               <del>{product.original_price.toLocaleString("vi-VN")} đ</del>
@@ -261,10 +282,13 @@ const ProductDetail = () => {
                 overflowY: "auto",
                 overflowX: "hidden",
                 boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
-                backgroundColor: "#f8f9fa"
+                backgroundColor: "#f8f9fa",
               }}
             >
-              <Row className="fw-bold border-bottom pb-2 mb-2" style={{ backgroundColor: "#e9ecef" }}>
+              <Row
+                className="fw-bold border-bottom pb-2 mb-2"
+                style={{ backgroundColor: "#e9ecef" }}
+              >
                 <Col xs={8} className="py-2">
                   <i className="bi bi-shop me-2"></i>Chi nhánh
                 </Col>
@@ -280,25 +304,40 @@ const ProductDetail = () => {
                     transition: "all 0.3s ease",
                     cursor: "pointer",
                     ":hover": {
-                      backgroundColor: "#f1f3f5"
-                    }
+                      backgroundColor: "#f1f3f5",
+                    },
                   }}
                 >
                   <Col xs={10} className="d-flex align-items-center gap-2">
                     <i className="bi bi-geo-alt text-primary fs-5"></i>
                     <div>
-                      <span className="fw-medium d-block" style={{ color: '#2563eb', fontSize: '1.1rem' }}>{item.branch.name}</span>
-                      <span className="text-muted small">{item.branch.address}</span>
+                      <span
+                        className="fw-medium d-block"
+                        style={{ color: "#2563eb", fontSize: "1.1rem" }}
+                      >
+                        {item.branch.name}
+                      </span>
+                      <span className="text-muted small">
+                        {item.branch.address}
+                      </span>
                     </div>
                   </Col>
 
                   <Col xs={2} className="text-center">
                     {item.quantity > 0 ? (
-                      <span className="badge bg-success p-2" style={{ fontSize: '0.9rem' }}>
+                      <span
+                        className="badge bg-success p-2"
+                        style={{ fontSize: "0.9rem" }}
+                      >
                         {item.quantity}
                       </span>
                     ) : (
-                      <span className="badge bg-danger p-2" style={{ fontSize: '0.9rem' }}>Hết hàng</span>
+                      <span
+                        className="badge bg-danger p-2"
+                        style={{ fontSize: "0.9rem" }}
+                      >
+                        Hết hàng
+                      </span>
                     )}
                   </Col>
                 </Row>
@@ -336,7 +375,10 @@ const ProductDetail = () => {
                   variant="outline-secondary"
                   onClick={handleIncrease}
                   className="action-btn"
-                  disabled={quantity >= branchStock.reduce((sum, stock) => sum + stock.quantity, 0)}
+                  disabled={
+                    quantity >=
+                    branchStock.reduce((sum, stock) => sum + stock.quantity, 0)
+                  }
                 >
                   <FaPlus />
                 </Button>
