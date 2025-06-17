@@ -58,7 +58,7 @@ const ProductItem = ({ product }) => {
 
   return (
     <Card
-      className="h-100 w-100 border-0 "
+      className="h-100 w-100"
       onClick={handleClick}
       style={{
         cursor: "pointer",

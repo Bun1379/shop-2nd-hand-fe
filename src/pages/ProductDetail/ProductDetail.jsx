@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import "./ProductDetail.css";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { FaPlus, FaMinus } from "react-icons/fa";
+import { FaPlus, FaMinus, FaStar } from "react-icons/fa";
 import { toast } from "react-toastify";
 import { FaHeart } from "react-icons/fa";
 import { Row, Col, Card, Button, Image, Form } from "react-bootstrap";
@@ -429,7 +429,10 @@ const ProductDetail = () => {
             <h4>Chưa có đánh giá nào</h4>
           ) : (
             <>
-              <h4>Đánh giá sản phẩm ({reviews.length})</h4>
+              <h4 className="d-flex align-items-center gap-2">
+                Đánh giá sản phẩm ({averageRating}
+                <FaStar color="yellow" />) ({reviews.length} đánh giá)
+              </h4>
               <Review reviews={currentReviews} />
               {/* Hiển thị đánh giá hiện tại */}
               {reviews.length > reviewsPerPage && ( // Hiển thị phân trang nếu có nhiều hơn 5 đánh giá}
