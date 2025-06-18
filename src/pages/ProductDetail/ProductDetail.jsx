@@ -68,6 +68,7 @@ const ProductDetail = () => {
         updateQuantityCart();
       }
     } catch (error) {
+      toast.error(error.response.data.EM);
       console.log("Error: ", error);
     }
   };
